@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Barriecito, Montserrat } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
+import { Toaster } from '@/components/ui/toaster'
 import './globals.css'
 
 const barriecito = Barriecito({ 
@@ -127,6 +128,7 @@ export default function RootLayout({
       </head>
       <body className={`${barriecito.variable} ${montserrat.variable} font-sans antialiased flex flex-col min-h-screen`}>
         {children}
+        <Toaster />
         <Analytics />
       </body>
     </html>

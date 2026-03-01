@@ -2,6 +2,7 @@
 
 import { X, Heart, ShoppingCart, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { useToast } from "@/hooks/use-toast"
 import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
@@ -22,6 +23,7 @@ interface WishlistSidebarProps {
 }
 
 export default function WishlistSidebar({ isOpen, onClose }: WishlistSidebarProps) {
+  const { toast } = useToast()
   const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>([
     {
       id: 1,
@@ -51,13 +53,25 @@ export default function WishlistSidebar({ isOpen, onClose }: WishlistSidebarProp
   ])
 
   const removeItem = (id: number) => {
+    const item = wishlistItems.find(i => i.id === id)
     setWishlistItems(items => items.filter(item => item.id !== id))
+    toast({
+      title: "Removed from Wishlist",
+      description: `${item?.name} has been removed`,
+      variant: "destructive",
+    })
   }
 
   const moveToCart = (id: number) => {
+    const item = wishlistItems.find(i => i.id === id)
     // In a real app, this would add to cart and remove from wishlist
     console.log('Moving item to cart:', id)
     removeItem(id)
+    toast({
+      title: "Added to Cart",
+      description: `${item?.name} moved to cart`,
+      variant: "success" as any,
+    })
   }
 
   return (

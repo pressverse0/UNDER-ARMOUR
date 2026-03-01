@@ -2,6 +2,7 @@
 
 import { X, ShoppingCart, Minus, Plus, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { useToast } from "@/hooks/use-toast"
 import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
@@ -21,6 +22,7 @@ interface CartSidebarProps {
 }
 
 export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
+  const { toast } = useToast()
   const [cartItems, setCartItems] = useState<CartItem[]>([
     {
       id: 1,
@@ -48,10 +50,23 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
           : item
       )
     )
+    if (change > 0) {
+      toast({
+        title: "Quantity Updated",
+        description: "Item quantity increased",
+        variant: "default",
+      })
+    }
   }
 
   const removeItem = (id: number) => {
+    const item = cartItems.find(i => i.id === id)
     setCartItems(items => items.filter(item => item.id !== id))
+    toast({
+      title: "Removed from Cart",
+      description: `${item?.name} has been removed`,
+      variant: "destructive",
+    })
   }
 
   const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)

@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
+import { useToast } from "@/hooks/use-toast"
 import Image from "next/image"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
@@ -40,6 +41,7 @@ interface Product {
 }
 
 export default function MenPage() {
+  const { toast } = useToast()
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
   const [selectedSizes, setSelectedSizes] = useState<string[]>([])
@@ -142,6 +144,22 @@ export default function MenPage() {
   }
 
   const activeFiltersCount = selectedCategories.length + selectedSizes.length + selectedColors.length
+
+  const handleAddToCart = (product: Product) => {
+    toast({
+      title: "Added to Cart",
+      description: `${product.name} has been added to your cart`,
+      variant: "success" as any,
+    })
+  }
+
+  const handleAddToWishlist = (product: Product) => {
+    toast({
+      title: "Added to Wishlist",
+      description: `${product.name} has been added to your wishlist`,
+      variant: "success" as any,
+    })
+  }
 
   return (
     <>
@@ -363,7 +381,9 @@ export default function MenPage() {
                           height={250}
                           className="w-full h-auto filter grayscale group-hover:grayscale-0 transition-all duration-300"
                         />
-                        <button className="absolute top-2 right-2 bg-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button className="absolute top-2 right-2 bg-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                          onClick={() => handleAddToWishlist(product)}
+                        >
                           <Heart className="h-5 w-5 text-red-600" />
                         </button>
                       </div>
@@ -396,6 +416,7 @@ export default function MenPage() {
 
                         <Button 
                           disabled={!product.inStock}
+                          onClick={() => handleAddToCart(product)}
                           className="sketchy-btn-outline w-full border-2 border-black text-black hover:bg-black hover:text-white font-black uppercase disabled:opacity-50"
                         >
                           <ShoppingCart className="h-4 w-4 mr-2" />
@@ -477,12 +498,14 @@ export default function MenPage() {
                               <Button 
                                 variant="outline"
                                 size="icon"
+                                onClick={() => handleAddToWishlist(product)}
                                 className="border-2 border-black hover:bg-red-600 hover:text-white"
                               >
                                 <Heart className="h-5 w-5" />
                               </Button>
                               <Button 
                                 disabled={!product.inStock}
+                                onClick={() => handleAddToCart(product)}
                                 className="sketchy-btn bg-black text-white hover:bg-red-600 font-black uppercase disabled:opacity-50"
                               >
                                 <ShoppingCart className="h-5 w-5 mr-2" />
