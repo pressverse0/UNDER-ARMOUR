@@ -104,31 +104,31 @@ export default function UnderArmourLanding() {
                 itemType="https://schema.org/Product"
               >
                 <Card
-                  className="sketchy-card bg-white border-4 border-black transform hover:scale-105 transition-all duration-300"
+                  className="sketchy-card bg-white border-4 border-black transform hover:scale-105 transition-all duration-300 h-full flex flex-col"
                 >
-                  <CardContent className="p-6">
-                    <div className="sketchy-frame bg-gray-900 p-4 mb-6">
+                  <CardContent className="p-6 flex flex-col flex-1">
+                    <div className="sketchy-frame bg-gray-900 p-4 mb-6 h-64 flex items-center justify-center overflow-hidden">
                       <Image
                         src={item.image}
                         alt={`${item.name} - ${item.description}`}
                         width={300}
                         height={250}
-                        className="w-full h-auto filter grayscale"
+                        className="w-full h-full object-cover filter grayscale"
                         itemProp="image"
                       />
                     </div>
-                    <div className="space-y-3">
-                      <div className="sketchy-border bg-red-600 inline-block px-3 py-1">
+                    <div className="space-y-3 flex-1 flex flex-col">
+                      <div className="sketchy-border bg-red-600 inline-block px-3 py-1 self-start">
                         <span className="text-white font-bold text-xs uppercase" itemProp="category">{item.category}</span>
                       </div>
                       <h3 className="font-black text-xl text-black uppercase" itemProp="name">{item.name}</h3>
-                      <p className="text-2xl font-black text-red-600" itemProp="offers" itemScope itemType="https://schema.org/Offer">
+                      <p className="text-2xl font-black text-red-600 flex-1" itemProp="offers" itemScope itemType="https://schema.org/Offer">
                         <span itemProp="price">{item.price}</span>
                         <meta itemProp="priceCurrency" content="USD" />
                       </p>
                       <Button 
                         onClick={openCart}
-                        className="sketchy-btn-outline w-full border-2 border-black text-black hover:bg-black hover:text-white font-black uppercase" 
+                        className="sketchy-btn bg-black text-white hover:bg-red-600 hover:text-white font-black uppercase w-full mt-auto" 
                         aria-label={`Add ${item.name} to cart`}
                       >
                         Add to Cart
