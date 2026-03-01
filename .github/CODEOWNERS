@@ -1,0 +1,31 @@
+# This file defines code owners for the repository
+# Code owners are automatically requested for review when someone opens a pull request
+
+# Default owners for everything in the repo
+* @Mostafa-SAID7
+
+# Documentation
+/docs/ @Mostafa-SAID7
+*.md @Mostafa-SAID7
+
+# Configuration files
+/.github/ @Mostafa-SAID7
+*.json @Mostafa-SAID7
+*.yml @Mostafa-SAID7
+*.yaml @Mostafa-SAID7
+
+# Source code
+/app/ @Mostafa-SAID7
+/components/ @Mostafa-SAID7
+/lib/ @Mostafa-SAID7
+/hooks/ @Mostafa-SAID7
+
+# Styles
+*.css @Mostafa-SAID7
+tailwind.config.ts @Mostafa-SAID7
+
+# TypeScript configuration
+tsconfig.json @Mostafa-SAID7
+
+# Next.js configuration
+next.config.mjs @Mostafa-SAID7

@@ -1,0 +1,40 @@
+# Add labels to pull requests based on changed files
+
+documentation:
+  - '**/*.md'
+  - 'docs/**/*'
+
+dependencies:
+  - 'package.json'
+  - 'package-lock.json'
+  - 'pnpm-lock.yaml'
+  - 'yarn.lock'
+
+configuration:
+  - '*.config.*'
+  - '.github/**/*'
+  - '.eslintrc.json'
+  - '.prettierrc'
+  - '.editorconfig'
+  - 'tsconfig.json'
+
+frontend:
+  - 'app/**/*'
+  - 'components/**/*'
+
+api:
+  - 'app/api/**/*'
+
+styles:
+  - '**/*.css'
+  - 'tailwind.config.ts'
+
+typescript:
+  - '**/*.ts'
+  - '**/*.tsx'
+
+tests:
+  - '**/*.test.ts'
+  - '**/*.test.tsx'
+  - '**/*.spec.ts'
+  - '**/*.spec.tsx'
