@@ -1,12 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2026-02-25.clover',
-})
-
 export async function POST(request: NextRequest) {
   try {
+    // Initialize Stripe only when the route is called
+    const stripeSecretKey = process.env.STRIPE_SECRET_KEY
+    
+    if (!stripeSecretKey) {
+      return NextResponse.json(
+        { error: 'Stripe configuration is missing' },
+        { status: 500 }
+      )
+    }
+
+    const stripe = new Stripe(stripeSecretKey, {
+      apiVersion: '2026-02-25.clover',
+    })
+
     const { items, customerInfo } = await request.json()
 
     // Create line items for Stripe
