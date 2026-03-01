@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useMemo } from "react"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -360,7 +361,8 @@ export default function MenPage() {
               {paginatedProducts.map((product) => (
                 viewMode === 'grid' ? (
                   // Grid View
-                  <Card key={product.id} className="sketchy-card bg-white border-4 border-black transform hover:scale-105 transition-all duration-300 group h-full flex flex-col">
+                  <Link href={`/product/${product.id}`} key={product.id}>
+                  <Card className="sketchy-card bg-white border-4 border-black transform hover:scale-105 transition-all duration-300 group h-full flex flex-col cursor-pointer">
                     <CardContent className="p-6 flex flex-col flex-1">
                       <div className="relative sketchy-frame bg-gray-900 p-4 mb-4 h-64 flex items-center justify-center overflow-hidden">
                         {product.isNew && (
@@ -425,6 +427,7 @@ export default function MenPage() {
                       </div>
                     </CardContent>
                   </Card>
+                  </Link>
                 ) : (
                   // List View
                   <Card key={product.id} className="sketchy-card bg-white border-4 border-black hover:shadow-xl transition-all duration-300 group">
