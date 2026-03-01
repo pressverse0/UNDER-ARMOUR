@@ -322,8 +322,8 @@ export default function WomenPage() {
             <div className={viewMode === 'grid' ? 'grid md:grid-cols-2 lg:grid-cols-3 gap-6' : 'space-y-6'}>
               {paginatedProducts.map((product) => (
                 viewMode === 'grid' ? (
-                  <Card key={product.id} className="sketchy-card bg-white border-4 border-black transform hover:scale-105 transition-all duration-300 group">
-                    <CardContent className="p-6">
+                  <Card key={product.id} className="sketchy-card bg-white border-4 border-black transform hover:scale-105 transition-all duration-300 group h-full flex flex-col">
+                    <CardContent className="p-6 flex flex-col flex-1">
                       <div className="relative sketchy-frame bg-gray-900 p-4 mb-4">
                         {product.isNew && (
                           <Badge className="absolute top-2 left-2 bg-red-600 font-black uppercase z-10">New</Badge>
@@ -347,8 +347,8 @@ export default function WomenPage() {
                           <Heart className="h-5 w-5 text-red-600" />
                         </button>
                       </div>
-                      <div className="space-y-3">
-                        <div className="sketchy-border bg-red-600 inline-block px-3 py-1">
+                      <div className="space-y-3 flex-1 flex flex-col">
+                        <div className="sketchy-border bg-red-600 inline-block px-3 py-1 self-start">
                           <span className="text-white font-bold text-xs uppercase">{product.category}</span>
                         </div>
                         <h3 className="font-black text-lg text-black uppercase leading-tight">{product.name}</h3>
@@ -365,7 +365,7 @@ export default function WomenPage() {
                           <span className="text-sm font-bold text-gray-600">({product.reviews})</span>
                         </div>
 
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 flex-1">
                           <p className="text-2xl font-black text-red-600">${product.price}</p>
                           {product.originalPrice && (
                             <p className="text-lg font-bold text-gray-400 line-through">${product.originalPrice}</p>
@@ -374,7 +374,7 @@ export default function WomenPage() {
 
                         <Button 
                           disabled={!product.inStock}
-                          className="sketchy-btn-outline w-full border-2 border-black text-black hover:bg-black hover:text-white font-black uppercase disabled:opacity-50"
+                          className="sketchy-btn bg-black text-white hover:bg-red-600 hover:text-white font-black uppercase disabled:opacity-50 w-full mt-auto"
                         >
                           <ShoppingCart className="h-4 w-4 mr-2" />
                           Add to Cart
