@@ -19,6 +19,12 @@ const config = {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ['var(--font-barriecito)', 'Barriecito', 'system-ui'],
+        heading: ['var(--font-montserrat)', 'Montserrat', 'sans-serif'],
+        montserrat: ['var(--font-montserrat)', 'Montserrat', 'sans-serif'],
+        barriecito: ['var(--font-barriecito)', 'Barriecito', 'system-ui'],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

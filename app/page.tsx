@@ -1,50 +1,33 @@
+'use client'
+
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Shield, Target, Zap, Award } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
+import Header from "@/components/header"
+import Footer from "@/components/footer"
+import { useState } from "react"
+import CartSidebar from "@/components/cart-sidebar"
 
 export default function UnderArmourLanding() {
+  const [cartOpen, setCartOpen] = useState(false)
+
+  const openCart = () => {
+    setCartOpen(true)
+  }
+
+  const closeCart = () => {
+    setCartOpen(false)
+  }
+
   return (
-    <div className="min-h-screen bg-gray-100 font-sans">
-      {/* Header */}
-      <header className="bg-black border-b-4 border-red-600 sketchy-border">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <Shield className="h-8 w-8 text-red-600" />
-            <span className="text-white text-2xl font-black tracking-wider">UNDER ARMOUR</span>
-          </div>
-          <nav className="hidden md:flex space-x-8">
-            <Link
-              href="#"
-              className="text-gray-300 hover:text-red-600 font-bold uppercase tracking-wide transition-colors"
-            >
-              Men
-            </Link>
-            <Link
-              href="#"
-              className="text-gray-300 hover:text-red-600 font-bold uppercase tracking-wide transition-colors"
-            >
-              Women
-            </Link>
-            <Link
-              href="#"
-              className="text-gray-300 hover:text-red-600 font-bold uppercase tracking-wide transition-colors"
-            >
-              Shoes
-            </Link>
-            <Link
-              href="#"
-              className="text-gray-300 hover:text-red-600 font-bold uppercase tracking-wide transition-colors"
-            >
-              Sports
-            </Link>
-          </nav>
-        </div>
-      </header>
+    <>
+      <Header activePage="home" />
+      <main className="flex-1">
 
       {/* Hero Section */}
-      <section className="relative bg-black text-white py-20 lg:py-32 overflow-hidden">
+      <section className="relative bg-black text-white py-20 lg:py-32 overflow-hidden" aria-labelledby="hero-heading">
         <div className="absolute inset-0 bg-gradient-to-r from-black via-gray-900 to-black opacity-90"></div>
         <div className="container mx-auto px-4 relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -52,7 +35,7 @@ export default function UnderArmourLanding() {
               <div className="sketchy-border bg-red-600 inline-block px-4 py-2 transform -rotate-1">
                 <span className="text-white font-black text-sm uppercase tracking-widest">No Excuses</span>
               </div>
-              <h1 className="text-5xl lg:text-7xl font-black uppercase leading-none tracking-tight">
+              <h1 id="hero-heading" className="text-5xl lg:text-7xl font-black uppercase leading-none tracking-tight">
                 THE ONLY WAY
                 <br />
                 <span className="text-red-600">IS THROUGH</span>
@@ -61,25 +44,31 @@ export default function UnderArmourLanding() {
                 Push beyond limits. Break through barriers. Dominate every rep, every mile, every moment.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button className="sketchy-btn bg-red-600 hover:bg-red-700 text-white font-black text-lg px-8 py-4 uppercase tracking-wide transform hover:scale-105 transition-all">
-                  Train Now
-                </Button>
-                <Button
-                  variant="outline"
-                  className="sketchy-btn-outline border-2 border-white text-white hover:bg-white hover:text-black font-black text-lg px-8 py-4 uppercase tracking-wide bg-transparent"
-                >
-                  Shop Gear
-                </Button>
+                <Link href="/sports">
+                  <Button className="sketchy-btn bg-red-600 hover:bg-red-700 text-white font-black text-lg px-8 py-4 uppercase tracking-wide transform hover:scale-105 transition-all w-full" aria-label="Start training now">
+                    Train Now
+                  </Button>
+                </Link>
+                <Link href="/men">
+                  <Button
+                    variant="outline"
+                    className="sketchy-btn-outline border-2 border-white text-white hover:bg-white hover:text-black font-black text-lg px-8 py-4 uppercase tracking-wide bg-transparent w-full"
+                    aria-label="Shop athletic gear"
+                  >
+                    Shop Gear
+                  </Button>
+                </Link>
               </div>
             </div>
             <div className="relative">
               <div className="sketchy-frame bg-gray-900 p-4 transform rotate-1">
                 <Image
                   src="/intense-athlete-training-sketch.png"
-                  alt="Focused athlete training"
+                  alt="Focused athlete training intensely with Under Armour gear - pushing beyond limits"
                   width={500}
                   height={600}
                   className="w-full h-auto filter grayscale contrast-125"
+                  priority
                 />
               </div>
               <div className="absolute -bottom-4 -right-4 sketchy-border bg-red-600 px-6 py-3 transform rotate-2">
@@ -90,51 +79,64 @@ export default function UnderArmourLanding() {
         </div>
 
         {/* Sketchy divider */}
-        <div className="absolute bottom-0 left-0 right-0 h-8 bg-red-600 sketchy-divider"></div>
+        <div className="absolute bottom-0 left-0 right-0 h-8 bg-red-600 sketchy-divider" aria-hidden="true"></div>
       </section>
 
       {/* Featured Gear Section */}
-      <section className="py-20 bg-gray-100">
+      <section className="py-20 bg-gray-100" aria-labelledby="featured-gear-heading">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl lg:text-5xl font-black uppercase text-black mb-4 tracking-tight">
+            <h2 id="featured-gear-heading" className="text-4xl lg:text-5xl font-black uppercase text-black mb-4 tracking-tight">
               Battle-Tested <span className="text-red-600">Gear</span>
             </h2>
-            <div className="sketchy-underline mx-auto"></div>
+            <div className="sketchy-underline mx-auto" aria-hidden="true"></div>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
-              { name: "HeatGear Training Shirt", price: "$35", category: "Apparel" },
-              { name: "HOVR Phantom 3", price: "$140", category: "Footwear" },
-              { name: "Project Rock Gym Bag", price: "$75", category: "Accessories" },
+              { name: "HeatGear Training Shirt", price: "$35", category: "Apparel", description: "Moisture-wicking performance training shirt" },
+              { name: "HOVR Phantom 3", price: "$140", category: "Footwear", description: "Premium running shoes with HOVR cushioning technology" },
+              { name: "Project Rock Gym Bag", price: "$75", category: "Accessories", description: "Durable gym bag designed for champions" },
             ].map((item, index) => (
-              <Card
+              <article
                 key={index}
-                className="sketchy-card bg-white border-4 border-black transform hover:scale-105 transition-all duration-300"
+                itemScope
+                itemType="https://schema.org/Product"
               >
-                <CardContent className="p-6">
-                  <div className="sketchy-frame bg-gray-900 p-4 mb-6">
-                    <Image
-                      src={`/athletic-gear-display.png?height=250&width=300&query=under armour ${item.category.toLowerCase()} sketch style`}
-                      alt={item.name}
-                      width={300}
-                      height={250}
-                      className="w-full h-auto filter grayscale"
-                    />
-                  </div>
-                  <div className="space-y-3">
-                    <div className="sketchy-border bg-red-600 inline-block px-3 py-1">
-                      <span className="text-white font-bold text-xs uppercase">{item.category}</span>
+                <Card
+                  className="sketchy-card bg-white border-4 border-black transform hover:scale-105 transition-all duration-300"
+                >
+                  <CardContent className="p-6">
+                    <div className="sketchy-frame bg-gray-900 p-4 mb-6">
+                      <Image
+                        src={`/athletic-gear-display.png?height=250&width=300&query=under armour ${item.category.toLowerCase()} sketch style`}
+                        alt={`${item.name} - ${item.description}`}
+                        width={300}
+                        height={250}
+                        className="w-full h-auto filter grayscale"
+                        itemProp="image"
+                      />
                     </div>
-                    <h3 className="font-black text-xl text-black uppercase">{item.name}</h3>
-                    <p className="text-2xl font-black text-red-600">{item.price}</p>
-                    <Button className="sketchy-btn-outline w-full border-2 border-black text-black hover:bg-black hover:text-white font-black uppercase">
-                      Add to Cart
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+                    <div className="space-y-3">
+                      <div className="sketchy-border bg-red-600 inline-block px-3 py-1">
+                        <span className="text-white font-bold text-xs uppercase" itemProp="category">{item.category}</span>
+                      </div>
+                      <h3 className="font-black text-xl text-black uppercase" itemProp="name">{item.name}</h3>
+                      <p className="text-2xl font-black text-red-600" itemProp="offers" itemScope itemType="https://schema.org/Offer">
+                        <span itemProp="price">{item.price}</span>
+                        <meta itemProp="priceCurrency" content="USD" />
+                      </p>
+                      <Button 
+                        onClick={openCart}
+                        className="sketchy-btn-outline w-full border-2 border-black text-black hover:bg-black hover:text-white font-black uppercase" 
+                        aria-label={`Add ${item.name} to cart`}
+                      >
+                        Add to Cart
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </article>
             ))}
           </div>
         </div>
@@ -239,48 +241,12 @@ export default function UnderArmourLanding() {
           </div>
         </div>
       </section>
+      </main>
 
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12 border-t-4 border-red-600">
-        <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-4 gap-8">
-            <div>
-              <div className="flex items-center space-x-2 mb-6">
-                <Shield className="h-8 w-8 text-red-600" />
-                <span className="text-white text-xl font-black tracking-wider">UNDER ARMOUR</span>
-              </div>
-              <p className="text-gray-400 font-bold">Empowering athletes to push beyond limits since 1996.</p>
-            </div>
+      <Footer />
 
-            {[
-              { title: "Products", links: ["Men", "Women", "Kids", "Shoes", "Accessories"] },
-              { title: "Sports", links: ["Basketball", "Football", "Running", "Training", "Golf"] },
-              { title: "Support", links: ["Size Guide", "Returns", "Shipping", "Contact", "FAQ"] },
-            ].map((section, index) => (
-              <div key={index}>
-                <h3 className="font-black text-white uppercase mb-4 tracking-wide">{section.title}</h3>
-                <ul className="space-y-2">
-                  {section.links.map((link, linkIndex) => (
-                    <li key={linkIndex}>
-                      <Link href="#" className="text-gray-400 hover:text-red-600 font-bold transition-colors">
-                        {link}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-
-          <div className="sketchy-divider-horizontal bg-red-600 h-1 my-8"></div>
-
-          <div className="text-center">
-            <p className="text-gray-400 font-bold">
-              © {new Date().getFullYear()} Under Armour, Inc. All rights reserved. Protect This House.
-            </p>
-          </div>
-        </div>
-      </footer>
-    </div>
+      {/* Cart Sidebar */}
+      <CartSidebar isOpen={cartOpen} onClose={closeCart} />
+    </>
   )
 }
