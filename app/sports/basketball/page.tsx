@@ -356,7 +356,7 @@ export default function BasketballPage() {
                 viewMode === 'grid' ? (
                   <Card key={product.id} className="sketchy-card bg-white border-4 border-black transform hover:scale-105 transition-all duration-300 group h-full flex flex-col">
                     <CardContent className="p-6 flex flex-col flex-1">
-                      <div className="relative sketchy-frame bg-gray-900 p-4 mb-4">
+                      <div className="relative sketchy-frame bg-gray-900 p-4 mb-4 h-64 flex items-center justify-center overflow-hidden">
                         {product.isNew && (
                           <Badge className="absolute top-2 left-2 bg-red-600 font-black uppercase z-10">New</Badge>
                         )}
@@ -373,7 +373,7 @@ export default function BasketballPage() {
                           alt={product.name}
                           width={300}
                           height={250}
-                          className="w-full h-auto filter grayscale group-hover:grayscale-0 transition-all duration-300"
+                          className="w-full h-full object-cover filter grayscale group-hover:grayscale-0 transition-all duration-300"
                         />
                         <button className="absolute top-2 right-2 bg-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
                           <Heart className="h-5 w-5 text-red-600" />
