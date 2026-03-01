@@ -100,8 +100,9 @@ export default function Header({ activePage = 'home' }: HeaderProps) {
             {/* Wishlist Icon */}
             <button
               onClick={toggleWishlist}
-              className="text-gray-300 hover:text-red-600 transition-colors relative group"
+              className="text-gray-300 hover:text-red-600 transition-colors relative group cursor-pointer"
               aria-label="Wishlist"
+              type="button"
             >
               <Heart className="h-6 w-6" />
               <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-black rounded-full h-4 w-4 flex items-center justify-center">
@@ -112,8 +113,9 @@ export default function Header({ activePage = 'home' }: HeaderProps) {
             {/* Cart Icon */}
             <button
               onClick={toggleCart}
-              className="text-gray-300 hover:text-red-600 transition-colors relative group"
+              className="text-gray-300 hover:text-red-600 transition-colors relative group cursor-pointer"
               aria-label="Shopping cart"
+              type="button"
             >
               <ShoppingCart className="h-6 w-6" />
               <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-black rounded-full h-4 w-4 flex items-center justify-center">
