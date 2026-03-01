@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import Image from "next/image"
+import Link from "next/link"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
 import { 
@@ -354,7 +355,8 @@ export default function GolfPage() {
             <div className={viewMode === 'grid' ? 'grid md:grid-cols-2 lg:grid-cols-3 gap-6' : 'space-y-6'}>
               {paginatedProducts.map((product) => (
                 viewMode === 'grid' ? (
-                  <Card key={product.id} className="sketchy-card bg-white border-4 border-black transform hover:scale-105 transition-all duration-300 group h-full flex flex-col">
+                  <Link key={product.id} href={`/product/${product.id}`}>
+                  <Card className="sketchy-card bg-white border-4 border-black transform hover:scale-105 transition-all duration-300 group h-full flex flex-col cursor-pointer">
                     <CardContent className="p-6 flex flex-col flex-1">
                       <div className="relative sketchy-frame bg-gray-900 p-4 mb-4 h-64 flex items-center justify-center overflow-hidden">
                         {product.isNew && (
@@ -415,8 +417,10 @@ export default function GolfPage() {
                       </div>
                     </CardContent>
                   </Card>
+                  </Link>
                 ) : (
-                  <Card key={product.id} className="sketchy-card bg-white border-4 border-black hover:shadow-xl transition-all duration-300 group">
+                  <Link key={product.id} href={`/product/${product.id}`}>
+                  <Card className="sketchy-card bg-white border-4 border-black hover:shadow-xl transition-all duration-300 group cursor-pointer">
                     <CardContent className="p-6">
                       <div className="flex gap-6">
                         <div className="relative sketchy-frame bg-gray-900 p-4 w-48 flex-shrink-0">
@@ -503,6 +507,7 @@ export default function GolfPage() {
                       </div>
                     </CardContent>
                   </Card>
+                  </Link>
                 )
               ))}
             </div>

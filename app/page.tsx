@@ -94,17 +94,18 @@ export default function UnderArmourLanding() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
-              { name: "HeatGear Training Shirt", price: "$35", category: "Apparel", description: "Moisture-wicking performance training shirt", image: "/ARMOUR/HeatGear Training Shirt.jpg" },
-              { name: "HOVR Phantom 3", price: "$140", category: "Footwear", description: "Premium running shoes with HOVR cushioning technology", image: "/ARMOUR/HOVRPhantom3.jpg" },
-              { name: "Project Rock Gym Bag", price: "$75", category: "Accessories", description: "Durable gym bag designed for champions", image: "/ARMOUR/ProjectRockGymBag.jpg" },
+              { id: 11, name: "HeatGear Training Shirt", price: "$35", category: "Apparel", description: "Moisture-wicking performance training shirt", image: "/ARMOUR/HeatGear Training Shirt.jpg" },
+              { id: 2, name: "HOVR Phantom 3", price: "$140", category: "Footwear", description: "Premium running shoes with HOVR cushioning technology", image: "/ARMOUR/HOVRPhantom3.jpg" },
+              { id: 9, name: "Project Rock Gym Bag", price: "$75", category: "Accessories", description: "Durable gym bag designed for champions", image: "/ARMOUR/ProjectRockGymBag.jpg" },
             ].map((item, index) => (
               <article
                 key={index}
                 itemScope
                 itemType="https://schema.org/Product"
               >
+                <Link href={`/product/${item.id}`}>
                 <Card
-                  className="sketchy-card bg-white border-4 border-black transform hover:scale-105 transition-all duration-300 h-full flex flex-col"
+                  className="sketchy-card bg-white border-4 border-black transform hover:scale-105 transition-all duration-300 h-full flex flex-col cursor-pointer"
                 >
                   <CardContent className="p-6 flex flex-col flex-1">
                     <div className="sketchy-frame bg-gray-900 p-4 mb-6 h-64 flex items-center justify-center overflow-hidden">
@@ -136,6 +137,7 @@ export default function UnderArmourLanding() {
                     </div>
                   </CardContent>
                 </Card>
+                </Link>
               </article>
             ))}
           </div>

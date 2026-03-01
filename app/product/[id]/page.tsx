@@ -1,10 +1,11 @@
 'use client'
 
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useParams, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { Input } from "@/components/ui/input"
 import { useToast } from "@/hooks/use-toast"
 import Image from "next/image"
 import Link from "next/link"
@@ -23,7 +24,12 @@ import {
   ChevronLeft,
   ChevronRight,
   Check,
-  X
+  X,
+  Facebook,
+  Twitter,
+  Linkedin,
+  Mail,
+  Copy
 } from "lucide-react"
 
 // Mock product data - in real app, this would come from API/database
@@ -46,6 +52,33 @@ export default function ProductDetailPage() {
   const [quantity, setQuantity] = useState(1)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [activeTab, setActiveTab] = useState<'description' | 'features' | 'reviews'>('description')
+  const [showShareDropdown, setShowShareDropdown] = useState(false)
+  const [showReviewModal, setShowReviewModal] = useState(false)
+  const [reviewData, setReviewData] = useState({
+    rating: 0,
+    name: '',
+    email: '',
+    title: '',
+    review: ''
+  })
+  const shareDropdownRef = useRef<HTMLDivElement>(null)
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (shareDropdownRef.current && !shareDropdownRef.current.contains(event.target as Node)) {
+        setShowShareDropdown(false)
+      }
+    }
+
+    if (showShareDropdown) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [showShareDropdown])
 
   // Mock multiple images (in real app, product would have multiple images)
   const productImages = [product.image, product.image, product.image]
@@ -73,6 +106,42 @@ export default function ProductDetailPage() {
       description: `${product.name} has been added to your wishlist`,
       variant: "success" as any,
     })
+  }
+
+  const handleReviewSubmit = () => {
+    if (reviewData.rating === 0) {
+      toast({
+        title: "Rating Required",
+        description: "Please select a rating before submitting",
+        variant: "destructive",
+      })
+      return
+    }
+    if (!reviewData.name || !reviewData.review) {
+      toast({
+        title: "Missing Information",
+        description: "Please fill in all required fields",
+        variant: "destructive",
+      })
+      return
+    }
+
+    // Submit review logic here
+    toast({
+      title: "Review Submitted!",
+      description: "Thank you for your review. It will be published soon.",
+      variant: "success" as any,
+    })
+    
+    // Reset form
+    setReviewData({
+      rating: 0,
+      name: '',
+      email: '',
+      title: '',
+      review: ''
+    })
+    setShowReviewModal(false)
   }
 
   const nextImage = () => {
@@ -302,13 +371,100 @@ export default function ProductDetailPage() {
                     <Heart className="h-5 w-5 mr-2" />
                     Wishlist
                   </Button>
-                  <Button
-                    variant="outline"
-                    className="sketchy-btn-outline border-2 border-black text-black hover:bg-black hover:text-white font-black uppercase py-4"
-                  >
-                    <Share2 className="h-5 w-5 mr-2" />
-                    Share
-                  </Button>
+                  <div className="relative" ref={shareDropdownRef}>
+                    <Button
+                      onClick={() => setShowShareDropdown(!showShareDropdown)}
+                      variant="outline"
+                      className="sketchy-btn-outline border-2 border-black text-black hover:bg-black hover:text-white font-black uppercase py-4 w-full"
+                    >
+                      <Share2 className="h-5 w-5 mr-2" />
+                      Share
+                    </Button>
+                    
+                    {/* Share Dropdown */}
+                    {showShareDropdown && (
+                      <div className="absolute top-[calc(100%+4px)] right-0 w-64 bg-white border-4 border-black sketchy-card z-50 animate-in fade-in zoom-in-95 duration-200">
+                        <div className="p-4 space-y-2">
+                          <p className="font-black uppercase text-sm mb-3">Share this product</p>
+                          
+                          {/* Facebook */}
+                          <button
+                            onClick={() => {
+                              window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank', 'width=600,height=400')
+                              setShowShareDropdown(false)
+                            }}
+                            className="flex items-center gap-3 w-full p-3 hover:bg-blue-50 rounded transition-colors font-bold"
+                          >
+                            <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                              <Facebook className="h-4 w-4 text-white" fill="white" />
+                            </div>
+                            <span>Facebook</span>
+                          </button>
+
+                          {/* Twitter */}
+                          <button
+                            onClick={() => {
+                              window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(product.name)}`, '_blank', 'width=600,height=400')
+                              setShowShareDropdown(false)
+                            }}
+                            className="flex items-center gap-3 w-full p-3 hover:bg-blue-50 rounded transition-colors font-bold"
+                          >
+                            <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center">
+                              <Twitter className="h-4 w-4 text-white" fill="white" />
+                            </div>
+                            <span>Twitter</span>
+                          </button>
+
+                          {/* LinkedIn */}
+                          <button
+                            onClick={() => {
+                              window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`, '_blank', 'width=600,height=400')
+                              setShowShareDropdown(false)
+                            }}
+                            className="flex items-center gap-3 w-full p-3 hover:bg-blue-50 rounded transition-colors font-bold"
+                          >
+                            <div className="w-8 h-8 bg-blue-700 rounded-full flex items-center justify-center">
+                              <Linkedin className="h-4 w-4 text-white" fill="white" />
+                            </div>
+                            <span>LinkedIn</span>
+                          </button>
+
+                          {/* Email */}
+                          <button
+                            onClick={() => {
+                              window.location.href = `mailto:?subject=${encodeURIComponent(product.name)}&body=${encodeURIComponent(`Check out this product: ${window.location.href}`)}`
+                              setShowShareDropdown(false)
+                            }}
+                            className="flex items-center gap-3 w-full p-3 hover:bg-gray-100 rounded transition-colors font-bold"
+                          >
+                            <div className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center">
+                              <Mail className="h-4 w-4 text-white" />
+                            </div>
+                            <span>Email</span>
+                          </button>
+
+                          {/* Copy Link */}
+                          <button
+                            onClick={() => {
+                              navigator.clipboard.writeText(window.location.href)
+                              toast({
+                                title: "Link Copied!",
+                                description: "Product link copied to clipboard",
+                                variant: "success" as any,
+                              })
+                              setShowShareDropdown(false)
+                            }}
+                            className="flex items-center gap-3 w-full p-3 hover:bg-red-50 rounded transition-colors font-bold"
+                          >
+                            <div className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center">
+                              <Copy className="h-4 w-4 text-white" />
+                            </div>
+                            <span>Copy Link</span>
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
 
@@ -405,7 +561,10 @@ export default function ProductDetailPage() {
                       <div className="text-center py-8">
                         <p className="text-2xl font-black text-gray-600 mb-2">Customer Reviews</p>
                         <p className="text-gray-500 font-bold">Be the first to review this product</p>
-                        <Button className="sketchy-btn bg-red-600 text-white hover:bg-red-700 font-black uppercase mt-4">
+                        <Button 
+                          onClick={() => setShowReviewModal(true)}
+                          className="sketchy-btn bg-red-600 text-white hover:bg-red-700 font-black uppercase mt-4"
+                        >
                           Write a Review
                         </Button>
                       </div>
@@ -418,6 +577,129 @@ export default function ProductDetailPage() {
         </section>
       </main>
       <Footer />
+
+      {/* Review Modal */}
+      {showReviewModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="absolute inset-0 bg-black bg-opacity-70" onClick={() => setShowReviewModal(false)}></div>
+          <Card className="sketchy-card bg-white border-4 border-black relative z-10 w-full max-w-2xl max-h-[90vh] overflow-y-auto animate-in zoom-in-95 duration-200">
+            <CardContent className="p-8">
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-3xl font-black uppercase">Write a Review</h3>
+                <button 
+                  onClick={() => setShowReviewModal(false)}
+                  className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+
+              <div className="space-y-6">
+                {/* Rating */}
+                <div>
+                  <Label className="font-black uppercase text-sm mb-3 block">
+                    Rating <span className="text-red-600">*</span>
+                  </Label>
+                  <div className="flex gap-2">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        onClick={() => setReviewData({...reviewData, rating: star})}
+                        className="transition-transform hover:scale-110"
+                      >
+                        <Star
+                          className={`h-10 w-10 ${
+                            star <= reviewData.rating
+                              ? 'fill-yellow-500 text-yellow-500'
+                              : 'text-gray-300'
+                          }`}
+                        />
+                      </button>
+                    ))}
+                  </div>
+                  {reviewData.rating > 0 && (
+                    <p className="text-sm font-bold text-gray-600 mt-2">
+                      {reviewData.rating} out of 5 stars
+                    </p>
+                  )}
+                </div>
+
+                {/* Name */}
+                <div>
+                  <Label className="font-black uppercase text-sm mb-2 block">
+                    Your Name <span className="text-red-600">*</span>
+                  </Label>
+                  <Input
+                    value={reviewData.name}
+                    onChange={(e) => setReviewData({...reviewData, name: e.target.value})}
+                    placeholder="Enter your name"
+                    className="border-2 border-gray-300 focus:border-red-600 font-bold"
+                  />
+                </div>
+
+                {/* Email */}
+                <div>
+                  <Label className="font-black uppercase text-sm mb-2 block">
+                    Email <span className="text-gray-500 text-xs">(Optional)</span>
+                  </Label>
+                  <Input
+                    type="email"
+                    value={reviewData.email}
+                    onChange={(e) => setReviewData({...reviewData, email: e.target.value})}
+                    placeholder="your.email@example.com"
+                    className="border-2 border-gray-300 focus:border-red-600 font-bold"
+                  />
+                </div>
+
+                {/* Review Title */}
+                <div>
+                  <Label className="font-black uppercase text-sm mb-2 block">
+                    Review Title <span className="text-gray-500 text-xs">(Optional)</span>
+                  </Label>
+                  <Input
+                    value={reviewData.title}
+                    onChange={(e) => setReviewData({...reviewData, title: e.target.value})}
+                    placeholder="Sum up your review in one line"
+                    className="border-2 border-gray-300 focus:border-red-600 font-bold"
+                  />
+                </div>
+
+                {/* Review Text */}
+                <div>
+                  <Label className="font-black uppercase text-sm mb-2 block">
+                    Your Review <span className="text-red-600">*</span>
+                  </Label>
+                  <textarea
+                    value={reviewData.review}
+                    onChange={(e) => setReviewData({...reviewData, review: e.target.value})}
+                    placeholder="Tell us what you think about this product..."
+                    rows={6}
+                    className="w-full border-2 border-gray-300 focus:border-red-600 rounded px-4 py-3 font-bold resize-none focus:outline-none focus:ring-0"
+                  />
+                  <p className="text-sm text-gray-500 font-bold mt-1">
+                    {reviewData.review.length} characters
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex gap-4 mt-8">
+                <Button 
+                  onClick={handleReviewSubmit}
+                  className="sketchy-btn bg-red-600 text-white hover:bg-red-700 font-black uppercase flex-1"
+                >
+                  Submit Review
+                </Button>
+                <Button 
+                  onClick={() => setShowReviewModal(false)}
+                  className="sketchy-btn-outline border-2 border-black text-black hover:bg-black hover:text-white font-black uppercase flex-1"
+                >
+                  Cancel
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </>
   )
 }
