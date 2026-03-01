@@ -55,18 +55,18 @@ export default function FootballPage() {
   const itemsPerPage = 9
 
   const allProducts: Product[] = [
-    { id: 1, name: "Curry Flow 11", price: 160, category: "Shoes", gender: "Men", size: ["8", "9", "10", "11", "12", "13"], color: ["White", "Blue", "Black"], rating: 4.9, reviews: 621, image: "/athletic-gear-display.png", isNew: true, inStock: true },
-    { id: 2, name: "Spawn 5", price: 120, category: "Shoes", gender: "Men", size: ["8", "9", "10", "11", "12", "13"], color: ["Black", "Red", "White"], rating: 4.6, reviews: 298, image: "/athletic-gear-display.png", inStock: true },
-    { id: 3, name: "Baseline Performance Tank", price: 30, originalPrice: 40, category: "Apparel", gender: "Men", size: ["S", "M", "L", "XL", "XXL"], color: ["Black", "White", "Red"], rating: 4.5, reviews: 187, image: "/athletic-gear-display.png", isSale: true, inStock: true },
-    { id: 4, name: "SC30 Curry Shorts", price: 45, category: "Apparel", gender: "Men", size: ["S", "M", "L", "XL"], color: ["Black", "Blue", "Gray"], rating: 4.7, reviews: 342, image: "/athletic-gear-display.png", inStock: true },
-    { id: 5, name: "Embiid 2", price: 140, category: "Shoes", gender: "Men", size: ["8", "9", "10", "11", "12", "13"], color: ["Black", "White", "Blue"], rating: 4.8, reviews: 456, image: "/athletic-gear-display.png", isNew: true, inStock: true },
-    { id: 6, name: "Baseline Compression Tights", price: 50, category: "Apparel", gender: "Men", size: ["S", "M", "L", "XL"], color: ["Black", "Navy"], rating: 4.6, reviews: 234, image: "/athletic-gear-display.png", inStock: true },
-    { id: 7, name: "Women's Curry Flow 10", price: 150, category: "Shoes", gender: "Women", size: ["6", "7", "8", "9", "10"], color: ["White", "Pink", "Purple"], rating: 4.8, reviews: 389, image: "/athletic-gear-display.png", inStock: true },
-    { id: 8, name: "Baseline Hoodie", price: 65, originalPrice: 80, category: "Apparel", gender: "Men", size: ["M", "L", "XL", "XXL"], color: ["Black", "Gray", "Navy"], rating: 4.7, reviews: 298, image: "/athletic-gear-display.png", isSale: true, inStock: true },
-    { id: 9, name: "Basketball Backpack", price: 70, category: "Accessories", gender: "Unisex", size: ["One Size"], color: ["Black", "Red"], rating: 4.6, reviews: 156, image: "/athletic-gear-display.png", inStock: true },
-    { id: 10, name: "Curry Brand Socks 3-Pack", price: 20, category: "Accessories", gender: "Unisex", size: ["S", "M", "L"], color: ["White", "Black"], rating: 4.5, reviews: 512, image: "/athletic-gear-display.png", inStock: true },
-    { id: 11, name: "Baseline Performance Shirt", price: 35, category: "Apparel", gender: "Men", size: ["S", "M", "L", "XL", "XXL"], color: ["Black", "White", "Blue", "Red"], rating: 4.6, reviews: 423, image: "/athletic-gear-display.png", inStock: true },
-    { id: 12, name: "Women's Baseline Tank", price: 28, category: "Apparel", gender: "Women", size: ["XS", "S", "M", "L"], color: ["Black", "White", "Pink"], rating: 4.5, reviews: 267, image: "/athletic-gear-display.png", inStock: false },
+    { id: 1, name: "Curry Flow 11", price: 160, category: "Shoes", gender: "Men", size: ["8", "9", "10", "11", "12", "13"], color: ["White", "Blue", "Black"], rating: 4.9, reviews: 621, image: "/ARMOUR/Curry Flow 11.jpg", isNew: true, inStock: true },
+    { id: 2, name: "Spawn 5", price: 120, category: "Shoes", gender: "Men", size: ["8", "9", "10", "11", "12", "13"], color: ["Black", "Red", "White"], rating: 4.6, reviews: 298, image: "/ARMOUR/Charged Assert 10.jpg", inStock: true },
+    { id: 3, name: "Baseline Performance Tank", price: 30, originalPrice: 40, category: "Apparel", gender: "Men", size: ["S", "M", "L", "XL", "XXL"], color: ["Black", "White", "Red"], rating: 4.5, reviews: 187, image: "/ARMOUR/Project Rock Tank.jpg", isSale: true, inStock: true },
+    { id: 4, name: "SC30 Curry Shorts", price: 45, category: "Apparel", gender: "Men", size: ["S", "M", "L", "XL"], color: ["Black", "Blue", "Gray"], rating: 4.7, reviews: 342, image: "/ARMOUR/Play Up 3.0 Shorts.jpg", inStock: true },
+    { id: 5, name: "Embiid 2", price: 140, category: "Shoes", gender: "Men", size: ["8", "9", "10", "11", "12", "13"], color: ["Black", "White", "Blue"], rating: 4.8, reviews: 456, image: "/ARMOUR/HOVRPhantom3.jpg", isNew: true, inStock: true },
+    { id: 6, name: "Baseline Compression Tights", price: 50, category: "Apparel", gender: "Men", size: ["S", "M", "L", "XL"], color: ["Black", "Navy"], rating: 4.6, reviews: 234, image: "/ARMOUR/UA RUSH Training Pants.jpg", inStock: true },
+    { id: 7, name: "Women's Curry Flow 10", price: 150, category: "Shoes", gender: "Women", size: ["6", "7", "8", "9", "10"], color: ["White", "Pink", "Purple"], rating: 4.8, reviews: 389, image: "/ARMOUR/Flow Velociti Wind 2.jpg", inStock: true },
+    { id: 8, name: "Baseline Hoodie", price: 65, originalPrice: 80, category: "Apparel", gender: "Men", size: ["M", "L", "XL", "XXL"], color: ["Black", "Gray", "Navy"], rating: 4.7, reviews: 298, image: "/ARMOUR/Rival Fleece Hoodie.jpg", isSale: true, inStock: true },
+    { id: 9, name: "Basketball Backpack", price: 70, category: "Accessories", gender: "Unisex", size: ["One Size"], color: ["Black", "Red"], rating: 4.6, reviews: 156, image: "/ARMOUR/ProjectRockGymBag.jpg", inStock: true },
+    { id: 10, name: "Curry Brand Socks 3-Pack", price: 20, category: "Accessories", gender: "Unisex", size: ["S", "M", "L"], color: ["White", "Black"], rating: 4.5, reviews: 512, image: "/ARMOUR/ColdGear Base Layer.jpg", inStock: true },
+    { id: 11, name: "Baseline Performance Shirt", price: 35, category: "Apparel", gender: "Men", size: ["S", "M", "L", "XL", "XXL"], color: ["Black", "White", "Blue", "Red"], rating: 4.6, reviews: 423, image: "/ARMOUR/HeatGear Training Shirt.jpg", inStock: true },
+    { id: 12, name: "Women's Baseline Tank", price: 28, category: "Apparel", gender: "Women", size: ["XS", "S", "M", "L"], color: ["Black", "White", "Pink"], rating: 4.5, reviews: 267, image: "/ARMOUR/Meridian Crop Tank.jpg", inStock: false },
   ]
 
   const categories = ["Shoes", "Apparel", "Accessories"]

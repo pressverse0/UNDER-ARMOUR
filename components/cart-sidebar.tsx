@@ -29,7 +29,7 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
       name: "HeatGear Training Shirt",
       price: 35,
       quantity: 1,
-      image: "/athletic-gear-display.png",
+      image: "/ARMOUR/HeatGear Training Shirt.jpg",
       category: "Apparel"
     },
     {
@@ -37,7 +37,7 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
       name: "HOVR Phantom 3",
       price: 140,
       quantity: 1,
-      image: "/athletic-gear-display.png",
+      image: "/ARMOUR/HOVRPhantom3.jpg",
       category: "Footwear"
     }
   ])

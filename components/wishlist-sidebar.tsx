@@ -29,7 +29,7 @@ export default function WishlistSidebar({ isOpen, onClose }: WishlistSidebarProp
       id: 1,
       name: "HeatGear Compression Shirt",
       price: 35,
-      image: "/athletic-gear-display.png",
+      image: "/ARMOUR/HeatGearCompressionShirt.jpg",
       category: "Training",
       inStock: true
     },
@@ -37,7 +37,7 @@ export default function WishlistSidebar({ isOpen, onClose }: WishlistSidebarProp
       id: 2,
       name: "HOVR Phantom 3",
       price: 140,
-      image: "/athletic-gear-display.png",
+      image: "/ARMOUR/HOVRPhantom3.jpg",
       category: "Footwear",
       inStock: true
     },
@@ -46,7 +46,7 @@ export default function WishlistSidebar({ isOpen, onClose }: WishlistSidebarProp
       name: "Tech 2.0 Shorts",
       price: 30,
       originalPrice: 45,
-      image: "/athletic-gear-display.png",
+      image: "/ARMOUR/Tech2.0Shorts.jpg",
       category: "Bottoms",
       inStock: false
     }

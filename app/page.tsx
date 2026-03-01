@@ -94,9 +94,9 @@ export default function UnderArmourLanding() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
-              { name: "HeatGear Training Shirt", price: "$35", category: "Apparel", description: "Moisture-wicking performance training shirt" },
-              { name: "HOVR Phantom 3", price: "$140", category: "Footwear", description: "Premium running shoes with HOVR cushioning technology" },
-              { name: "Project Rock Gym Bag", price: "$75", category: "Accessories", description: "Durable gym bag designed for champions" },
+              { name: "HeatGear Training Shirt", price: "$35", category: "Apparel", description: "Moisture-wicking performance training shirt", image: "/ARMOUR/HeatGear Training Shirt.jpg" },
+              { name: "HOVR Phantom 3", price: "$140", category: "Footwear", description: "Premium running shoes with HOVR cushioning technology", image: "/ARMOUR/HOVRPhantom3.jpg" },
+              { name: "Project Rock Gym Bag", price: "$75", category: "Accessories", description: "Durable gym bag designed for champions", image: "/ARMOUR/ProjectRockGymBag.jpg" },
             ].map((item, index) => (
               <article
                 key={index}
@@ -109,7 +109,7 @@ export default function UnderArmourLanding() {
                   <CardContent className="p-6">
                     <div className="sketchy-frame bg-gray-900 p-4 mb-6">
                       <Image
-                        src={`/athletic-gear-display.png?height=250&width=300&query=under armour ${item.category.toLowerCase()} sketch style`}
+                        src={item.image}
                         alt={`${item.name} - ${item.description}`}
                         width={300}
                         height={250}
