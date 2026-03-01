@@ -1,6 +1,6 @@
 'use client'
 
-import { Home, Search, AlertTriangle, ArrowRight } from "lucide-react"
+import { Home, Search, AlertTriangle, ArrowRight, Shield } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { useEffect, useState } from 'react'
