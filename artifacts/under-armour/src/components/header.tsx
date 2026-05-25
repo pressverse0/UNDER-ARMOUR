@@ -6,78 +6,13 @@ import { useWishlist } from "@/context/wishlist-context"
 import CartSidebar from "./cart-sidebar"
 import WishlistSidebar from "./wishlist-sidebar"
 import AnnouncementBanner from "./announcement-banner"
+import { navLinks, supportLinks } from "@/data/navigation"
 
 import type { ActivePage } from "@/types/ui"
 
 interface HeaderProps {
   activePage?: ActivePage
 }
-
-const navLinks = [
-  {
-    label: "Men", href: "/men", key: "men" as ActivePage,
-    dropdown: [
-      { label: "Training", href: "/men" },
-      { label: "Footwear", href: "/men" },
-      { label: "Bottoms", href: "/men" },
-      { label: "Outerwear", href: "/men" },
-    ],
-  },
-  {
-    label: "Women", href: "/women", key: "women" as ActivePage,
-    dropdown: [
-      { label: "Sports Bras", href: "/women" },
-      { label: "Tops", href: "/women" },
-      { label: "Bottoms", href: "/women" },
-      { label: "Footwear", href: "/women" },
-    ],
-  },
-  {
-    label: "Shoes", href: "/shoes", key: "shoes" as ActivePage,
-    dropdown: [
-      { label: "Running", href: "/shoes" },
-      { label: "Training", href: "/shoes" },
-      { label: "Basketball", href: "/shoes" },
-      { label: "All Shoes", href: "/shoes" },
-    ],
-  },
-  {
-    label: "Sports", href: "/sports", key: "sports" as ActivePage,
-    dropdown: [
-      { label: "Basketball", href: "/sports/basketball" },
-      { label: "Football", href: "/sports/football" },
-      { label: "Running", href: "/sports/running" },
-      { label: "Training", href: "/sports/training" },
-      { label: "Golf", href: "/sports/golf" },
-    ],
-  },
-  {
-    label: "Kids", href: "/kids", key: "kids" as ActivePage,
-    dropdown: [
-      { label: "Boys", href: "/kids" },
-      { label: "Girls", href: "/kids" },
-      { label: "Unisex", href: "/kids" },
-    ],
-  },
-  {
-    label: "Accessories", href: "/accessories", key: "accessories" as ActivePage,
-    dropdown: [
-      { label: "Bags", href: "/accessories" },
-      { label: "Headwear", href: "/accessories" },
-      { label: "Socks", href: "/accessories" },
-      { label: "Hydration", href: "/accessories" },
-    ],
-  },
-]
-
-const supportLinks = [
-  { label: "FAQ", href: "/support/faq" },
-  { label: "Shipping", href: "/support/shipping" },
-  { label: "Returns", href: "/support/returns" },
-  { label: "Size Guide", href: "/support/size-guide" },
-  { label: "Track Order", href: "/track-order" },
-  { label: "Contact Us", href: "/support/contact" },
-]
 
 export default function Header({ activePage = 'home' }: HeaderProps) {
   const { cartCount } = useCart()
@@ -113,18 +48,123 @@ export default function Header({ activePage = 'home' }: HeaderProps) {
   return (
     <>
       <AnnouncementBanner />
-      <header className="bg-black border-b-4 border-red-600 sticky top-0 z-40" role="banner">
-        <div className="container mx-auto px-4 py-3">
-          <div className="flex items-center justify-between gap-2">
+      <header className="bg-black sticky top-0 z-40 shadow-xl" role="banner">
 
-            {/* Logo */}
-            <Link href="/" className="flex items-center space-x-2 flex-shrink-0" onClick={() => setMobileMenuOpen(false)}>
-              <Shield className="h-8 w-8 text-red-600" aria-hidden="true" />
-              <span className="text-white text-lg lg:text-2xl font-black tracking-wider">UNDER ARMOUR</span>
-            </Link>
+        {/* ── NAV 1: Logo + Brand left | Action icons right ── */}
+        <div className="border-b border-gray-800">
+          <div className="container mx-auto px-4 py-3">
+            <div className="flex items-center justify-between gap-4">
 
-            {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center space-x-0" role="navigation" aria-label="Main navigation">
+              {/* Logo & Brand */}
+              <Link
+                href="/"
+                className="flex items-center gap-2.5 flex-shrink-0 group"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <div className="bg-red-600 rounded-xl p-1.5 group-hover:bg-red-500 transition-colors">
+                  <Shield className="h-6 w-6 text-white" aria-hidden="true" />
+                </div>
+                <span className="text-white text-lg lg:text-xl font-black tracking-widest uppercase">
+                  Under Armour
+                </span>
+              </Link>
+
+              {/* Right: Search + Icons */}
+              <div className="flex items-center gap-1 sm:gap-2">
+                {/* Search */}
+                {searchOpen ? (
+                  <form onSubmit={handleSearchSubmit} className="flex items-center gap-1">
+                    <div className="flex items-center bg-gray-900 border border-gray-700 rounded-full px-4 py-1.5 focus-within:border-red-600 transition-colors">
+                      <Search className="h-4 w-4 text-gray-400 mr-2 flex-shrink-0" />
+                      <input
+                        ref={searchRef}
+                        type="text"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        placeholder="Search gear..."
+                        className="bg-transparent text-white text-sm font-bold w-28 sm:w-44 focus:outline-none placeholder:text-gray-500"
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => { setSearchOpen(false); setSearchQuery("") }}
+                      className="text-gray-400 hover:text-red-500 transition-colors p-1.5 rounded-full hover:bg-gray-900"
+                    >
+                      <X className="h-5 w-5" />
+                    </button>
+                  </form>
+                ) : (
+                  <button
+                    onClick={() => setSearchOpen(true)}
+                    className="text-gray-300 hover:text-white hover:bg-gray-800 transition-colors p-2 rounded-full"
+                    aria-label="Search"
+                  >
+                    <Search className="h-5 w-5" />
+                  </button>
+                )}
+
+                {/* Wishlist */}
+                <button
+                  onClick={() => { setWishlistOpen(!wishlistOpen); setCartOpen(false) }}
+                  className="text-gray-300 hover:text-white hover:bg-gray-800 transition-colors relative p-2 rounded-full cursor-pointer"
+                  aria-label={`Wishlist (${wishlistCount} items)`}
+                  type="button"
+                >
+                  <Heart className="h-5 w-5" />
+                  {wishlistCount > 0 && (
+                    <span className="absolute top-0.5 right-0.5 bg-red-600 text-white text-xs font-black rounded-full h-4 w-4 flex items-center justify-center">
+                      {wishlistCount > 9 ? '9+' : wishlistCount}
+                    </span>
+                  )}
+                </button>
+
+                {/* Cart */}
+                <button
+                  onClick={() => { setCartOpen(!cartOpen); setWishlistOpen(false) }}
+                  className="text-gray-300 hover:text-white hover:bg-gray-800 transition-colors relative p-2 rounded-full cursor-pointer"
+                  aria-label={`Shopping cart (${cartCount} items)`}
+                  type="button"
+                >
+                  <ShoppingCart className="h-5 w-5" />
+                  {cartCount > 0 && (
+                    <span className="absolute top-0.5 right-0.5 bg-red-600 text-white text-xs font-black rounded-full h-4 w-4 flex items-center justify-center">
+                      {cartCount > 9 ? '9+' : cartCount}
+                    </span>
+                  )}
+                </button>
+
+                {/* Account */}
+                <Link
+                  href="/account"
+                  className="hidden sm:flex text-gray-300 hover:text-white hover:bg-gray-800 transition-colors p-2 rounded-full"
+                  aria-label="Account"
+                >
+                  <User className="h-5 w-5" />
+                </Link>
+
+                {/* Mobile hamburger */}
+                <button
+                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                  className="lg:hidden text-white hover:text-red-500 hover:bg-gray-800 transition-colors p-2 rounded-full"
+                  aria-label="Toggle mobile menu"
+                  aria-expanded={mobileMenuOpen}
+                >
+                  {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ── NAV 2: Main links centered (desktop only) ── */}
+        <nav
+          className="hidden lg:block bg-black border-b-2 border-red-600"
+          role="navigation"
+          aria-label="Main navigation"
+        >
+          <div className="container mx-auto px-4 py-2">
+            <div className="flex items-center justify-center gap-1">
+
               {navLinks.map((nav) => (
                 <div
                   key={nav.key}
@@ -134,24 +174,27 @@ export default function Header({ activePage = 'home' }: HeaderProps) {
                 >
                   <Link
                     href={nav.href}
-                    className={`flex items-center gap-0.5 font-black uppercase tracking-wide text-sm px-3 py-2 transition-colors ${
-                      activePage === nav.key ? 'text-red-600' : 'text-gray-300 hover:text-red-600'
+                    className={`flex items-center gap-0.5 font-black uppercase tracking-wide text-xs px-4 py-2 rounded-full transition-all duration-200 ${
+                      activePage === nav.key
+                        ? 'bg-red-600 text-white'
+                        : 'text-gray-300 hover:bg-gray-800 hover:text-white'
                     }`}
                   >
                     {nav.label}
                     <ChevronDown className={`h-3 w-3 transition-transform duration-200 ${openDropdown === nav.key ? 'rotate-180' : ''}`} />
                   </Link>
+
                   {openDropdown === nav.key && (
                     <div
-                      className="absolute top-full left-0 mt-1 w-44 bg-white border-4 border-black shadow-2xl z-50"
+                      className="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 w-44 bg-white rounded-xl border border-gray-200 shadow-2xl z-50 overflow-hidden"
                       onMouseEnter={() => handleDropdownEnter(nav.key)}
                       onMouseLeave={handleDropdownLeave}
                     >
-                      {nav.dropdown.map((item) => (
+                      {nav.dropdown.map((item, idx) => (
                         <Link
                           key={item.label}
                           href={item.href}
-                          className="block px-4 py-2.5 text-sm font-black uppercase text-gray-800 hover:bg-red-600 hover:text-white transition-colors border-b border-gray-100 last:border-0"
+                          className={`block px-4 py-2.5 text-sm font-bold text-gray-800 hover:bg-red-600 hover:text-white transition-colors ${idx < nav.dropdown.length - 1 ? 'border-b border-gray-100' : ''}`}
                         >
                           {item.label}
                         </Link>
@@ -161,27 +204,29 @@ export default function Header({ activePage = 'home' }: HeaderProps) {
                 </div>
               ))}
 
-              {/* Support Dropdown */}
+              {/* Support dropdown */}
               <div
                 className="relative"
                 onMouseEnter={() => handleDropdownEnter('support')}
                 onMouseLeave={handleDropdownLeave}
               >
-                <button className="flex items-center gap-0.5 font-black uppercase tracking-wide text-sm px-3 py-2 transition-colors text-gray-300 hover:text-red-600">
+                <button
+                  className={`flex items-center gap-0.5 font-black uppercase tracking-wide text-xs px-4 py-2 rounded-full transition-all duration-200 text-gray-300 hover:bg-gray-800 hover:text-white`}
+                >
                   Support
                   <ChevronDown className={`h-3 w-3 transition-transform duration-200 ${openDropdown === 'support' ? 'rotate-180' : ''}`} />
                 </button>
                 {openDropdown === 'support' && (
                   <div
-                    className="absolute top-full left-0 mt-1 w-44 bg-white border-4 border-black shadow-2xl z-50"
+                    className="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 w-44 bg-white rounded-xl border border-gray-200 shadow-2xl z-50 overflow-hidden"
                     onMouseEnter={() => handleDropdownEnter('support')}
                     onMouseLeave={handleDropdownLeave}
                   >
-                    {supportLinks.map((item) => (
+                    {supportLinks.map((item, idx) => (
                       <Link
                         key={item.href}
                         href={item.href}
-                        className="block px-4 py-2.5 text-sm font-black uppercase text-gray-800 hover:bg-red-600 hover:text-white transition-colors border-b border-gray-100 last:border-0"
+                        className={`block px-4 py-2.5 text-sm font-bold text-gray-800 hover:bg-red-600 hover:text-white transition-colors ${idx < supportLinks.length - 1 ? 'border-b border-gray-100' : ''}`}
                       >
                         {item.label}
                       </Link>
@@ -190,129 +235,100 @@ export default function Header({ activePage = 'home' }: HeaderProps) {
                 )}
               </div>
 
+              {/* Sale */}
               <Link
                 href="/sale"
-                className={`flex items-center gap-1 font-black uppercase tracking-wide text-sm px-3 py-2 transition-colors ${
-                  activePage === 'sale' ? 'text-red-600' : 'text-red-400 hover:text-red-300'
+                className={`flex items-center gap-1.5 font-black uppercase tracking-wide text-xs px-4 py-2 rounded-full transition-all duration-200 ${
+                  activePage === 'sale'
+                    ? 'bg-red-600 text-white'
+                    : 'text-red-400 hover:bg-red-600 hover:text-white'
                 }`}
               >
-                <Tag className="h-3.5 w-3.5" /> Sale
+                <Tag className="h-3 w-3" /> Sale
               </Link>
+
+              {/* New Arrivals */}
               <Link
                 href="/new-arrivals"
-                className={`flex items-center gap-1 font-black uppercase tracking-wide text-sm px-3 py-2 transition-colors ${
-                  activePage === 'new-arrivals' ? 'text-red-600' : 'text-gray-300 hover:text-red-600'
+                className={`flex items-center gap-1.5 font-black uppercase tracking-wide text-xs px-4 py-2 rounded-full transition-all duration-200 ${
+                  activePage === 'new-arrivals'
+                    ? 'bg-red-600 text-white'
+                    : 'text-gray-300 hover:bg-gray-800 hover:text-white'
                 }`}
               >
-                <Sparkles className="h-3.5 w-3.5" /> New
-              </Link>
-            </nav>
-
-            {/* Right Side Icons */}
-            <div className="flex items-center space-x-2 sm:space-x-3">
-              {searchOpen ? (
-                <form onSubmit={handleSearchSubmit} className="flex items-center">
-                  <input
-                    ref={searchRef}
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search gear..."
-                    className="bg-gray-900 text-white border-2 border-red-600 px-3 py-1.5 text-sm font-bold w-32 sm:w-44 focus:outline-none"
-                  />
-                  <button type="button" onClick={() => { setSearchOpen(false); setSearchQuery("") }} className="text-gray-400 hover:text-red-600 transition-colors ml-1">
-                    <X className="h-5 w-5" />
-                  </button>
-                </form>
-              ) : (
-                <button onClick={() => setSearchOpen(true)} className="text-gray-300 hover:text-red-600 transition-colors" aria-label="Search">
-                  <Search className="h-5 w-5" />
-                </button>
-              )}
-
-              <button
-                onClick={() => { setWishlistOpen(!wishlistOpen); setCartOpen(false) }}
-                className="text-gray-300 hover:text-red-600 transition-colors relative cursor-pointer"
-                aria-label={`Wishlist (${wishlistCount} items)`}
-                type="button"
-              >
-                <Heart className="h-6 w-6" />
-                {wishlistCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-black rounded-full h-4 w-4 flex items-center justify-center">
-                    {wishlistCount > 9 ? '9+' : wishlistCount}
-                  </span>
-                )}
-              </button>
-
-              <button
-                onClick={() => { setCartOpen(!cartOpen); setWishlistOpen(false) }}
-                className="text-gray-300 hover:text-red-600 transition-colors relative cursor-pointer"
-                aria-label={`Shopping cart (${cartCount} items)`}
-                type="button"
-              >
-                <ShoppingCart className="h-6 w-6" />
-                {cartCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-black rounded-full h-4 w-4 flex items-center justify-center">
-                    {cartCount > 9 ? '9+' : cartCount}
-                  </span>
-                )}
-              </button>
-
-              <Link href="/account" className="hidden sm:flex text-gray-300 hover:text-red-600 transition-colors" aria-label="Account">
-                <User className="h-6 w-6" />
+                <Sparkles className="h-3 w-3" /> New
               </Link>
 
-              <button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="lg:hidden text-white hover:text-red-600 transition-colors p-1"
-                aria-label="Toggle mobile menu"
-                aria-expanded={mobileMenuOpen}
-              >
-                {mobileMenuOpen ? <X className="h-7 w-7" /> : <Menu className="h-7 w-7" />}
-              </button>
             </div>
           </div>
-        </div>
+        </nav>
 
-        {/* Mobile Navigation */}
+        {/* ── Mobile Navigation ── */}
         {mobileMenuOpen && (
-          <nav className="lg:hidden bg-gray-950 border-t-2 border-red-600 max-h-[80vh] overflow-y-auto" role="navigation" aria-label="Mobile navigation">
+          <nav
+            className="lg:hidden bg-gray-950 border-t border-gray-800 max-h-[80vh] overflow-y-auto"
+            role="navigation"
+            aria-label="Mobile navigation"
+          >
             <div className="container mx-auto px-4 py-4 space-y-1">
               {navLinks.map((nav) => (
                 <Link
                   key={nav.key}
                   href={nav.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`block font-black uppercase tracking-wide text-lg py-2 px-4 rounded transition-colors ${
-                    activePage === nav.key ? 'text-red-600 bg-gray-900' : 'text-gray-300 hover:text-red-600 hover:bg-gray-900'
+                  className={`block font-black uppercase tracking-wide text-base py-2.5 px-4 rounded-xl transition-colors ${
+                    activePage === nav.key
+                      ? 'text-white bg-red-600'
+                      : 'text-gray-300 hover:text-white hover:bg-gray-800'
                   }`}
                 >
                   {nav.label}
                 </Link>
               ))}
               <div className="border-t border-gray-800 pt-3 mt-3 space-y-1">
-                <Link href="/sale" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2 text-red-400 font-black uppercase tracking-wide text-lg py-2 px-4 rounded hover:bg-gray-900 transition-colors">
+                <Link
+                  href="/sale"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`flex items-center gap-2 font-black uppercase tracking-wide text-base py-2.5 px-4 rounded-xl transition-colors ${
+                    activePage === 'sale' ? 'bg-red-600 text-white' : 'text-red-400 hover:bg-gray-800 hover:text-red-300'
+                  }`}
+                >
                   <Tag className="h-4 w-4" /> Sale
                 </Link>
-                <Link href="/new-arrivals" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2 text-gray-300 font-black uppercase tracking-wide text-lg py-2 px-4 rounded hover:bg-gray-900 transition-colors">
+                <Link
+                  href="/new-arrivals"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`flex items-center gap-2 font-black uppercase tracking-wide text-base py-2.5 px-4 rounded-xl transition-colors ${
+                    activePage === 'new-arrivals' ? 'bg-red-600 text-white' : 'text-gray-300 hover:bg-gray-800 hover:text-white'
+                  }`}
+                >
                   <Sparkles className="h-4 w-4" /> New Arrivals
                 </Link>
                 <button
                   onClick={() => setSupportMobileOpen(!supportMobileOpen)}
-                  className="w-full text-left flex items-center justify-between text-gray-300 font-black uppercase tracking-wide text-lg py-2 px-4 rounded hover:bg-gray-900 transition-colors"
+                  className="w-full text-left flex items-center justify-between text-gray-300 font-black uppercase tracking-wide text-base py-2.5 px-4 rounded-xl hover:bg-gray-800 transition-colors"
                 >
                   Support <ChevronDown className={`h-4 w-4 transition-transform ${supportMobileOpen ? 'rotate-180' : ''}`} />
                 </button>
                 {supportMobileOpen && (
-                  <div className="pl-6 space-y-1 pb-2">
+                  <div className="pl-4 space-y-1 pb-2">
                     {supportLinks.map((item) => (
-                      <Link key={item.href} href={item.href} onClick={() => setMobileMenuOpen(false)} className="block text-gray-400 hover:text-red-600 font-bold text-sm py-1.5 px-4 uppercase tracking-wide transition-colors">
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="block text-gray-400 hover:text-white font-bold text-sm py-2 px-4 rounded-lg uppercase tracking-wide hover:bg-gray-800 transition-colors"
+                      >
                         {item.label}
                       </Link>
                     ))}
                   </div>
                 )}
-                <Link href="/account" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2 text-gray-300 font-black uppercase tracking-wide text-lg py-2 px-4 rounded hover:bg-gray-900 transition-colors sm:hidden">
+                <Link
+                  href="/account"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-2 text-gray-300 font-black uppercase tracking-wide text-base py-2.5 px-4 rounded-xl hover:bg-gray-800 hover:text-white transition-colors sm:hidden"
+                >
                   <User className="h-5 w-5" /> Account
                 </Link>
               </div>

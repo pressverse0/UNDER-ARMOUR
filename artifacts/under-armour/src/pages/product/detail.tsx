@@ -31,12 +31,8 @@ import {
   Copy
 } from "lucide-react"
 
-// Mock product data - in real app, this would come from API/database
-const allProducts = [
-  { id: 1, name: "HeatGear Compression Shirt", price: 35, category: "Training", size: ["S", "M", "L", "XL"], color: ["Black", "Red", "Blue"], rating: 4.5, reviews: 128, image: "/ARMOUR/HeatGearCompressionShirt.jpg", description: "Stay cool and dry with our advanced HeatGear technology. This compression shirt wicks sweat away from your body and dries incredibly fast.", features: ["HeatGear fabric keeps you cool", "4-way stretch construction", "Anti-odor technology", "Moisture-wicking"], inStock: true, gender: "Men" },
-  { id: 2, name: "HOVR Phantom 3", price: 140, category: "Footwear", size: ["8", "9", "10", "11", "12"], color: ["Black", "White", "Gray"], rating: 4.8, reviews: 256, image: "/ARMOUR/HOVRPhantom3.jpg", description: "Experience zero-gravity feel with HOVR cushioning technology. Engineered mesh upper provides breathability and support.", features: ["HOVR cushioning technology", "Engineered mesh upper", "Responsive UA HOVR foam", "Durable rubber outsole"], inStock: true, gender: "Men" },
-  { id: 3, name: "Tech 2.0 Shorts", price: 30, originalPrice: 45, category: "Bottoms", size: ["S", "M", "L", "XL"], color: ["Black", "Navy", "Gray"], rating: 4.3, reviews: 89, image: "/ARMOUR/Tech2.0Shorts.jpg", description: "Lightweight and breathable training shorts with moisture-wicking fabric. Perfect for any workout.", features: ["Ultra-light fabric", "Moisture-wicking", "Elastic waistband", "Side pockets"], inStock: true, gender: "Men" },
-]
+import { allDetailProducts } from "@/data/products/detail"
+const allProducts = allDetailProducts
 
 export default function ProductDetailPage() {
   const params = useParams()

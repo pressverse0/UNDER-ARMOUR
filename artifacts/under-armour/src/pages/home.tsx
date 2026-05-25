@@ -8,47 +8,8 @@ import { useWishlist } from "@/context/wishlist-context"
 import PageLayout from "@/components/layout/page-layout"
 import ProductCard from "@/components/product-card"
 import SectionHeading from "@/components/section-heading"
-import { Target, Zap, Award } from "lucide-react"
-
-const featuredProducts = [
-  { id: 11, name: "HeatGear Training Shirt", price: 35, category: "Apparel", description: "Moisture-wicking performance training shirt", image: "/ARMOUR/HeatGear Training Shirt.jpg", rating: 4.4, reviews: 267, inStock: true },
-  { id: 2,  name: "HOVR Phantom 3",          price: 140, category: "Footwear",     description: "Premium running shoes with HOVR cushioning",   image: "/ARMOUR/HOVRPhantom3.jpg",               rating: 4.8, reviews: 256, inStock: true },
-  { id: 201,name: "Project Rock Gym Bag",    price: 75,  category: "Accessories",  description: "Built for champions. 42L capacity.",           image: "/ARMOUR/ProjectRockGymBag.jpg",          rating: 4.8, reviews: 234, inStock: true },
-]
-
-const newArrivals = [
-  { id: 10,  name: "Curry Flow 11",         price: 160, category: "Basketball", image: "/ARMOUR/Curry Flow 11.jpg",               rating: 4.9, reviews: 421, inStock: true, isNew: true },
-  { id: 6,   name: "Sportstyle Jacket",     price: 90,  category: "Outerwear",  image: "/ARMOUR/Sportstyle Jacket.jpg",           rating: 4.6, reviews: 142, inStock: true, isNew: true },
-  { id: 401, name: "Unstoppable Bomber",    price: 110, category: "Outerwear",  image: "/ARMOUR/Unstoppable Bomber Jacket.jpg",   rating: 4.5, reviews: 98,  inStock: true, isNew: true },
-  { id: 403, name: "Flow Velociti Wind 2",  price: 140, category: "Running",    image: "/ARMOUR/Flow Velociti Wind 2.jpg",        rating: 4.7, reviews: 185, inStock: true, isNew: true },
-]
-
-const categories = [
-  { label: "Men",        href: "/men",         image: "/intense-athlete-training-sketch.png", desc: "Training & Footwear" },
-  { label: "Women",      href: "/women",        image: "/athletic-gear-display.png",           desc: "Performance Gear" },
-  { label: "Kids",       href: "/kids",         image: "/intense-athlete-training-sketch.png", desc: "Ages 3–16" },
-  { label: "Shoes",      href: "/shoes",        image: "/athletic-gear-display.png",           desc: "HOVR & Charged" },
-  { label: "Sports",     href: "/sports",       image: "/intense-athlete-training-sketch.png", desc: "Shop by Sport" },
-  { label: "Accessories",href: "/accessories",  image: "/athletic-gear-display.png",           desc: "Complete Your Kit" },
-]
-
-const missionItems = [
-  { icon: Target, title: "Precision",  desc: "Every detail engineered for peak performance" },
-  { icon: Zap,    title: "Power",      desc: "Unleash your potential with cutting-edge technology" },
-  { icon: Award,  title: "Excellence", desc: "Champions choose Under Armour for a reason" },
-]
-
-const testimonials = [
-  { quote: "Under Armour doesn't just make gear. They make warriors.", author: "Sarah M.",  sport: "CrossFit Athlete",   rating: 5 },
-  { quote: "When the game is on the line, I trust Under Armour.",      author: "Marcus J.", sport: "Basketball Player",   rating: 5 },
-  { quote: "Every mile, every rep, every drop of sweat — UA is with me.", author: "Elena R.", sport: "Marathon Runner",  rating: 5 },
-]
-
-const heroStats = [
-  { value: "500+", label: "Products" },
-  { value: "4.7★", label: "Avg Rating" },
-  { value: "Free", label: "Ship over $50" },
-]
+import { categories, missionItems, testimonials, heroStats } from "@/data/home"
+import { featuredProducts, homeNewArrivals } from "@/data/products/featured"
 
 export default function UnderArmourLanding() {
   const { toast } = useToast()
@@ -74,7 +35,7 @@ export default function UnderArmourLanding() {
     if (isInWishlist(product.id)) {
       removeFromWishlist(product.id)
     } else {
-      addToWishlist({ id: product.id, name: product.name, price: product.price, image: product.image, category: product.category })
+      addToWishlist({ id: product.id, name: product.name, price: product.price, image: product.image, category: product.category, inStock: true })
     }
   }
 
@@ -228,7 +189,7 @@ export default function UnderArmourLanding() {
               </Link>
             </div>
             <div className="ua-product-grid">
-              {newArrivals.map(item => (
+              {homeNewArrivals.map(item => (
                 <ProductCard
                   key={item.id}
                   {...item}
