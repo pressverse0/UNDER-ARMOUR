@@ -7,6 +7,7 @@ A full-stack e-commerce platform built with **React 18**, **Laravel 11**, and **
 - **[Setup & Installation](./docs/SETUP.md)** - Quick start guide
 - **[API Reference](./docs/API.md)** - Complete endpoint documentation
 - **[System Design](./docs/ARCHITECTURE.md)** - Architecture & database design
+- **[Docker Deployment](./docs/DOCKER.md)** - Docker & containerization guide
 - **[Security & Best Practices](./docs/SECURITY.md)** - Security guidelines
 - **[Performance Optimization](./docs/PERFORMANCE.md)** - Performance strategies
 - **[Contributing](./docs/CONTRIBUTING.md)** - Development guidelines
