@@ -39,7 +39,6 @@ return new class extends Migration
             $table->index('is_new');
             $table->index('is_sale');
             $table->index('price');
-            $table->fullText(['name', 'description']);
         });
     }
 

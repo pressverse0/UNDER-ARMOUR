@@ -152,6 +152,9 @@ class Product extends Model
      */
     public function scopeSearch($query, $term)
     {
-        return $query->whereFullText(['name', 'description'], $term);
+        return $query->where(function ($q) use ($term) {
+            $q->where('name', 'LIKE', "%{$term}%")
+              ->orWhere('description', 'LIKE', "%{$term}%");
+        });
     }
 }

@@ -7,9 +7,6 @@ use App\Http\Resources\OrderResource;
 use App\Services\CartService;
 use App\Services\OrderService;
 use Illuminate\Http\Request;
-use Stripe\Stripe;
-use Stripe\PaymentIntent;
-
 class CheckoutController extends Controller
 {
     public function __construct(
@@ -17,9 +14,6 @@ class CheckoutController extends Controller
         private OrderService $orderService
     ) {}
 
-    /**
-     * Validate checkout.
-     */
     public function validate(Request $request)
     {
         $request->validate([
@@ -44,13 +38,9 @@ class CheckoutController extends Controller
         ]);
     }
 
-    /**
-     * Process payment and create order.
-     */
     public function process(Request $request)
     {
         $request->validate([
-            'payment_method_id' => 'required|string',
             'address' => 'required|string',
             'city' => 'required|string',
             'state' => 'required|string',
@@ -59,30 +49,40 @@ class CheckoutController extends Controller
         ]);
 
         try {
-            Stripe::setApiKey(config('services.stripe.secret'));
+            $cart = $this->cartService->getCart($request->user()->id);
 
-            $totals = $this->cartService->getCartTotals($request->user()->id);
-
-            // Create payment intent
-            $paymentIntent = PaymentIntent::create([
-                'amount' => (int)($totals['total'] * 100), // Convert to cents
-                'currency' => 'usd',
-                'payment_method' => $request->input('payment_method_id'),
-                'confirm' => true,
-                'automatic_payment_methods' => [
-                    'enabled' => true,
-                    'allow_redirects' => 'never',
-                ],
-            ]);
-
-            if ($paymentIntent->status !== 'succeeded') {
-                return response()->json([
-                    'message' => 'Payment failed',
-                    'status' => $paymentIntent->status,
-                ], 400);
+            if ($cart->items->isEmpty()) {
+                return response()->json(['message' => 'Cart is empty'], 400);
             }
 
-            // Create order
+            $stripePaymentId = null;
+            $stripeKey = config('services.stripe.secret');
+
+            if ($stripeKey && $request->filled('payment_method_id')) {
+                \Stripe\Stripe::setApiKey($stripeKey);
+                $totals = $this->cartService->getCartTotals($request->user()->id);
+
+                $paymentIntent = \Stripe\PaymentIntent::create([
+                    'amount' => (int)($totals['total'] * 100),
+                    'currency' => 'usd',
+                    'payment_method' => $request->input('payment_method_id'),
+                    'confirm' => true,
+                    'automatic_payment_methods' => [
+                        'enabled' => true,
+                        'allow_redirects' => 'never',
+                    ],
+                ]);
+
+                if ($paymentIntent->status !== 'succeeded') {
+                    return response()->json([
+                        'message' => 'Payment failed',
+                        'status' => $paymentIntent->status,
+                    ], 400);
+                }
+
+                $stripePaymentId = $paymentIntent->id;
+            }
+
             $order = $this->orderService->createOrderFromCart(
                 $request->user()->id,
                 [
@@ -93,15 +93,14 @@ class CheckoutController extends Controller
                     'country' => $request->input('country'),
                 ],
                 [
-                    'method' => 'stripe',
-                    'stripe_payment_id' => $paymentIntent->id,
+                    'method' => $stripePaymentId ? 'stripe' : 'demo',
+                    'stripe_payment_id' => $stripePaymentId,
                 ]
             );
 
-            // Update payment status
             $this->orderService->updatePaymentStatus($order->id, 'completed');
 
-            return response()->json(new OrderResource($order), 201);
+            return response()->json(new OrderResource($order->load('items.product')), 201);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Checkout failed',
