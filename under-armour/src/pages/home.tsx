@@ -65,9 +65,10 @@ export default function UnderArmourLanding() {
           <div className="ua-page-container relative z-10">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               <div className="space-y-8">
-                <div className="sketchy-border bg-red-600 inline-flex items-center gap-2 px-4 py-2 transform -rotate-1">
-                  <Shield className="h-4 w-4 text-white" />
-                  <span className="text-white font-black text-sm uppercase tracking-widest">No Excuses</span>
+                <div className="transform -rotate-1">
+                  <span className="ua-label-badge">
+                    <Shield className="h-4 w-4" /> No Excuses
+                  </span>
                 </div>
                 <h1 id="hero-heading" className="text-5xl lg:text-7xl font-black uppercase leading-none tracking-tight">
                   THE ONLY WAY<br />
@@ -96,16 +97,16 @@ export default function UnderArmourLanding() {
                 </div>
               </div>
               <div className="relative">
-                <div className="sketchy-frame bg-gray-900 p-4 transform rotate-1">
+                <div className="ua-hero-img-frame">
                   <img
                     src="/intense-athlete-training-sketch.png"
                     alt="Focused athlete training with Under Armour gear"
                     loading="eager"
-                    className="w-full h-auto filter grayscale contrast-125"
+                    className="filter grayscale contrast-125"
                   />
                 </div>
-                <div className="absolute -bottom-4 -right-4 sketchy-border bg-red-600 px-6 py-3 transform rotate-2">
-                  <span className="text-white font-black text-lg uppercase">Protect This House</span>
+                <div className="absolute -bottom-4 -right-4 transform rotate-2">
+                  <span className="ua-label-badge text-lg px-6 py-3">Protect This House</span>
                 </div>
               </div>
             </div>
@@ -263,9 +264,10 @@ export default function UnderArmourLanding() {
         <section className="ua-section-lg ua-bg-dark">
           <div className="ua-page-container">
             <div className="max-w-2xl mx-auto text-center">
-              <div className="sketchy-border bg-red-600 inline-flex items-center gap-2 px-4 py-2 mb-6 transform -rotate-1">
-                <Users className="h-4 w-4 text-white" />
-                <span className="font-black text-sm uppercase tracking-widest">UA Community</span>
+              <div className="transform -rotate-1 mb-6 inline-block">
+                <span className="ua-label-badge">
+                  <Users className="h-4 w-4" /> UA Community
+                </span>
               </div>
               <h2 className="ua-section-heading mb-4">
                 Stay in the <span className="text-red-600">Game</span>
@@ -274,13 +276,13 @@ export default function UnderArmourLanding() {
                 Get exclusive access to new drops, training tips, and member-only discounts.
               </p>
               {newsletterSubmitted ? (
-                <div className="flex items-center justify-center gap-3 bg-gray-900 border-2 border-green-600 p-5 rounded-lg">
+                <div className="flex items-center justify-center gap-3 bg-gray-900 border-2 border-green-600 p-5" style={{borderRadius:'var(--ua-radius-card)'}}>
                   <CheckCircle className="h-6 w-6 text-green-600" />
                   <p className="font-black uppercase text-green-400">You're in! Welcome to the UA family.</p>
                 </div>
               ) : (
                 <form onSubmit={handleNewsletter} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-                  <div className="flex items-center gap-2 flex-1 bg-gray-900 border-2 border-gray-700 focus-within:border-red-600 transition-colors px-4 rounded-lg">
+                  <div className="ua-newsletter-input">
                     <Mail className="h-5 w-5 text-gray-500 flex-shrink-0" />
                     <input
                       type="email"
