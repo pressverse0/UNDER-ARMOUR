@@ -13,14 +13,7 @@ import {
   ViewToggle, FilterPanel, FilterToggleButton,
   ResultsCount, Pagination,
 } from "@/components/filters"
-import { newArrivalProducts, newArrivalCategoryFilters } from "@/data/products/new-arrivals"
-
-const weekLabel = (weeks: number) => {
-  if (weeks <= 1) return "This Week"
-  if (weeks <= 2) return "2 Weeks Ago"
-  if (weeks <= 3) return "3 Weeks Ago"
-  return "4 Weeks Ago"
-}
+import { useProducts } from "@/hooks/useProducts"
 
 const SORT_OPTIONS = [
   { label: "Newest First",      value: "newest"     },
@@ -29,12 +22,12 @@ const SORT_OPTIONS = [
   { label: "Top Rated",         value: "rating"     },
 ]
 const ITEMS_PER_PAGE = 9
-const ALL_CATEGORIES = newArrivalCategoryFilters.filter((c) => c !== "All")
 
 export default function NewArrivalsPage() {
   const { toast } = useToast()
   const { addToCart } = useCart()
   const { addToWishlist, isInWishlist, removeFromWishlist } = useWishlist()
+  const { products: newArrivalProducts, loading } = useProducts({ filter: 'new' })
 
   const [searchQuery, setSearchQuery] = useState("")
   const [categories,  setCategories]  = useState<string[]>([])
@@ -42,6 +35,8 @@ export default function NewArrivalsPage() {
   const [currentPage, setCurrentPage] = useState(1)
   const [viewMode,    setViewMode]    = useState<"grid" | "list">("grid")
   const [filtersOpen, setFiltersOpen] = useState(false)
+
+  const ALL_CATEGORIES = useMemo(() => [...new Set(newArrivalProducts.map(p => p.category))].filter(Boolean), [newArrivalProducts])
 
   const filtered = useMemo(() => {
     let items = newArrivalProducts.filter((p) => {
@@ -52,13 +47,13 @@ export default function NewArrivalsPage() {
       )
     })
     switch (sortBy) {
-      case "newest":     items.sort((a, b) => a.arrivedWeeks - b.arrivedWeeks); break
+      case "newest":     break
       case "price-low":  items.sort((a, b) => a.price - b.price); break
       case "price-high": items.sort((a, b) => b.price - a.price); break
       case "rating":     items.sort((a, b) => b.rating - a.rating); break
     }
     return items
-  }, [searchQuery, categories, sortBy])
+  }, [searchQuery, categories, sortBy, newArrivalProducts])
 
   const totalPages  = Math.ceil(filtered.length / ITEMS_PER_PAGE)
   const paginated   = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)
@@ -66,14 +61,14 @@ export default function NewArrivalsPage() {
 
   const clearFilters = () => { setCategories([]); setSearchQuery(""); setCurrentPage(1) }
 
-  const handleCart = (e: React.MouseEvent, p: typeof newArrivalProducts[0]) => {
+  const handleCart = (e: React.MouseEvent, p: (typeof newArrivalProducts)[0]) => {
     e.preventDefault()
     if (!p.inStock) return
     addToCart({ id: p.id, name: p.name, price: p.price, image: p.image, category: p.category })
     toast({ title: "Added to Cart!", description: p.name })
   }
 
-  const handleWishlist = (e: React.MouseEvent, p: typeof newArrivalProducts[0]) => {
+  const handleWishlist = (e: React.MouseEvent, p: (typeof newArrivalProducts)[0]) => {
     e.preventDefault()
     if (isInWishlist(p.id)) {
       removeFromWishlist(p.id)
@@ -134,7 +129,7 @@ export default function NewArrivalsPage() {
                     id={p.id} name={p.name} price={p.price}
                     category={p.category} image={p.image} inStock={p.inStock} isNew={true}
                     rating={p.rating} reviews={p.reviews}
-                    customBadge={<span className="ua-badge ua-badge-new">{weekLabel(p.arrivedWeeks)}</span>}
+                    customBadge={<span className="ua-badge ua-badge-new">New</span>}
                     isWishlisted={isInWishlist(p.id)}
                     onAddToCart={(e) => handleCart(e, p)} onToggleWishlist={(e) => handleWishlist(e, p)}
                   />

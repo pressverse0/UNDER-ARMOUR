@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { CartProvider } from "@/context/cart-context";
 import { WishlistProvider } from "@/context/wishlist-context";
+import { AuthProvider } from "@/context/auth-context";
 import { PageSkeleton } from "@/components/skeletons";
 import ErrorBoundary from "@/components/error-boundary";
 
@@ -88,16 +89,18 @@ function App() {
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
-          <CartProvider>
-            <WishlistProvider>
-              <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-                <ErrorBoundary>
-                  <Router />
-                </ErrorBoundary>
-              </WouterRouter>
-              <Toaster />
-            </WishlistProvider>
-          </CartProvider>
+          <AuthProvider>
+            <CartProvider>
+              <WishlistProvider>
+                <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+                  <ErrorBoundary>
+                    <Router />
+                  </ErrorBoundary>
+                </WouterRouter>
+                <Toaster />
+              </WishlistProvider>
+            </CartProvider>
+          </AuthProvider>
         </TooltipProvider>
       </QueryClientProvider>
     </ErrorBoundary>

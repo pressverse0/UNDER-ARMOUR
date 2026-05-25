@@ -34,6 +34,21 @@
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
 
+    /* ── UA Design Tokens — single source of truth ──────── */
+    --ua-red:               #dc2626;
+    --ua-red-dark:          #b91c1c;
+    --ua-shadow-btn:        2px 3px 0px rgba(0,0,0,0.3), inset -1px -1px 0px rgba(0,0,0,0.2);
+    --ua-shadow-btn-hover:  3px 4px 0px rgba(0,0,0,0.4);
+    --ua-shadow-card:       4px 6px 0px rgba(0,0,0,0.2), inset -1px -1px 0px rgba(0,0,0,0.1);
+    --ua-shadow-card-hover: 6px 8px 0px rgba(0,0,0,0.3), inset -1px -1px 0px rgba(0,0,0,0.15);
+    --ua-shadow-frame:      4px 8px 0px rgba(0,0,0,0.5), inset -2px -2px 0px rgba(255,255,255,0.08);
+    --ua-radius-xs:   0.375rem;
+    --ua-radius-sm:   0.5rem;
+    --ua-radius-btn:  0.5rem;
+    --ua-radius-card: 1rem;
+    --ua-radius-lg:   1.25rem;
+    --ua-radius-xl:   1.75rem;
+
     --sidebar: 0 0% 98%;
     --sidebar-foreground: 0 0% 3.9%;
     --sidebar-border: 0 0% 89.8%;
@@ -173,20 +188,20 @@ body {
 }
 
 .sketchy-btn {
-  border-radius: 0.375rem;
+  border-radius: var(--ua-radius-btn);
   position: relative;
   border: 3px solid transparent;
-  box-shadow: 2px 3px 0px rgba(0, 0, 0, 0.3), inset -1px -1px 0px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--ua-shadow-btn);
   transform: rotate(-0.5deg);
 }
 
 .sketchy-btn:hover {
   transform: rotate(0deg) scale(1.02);
-  box-shadow: 3px 4px 0px rgba(0, 0, 0, 0.4), inset -1px -1px 0px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--ua-shadow-btn-hover);
 }
 
 .sketchy-btn-outline {
-  border-radius: 0.375rem;
+  border-radius: var(--ua-radius-btn);
   position: relative;
   border: 3px solid currentColor;
   box-shadow: 2px 3px 0px rgba(0, 0, 0, 0.2);
@@ -195,27 +210,27 @@ body {
 
 .sketchy-btn-outline:hover {
   transform: rotate(0deg) scale(1.02);
-  box-shadow: 3px 4px 0px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--ua-shadow-btn-hover);
 }
 
 .sketchy-card {
-  border-radius: 0.5rem;
+  border-radius: var(--ua-radius-card);
   position: relative;
-  box-shadow: 4px 6px 0px rgba(0, 0, 0, 0.2), inset -1px -1px 0px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--ua-shadow-card);
   transform: rotate(-0.3deg);
   overflow: hidden;
 }
 
 .sketchy-card:hover {
   transform: rotate(0deg);
-  box-shadow: 6px 8px 0px rgba(0, 0, 0, 0.3), inset -1px -1px 0px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--ua-shadow-card-hover);
 }
 
 .sketchy-frame {
-  border-radius: 0.5rem;
+  border-radius: var(--ua-radius-xl);
   position: relative;
-  border: 4px solid #000;
-  box-shadow: 3px 5px 0px rgba(0, 0, 0, 0.4), inset -2px -2px 0px rgba(255, 255, 255, 0.1);
+  border: 3px solid rgba(255,255,255,0.12);
+  box-shadow: var(--ua-shadow-frame);
   overflow: hidden;
 }
 
@@ -458,7 +473,7 @@ body {
   .ua-bg-accent         { @apply bg-red-600 text-white; }
 
   /* ── Category cards (home + sports index) ───────────── */
-  .ua-cat-card          { @apply relative overflow-hidden rounded-lg bg-white border-4 border-black transition-all duration-300 text-center p-6; will-change: transform; }
+  .ua-cat-card          { @apply relative overflow-hidden bg-white border-4 border-black transition-all duration-300 text-center p-6; border-radius: 1rem; will-change: transform; }
   .ua-cat-card:hover    { border-color: #dc2626; transform: scale(1.05); }
   .ua-cat-card-heading  { @apply font-black text-lg uppercase transition-colors; }
   .ua-cat-card:hover .ua-cat-card-heading { color: #dc2626; }
@@ -467,27 +482,27 @@ body {
   /* ── Mission / feature cards (dark bg) ──────────────── */
   .ua-feature-card {
     @apply bg-gray-900 p-8 border-2 border-red-600 text-center overflow-hidden;
-    border-radius: 0.5rem;
+    border-radius: var(--ua-radius-lg);
     position: relative;
-    box-shadow: 4px 6px 0px rgba(0,0,0,0.2), inset -1px -1px 0px rgba(0,0,0,0.1);
+    box-shadow: var(--ua-shadow-card);
     transform: rotate(-0.3deg);
   }
   .ua-feature-card:hover {
     transform: rotate(0deg);
-    box-shadow: 6px 8px 0px rgba(0,0,0,0.3), inset -1px -1px 0px rgba(0,0,0,0.15);
+    box-shadow: var(--ua-shadow-card-hover);
   }
 
   /* ── Testimonial cards ──────────────────────────────── */
   .ua-testimonial-card {
     @apply bg-white p-8 border-4 border-black overflow-hidden;
-    border-radius: 0.5rem;
+    border-radius: var(--ua-radius-lg);
     position: relative;
-    box-shadow: 4px 6px 0px rgba(0,0,0,0.2), inset -1px -1px 0px rgba(0,0,0,0.1);
+    box-shadow: var(--ua-shadow-card);
     transform: rotate(-0.3deg);
   }
   .ua-testimonial-card:hover {
     transform: rotate(0deg);
-    box-shadow: 6px 8px 0px rgba(0,0,0,0.3), inset -1px -1px 0px rgba(0,0,0,0.15);
+    box-shadow: var(--ua-shadow-card-hover);
   }
 
   /* ── Hero stat display ──────────────────────────────── */
@@ -561,25 +576,25 @@ body {
   /* ── Product card ───────────────────────────────────── */
   .ua-product-card {
     @apply bg-white border-4 border-black hover:scale-105 transition-all duration-300 h-full flex flex-col cursor-pointer overflow-hidden;
-    border-radius: 0.5rem;
+    border-radius: var(--ua-radius-card);
     position: relative;
-    box-shadow: 4px 6px 0px rgba(0,0,0,0.2), inset -1px -1px 0px rgba(0,0,0,0.1);
+    box-shadow: var(--ua-shadow-card);
     transform: rotate(-0.3deg);
   }
   .ua-product-card:hover {
     transform: rotate(0deg);
-    box-shadow: 6px 8px 0px rgba(0,0,0,0.3), inset -1px -1px 0px rgba(0,0,0,0.15);
+    box-shadow: var(--ua-shadow-card-hover);
   }
   .ua-card-body         { @apply p-4 flex flex-col flex-1; }
   .ua-card-body-lg      { @apply p-6 flex flex-col flex-1; }
-  .ua-card-image-wrap   { @apply relative bg-gray-900 overflow-hidden rounded-t-lg; }
+  .ua-card-image-wrap   { @apply relative bg-gray-900 overflow-hidden; border-radius: var(--ua-radius-card) var(--ua-radius-card) 0 0; }
   .ua-card-image        { @apply w-full h-full object-cover filter grayscale transition-all duration-500; }
   .ua-card-image-frame {
     @apply relative bg-gray-900 flex items-center justify-center overflow-hidden;
-    border-radius: 0.5rem;
+    border-radius: var(--ua-radius-card);
     position: relative;
     border: 4px solid #000;
-    box-shadow: 3px 5px 0px rgba(0,0,0,0.4), inset -2px -2px 0px rgba(255,255,255,0.1);
+    box-shadow: var(--ua-shadow-frame);
   }
 
   /* ── Card badges ────────────────────────────────────── */
@@ -588,6 +603,38 @@ body {
   .ua-badge-sale        { @apply bg-red-600 text-white; }
   .ua-badge-oos         { @apply bg-gray-700 text-white; }
   .ua-badge-stack       { @apply absolute top-3 left-3 flex flex-col gap-1; }
+
+  /* ── Label badges (hero + section badges) ───────────── */
+  .ua-label-badge {
+    @apply inline-flex items-center gap-2 px-4 py-2 text-white bg-red-600 font-black text-sm uppercase tracking-widest;
+    border-radius: var(--ua-radius-sm);
+    box-shadow: 3px 3px 0px rgba(0,0,0,0.35);
+  }
+  .ua-label-badge-dark {
+    @apply inline-flex items-center gap-2 px-4 py-2 text-white bg-black font-black text-sm uppercase tracking-widest;
+    border-radius: var(--ua-radius-sm);
+    box-shadow: 3px 3px 0px rgba(220,38,38,0.5);
+  }
+
+  /* ── Hero image frame ───────────────────────────────── */
+  .ua-hero-img-frame {
+    @apply bg-gray-900 p-3 transform rotate-1 overflow-hidden;
+    border-radius: var(--ua-radius-xl);
+    border: 3px solid rgba(255,255,255,0.1);
+    box-shadow: var(--ua-shadow-frame);
+  }
+  .ua-hero-img-frame img {
+    border-radius: calc(var(--ua-radius-xl) - 0.25rem);
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  /* ── Newsletter input wrapper ────────────────────────── */
+  .ua-newsletter-input {
+    @apply flex items-center gap-2 flex-1 bg-gray-900 border-2 border-gray-700 focus-within:border-red-600 transition-colors px-4;
+    border-radius: var(--ua-radius-card);
+  }
 
   /* ── Wishlist / interaction buttons ─────────────────── */
   .ua-wishlist-btn {
@@ -617,39 +664,48 @@ body {
   /* ── Star rating ────────────────────────────────────── */
   .ua-rating-count      { @apply text-xs text-gray-500 font-bold; }
 
+  /* ── Button base (shared shadow / radius / tilt) ────── */
+  .ua-btn-base {
+    border-radius: var(--ua-radius-btn);
+    border: 3px solid transparent;
+    box-shadow: var(--ua-shadow-btn);
+    transform: rotate(-0.5deg);
+  }
+  .ua-btn-base:hover { transform: rotate(0deg) scale(1.02); box-shadow: var(--ua-shadow-btn-hover); }
+
   /* ── CTA / action buttons ───────────────────────────── */
   .ua-btn-cart {
     @apply bg-black text-white hover:bg-red-600 font-black uppercase text-xs w-full disabled:opacity-50 disabled:cursor-not-allowed;
-    border-radius: 0.375rem;
+    border-radius: var(--ua-radius-btn);
     border: 3px solid transparent;
-    box-shadow: 2px 3px 0px rgba(0,0,0,0.3), inset -1px -1px 0px rgba(0,0,0,0.2);
+    box-shadow: var(--ua-shadow-btn);
     transform: rotate(-0.5deg);
   }
-  .ua-btn-cart:hover { transform: rotate(0deg) scale(1.02); box-shadow: 3px 4px 0px rgba(0,0,0,0.4); }
+  .ua-btn-cart:hover { transform: rotate(0deg) scale(1.02); box-shadow: var(--ua-shadow-btn-hover); }
   .ua-btn-cart-red {
     @apply bg-red-600 text-white hover:bg-red-700 font-black uppercase text-xs w-full disabled:opacity-50;
-    border-radius: 0.375rem;
+    border-radius: var(--ua-radius-btn);
     border: 3px solid transparent;
-    box-shadow: 2px 3px 0px rgba(0,0,0,0.3), inset -1px -1px 0px rgba(0,0,0,0.2);
+    box-shadow: var(--ua-shadow-btn);
     transform: rotate(-0.5deg);
   }
-  .ua-btn-cart-red:hover { transform: rotate(0deg) scale(1.02); box-shadow: 3px 4px 0px rgba(0,0,0,0.4); }
+  .ua-btn-cart-red:hover { transform: rotate(0deg) scale(1.02); box-shadow: var(--ua-shadow-btn-hover); }
   .ua-btn-primary {
     @apply bg-red-600 hover:bg-red-700 text-white font-black uppercase;
-    border-radius: 0.375rem;
+    border-radius: var(--ua-radius-btn);
     border: 3px solid transparent;
-    box-shadow: 2px 3px 0px rgba(0,0,0,0.3), inset -1px -1px 0px rgba(0,0,0,0.2);
+    box-shadow: var(--ua-shadow-btn);
     transform: rotate(-0.5deg);
   }
-  .ua-btn-primary:hover { transform: rotate(0deg) scale(1.02); }
+  .ua-btn-primary:hover { transform: rotate(0deg) scale(1.02); box-shadow: var(--ua-shadow-btn-hover); }
   .ua-btn-secondary {
     @apply bg-black hover:bg-gray-900 text-white font-black uppercase;
-    border-radius: 0.375rem;
+    border-radius: var(--ua-radius-btn);
     border: 3px solid transparent;
-    box-shadow: 2px 3px 0px rgba(0,0,0,0.3), inset -1px -1px 0px rgba(0,0,0,0.2);
+    box-shadow: var(--ua-shadow-btn);
     transform: rotate(-0.5deg);
   }
-  .ua-btn-secondary:hover { transform: rotate(0deg) scale(1.02); }
+  .ua-btn-secondary:hover { transform: rotate(0deg) scale(1.02); box-shadow: var(--ua-shadow-btn-hover); }
 
   /* ── Section utilities ──────────────────────────────── */
   .ua-results-count     { @apply text-sm font-black uppercase text-gray-600 mb-6; }
@@ -659,16 +715,16 @@ body {
   /* ── Sidebar item row ───────────────────────────────── */
   .ua-sidebar-item {
     @apply flex gap-4 p-4 border-2 border-gray-200 transition-colors cursor-pointer;
-    border-radius: 0.375rem;
+    border-radius: var(--ua-radius-sm);
   }
-  .ua-sidebar-item:hover { border-color: #dc2626; }
+  .ua-sidebar-item:hover { border-color: var(--ua-red); }
 
   /* ── Sidebar thumbnail (image container) ────────────── */
   .ua-sidebar-thumb {
     @apply bg-gray-900 overflow-hidden flex-shrink-0;
     width: 5rem;
     height: 5rem;
-    border-radius: 0.375rem;
+    border-radius: var(--ua-radius-sm);
   }
 
   /* ── Count badge (cart / wishlist count bubble) ─────── */
@@ -682,7 +738,7 @@ body {
   /* ── Quantity control wrapper ───────────────────────── */
   .ua-qty-ctrl {
     @apply flex items-center space-x-1 border-2 border-gray-300;
-    border-radius: 0.375rem;
+    border-radius: var(--ua-radius-sm);
   }
 
   /* ── List view layout ────────────────────────────────── */

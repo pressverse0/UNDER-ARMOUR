@@ -12,8 +12,10 @@ import {
   ViewToggle, FilterPanel, FilterToggleButton,
   ResultsCount, Pagination,
 } from "@/components/filters"
-import { accessoryProducts, accessoryCategoryFilters } from "@/data/products/accessories"
-import type { AccessoryProduct } from "@/types/product"
+import { useProducts } from "@/hooks/useProducts"
+import type { FrontendProduct } from "@/hooks/useProducts"
+
+const ACCESSORY_CATEGORIES = ["Outdoor", "Lifestyle", "Accessories", "Bags", "Headwear"]
 
 const SORT_OPTIONS = [
   { label: "Featured",          value: "featured"   },
@@ -23,12 +25,19 @@ const SORT_OPTIONS = [
   { label: "Top Rated",         value: "rating"     },
 ]
 const ITEMS_PER_PAGE = 9
-const ALL_CATEGORIES = accessoryCategoryFilters.filter((c) => c !== "All")
 
 export default function AccessoriesPage() {
   const { toast } = useToast()
   const { addToCart } = useCart()
   const { addToWishlist, isInWishlist, removeFromWishlist } = useWishlist()
+  const { products: allProducts, loading } = useProducts({ perPage: 100 })
+
+  const accessoryProducts = useMemo(
+    () => allProducts.filter(p =>
+      ACCESSORY_CATEGORIES.some(c => p.category.toLowerCase().includes(c.toLowerCase()))
+    ),
+    [allProducts]
+  )
 
   const [searchQuery, setSearchQuery] = useState("")
   const [categories,  setCategories]  = useState<string[]>([])
@@ -36,6 +45,8 @@ export default function AccessoriesPage() {
   const [currentPage, setCurrentPage] = useState(1)
   const [viewMode,    setViewMode]    = useState<"grid" | "list">("grid")
   const [filtersOpen, setFiltersOpen] = useState(false)
+
+  const availableCategories = useMemo(() => [...new Set(accessoryProducts.map(p => p.category))].sort(), [accessoryProducts])
 
   const filtered = useMemo(() => {
     let items = accessoryProducts.filter((p) => {
@@ -46,13 +57,13 @@ export default function AccessoriesPage() {
       )
     })
     switch (sortBy) {
-      case "price-low":  items.sort((a, b) => a.price - b.price); break
-      case "price-high": items.sort((a, b) => b.price - a.price); break
-      case "rating":     items.sort((a, b) => b.rating - a.rating); break
-      case "newest":     items.sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0)); break
+      case "price-low":  items = [...items].sort((a, b) => a.price - b.price); break
+      case "price-high": items = [...items].sort((a, b) => b.price - a.price); break
+      case "rating":     items = [...items].sort((a, b) => b.rating - a.rating); break
+      case "newest":     items = [...items].sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0)); break
     }
     return items
-  }, [searchQuery, categories, sortBy])
+  }, [accessoryProducts, searchQuery, categories, sortBy])
 
   const totalPages  = Math.ceil(filtered.length / ITEMS_PER_PAGE)
   const paginated   = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)
@@ -60,14 +71,14 @@ export default function AccessoriesPage() {
 
   const clearFilters = () => { setCategories([]); setSearchQuery(""); setCurrentPage(1) }
 
-  const handleCart = (e: React.MouseEvent, p: AccessoryProduct) => {
+  const handleCart = (e: React.MouseEvent, p: FrontendProduct) => {
     e.preventDefault()
     if (!p.inStock) return
     addToCart({ id: p.id, name: p.name, price: p.price, image: p.image, category: p.category })
     toast({ title: "Added to Cart!", description: p.name })
   }
 
-  const handleWishlist = (e: React.MouseEvent, p: AccessoryProduct) => {
+  const handleWishlist = (e: React.MouseEvent, p: FrontendProduct) => {
     e.preventDefault()
     if (isInWishlist(p.id)) {
       removeFromWishlist(p.id)
@@ -96,7 +107,7 @@ export default function AccessoriesPage() {
 
         <ErrorBoundary>
           <FilterPanel isOpen={filtersOpen} onToggle={() => setFiltersOpen(!filtersOpen)} onClear={clearFilters} activeCount={activeCount}>
-            <CheckboxGroup label="Category" options={ALL_CATEGORIES} selected={categories} onChange={(v) => { setCategories(v); setCurrentPage(1) }} />
+            <CheckboxGroup label="Category" options={availableCategories} selected={categories} onChange={(v) => { setCategories(v); setCurrentPage(1) }} />
           </FilterPanel>
         </ErrorBoundary>
 
@@ -105,7 +116,13 @@ export default function AccessoriesPage() {
             <div className="mb-6">
               <ResultsCount shown={paginated.length} total={filtered.length} label="accessories" />
             </div>
-            {paginated.length === 0 ? (
+            {loading ? (
+              <div className="ua-product-grid">
+                {[...Array(6)].map((_, i) => (
+                  <div key={i} className="bg-white border-4 border-gray-200 rounded animate-pulse h-80" />
+                ))}
+              </div>
+            ) : paginated.length === 0 ? (
               <EmptyState title="No accessories found" onClear={clearFilters} />
             ) : (
               <div className={viewMode === "grid" ? "ua-product-grid" : "ua-list-view"}>

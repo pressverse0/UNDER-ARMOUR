@@ -11,8 +11,10 @@ import {
   PriceRange, ViewToggle, FilterPanel, FilterToggleButton,
   ResultsCount, Pagination,
 } from "@/components/filters"
-import { shoesProducts, shoesCategories, shoesGenders, shoesSizes, shoesTechnologies } from "@/data/products/shoes"
-import type { Product } from "@/types/product"
+import { useProducts } from "@/hooks/useProducts"
+import type { FrontendProduct } from "@/hooks/useProducts"
+
+const SHOE_CATEGORIES = ["Running", "Basketball"]
 
 const SORT_OPTIONS = [
   { label: "Featured",          value: "featured"   },
@@ -27,6 +29,12 @@ export default function ShoesPage() {
   const { toast } = useToast()
   const { addToCart } = useCart()
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist()
+  const { products: allProducts, loading } = useProducts({ perPage: 100 })
+
+  const shoeProducts = useMemo(
+    () => allProducts.filter(p => SHOE_CATEGORIES.some(c => p.category.toLowerCase().includes(c.toLowerCase()))),
+    [allProducts]
+  )
 
   const [searchQuery,        setSearchQuery]        = useState("")
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
@@ -39,8 +47,14 @@ export default function ShoesPage() {
   const [viewMode,           setViewMode]           = useState<"grid" | "list">("grid")
   const [filtersOpen,        setFiltersOpen]        = useState(false)
 
+  const categories  = useMemo(() => [...new Set(shoeProducts.map(p => p.category))].sort(), [shoeProducts])
+  const genders     = useMemo(() => [...new Set(shoeProducts.map(p => p.gender).filter(Boolean) as string[])].sort(), [shoeProducts])
+  const sizes       = useMemo(() => [...new Set(shoeProducts.flatMap(p => p.size))].sort(), [shoeProducts])
+  const technologies = useMemo(() => [...new Set(shoeProducts.map(p => p.technology).filter(Boolean) as string[])].sort(), [shoeProducts])
+  const maxPrice    = useMemo(() => Math.ceil(Math.max(...shoeProducts.map(p => p.price), 250)), [shoeProducts])
+
   const filtered = useMemo(() => {
-    let items = shoesProducts.filter((p) => {
+    let items = shoeProducts.filter((p) => {
       const q = searchQuery.toLowerCase()
       return (
         (p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q)) &&
@@ -52,13 +66,13 @@ export default function ShoesPage() {
       )
     })
     switch (sortBy) {
-      case "price-low":  items.sort((a, b) => a.price - b.price); break
-      case "price-high": items.sort((a, b) => b.price - a.price); break
-      case "rating":     items.sort((a, b) => b.rating - a.rating); break
-      case "newest":     items.sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0)); break
+      case "price-low":  items = [...items].sort((a, b) => a.price - b.price); break
+      case "price-high": items = [...items].sort((a, b) => b.price - a.price); break
+      case "rating":     items = [...items].sort((a, b) => b.rating - a.rating); break
+      case "newest":     items = [...items].sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0)); break
     }
     return items
-  }, [searchQuery, selectedCategories, selectedGenders, selectedSizes, selectedTechs, priceRange, sortBy])
+  }, [shoeProducts, searchQuery, selectedCategories, selectedGenders, selectedSizes, selectedTechs, priceRange, sortBy])
 
   const totalPages  = Math.ceil(filtered.length / ITEMS_PER_PAGE)
   const paginated   = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)
@@ -66,17 +80,17 @@ export default function ShoesPage() {
 
   const clearFilters = () => {
     setSelectedCategories([]); setSelectedGenders([]); setSelectedSizes([])
-    setSelectedTechs([]);       setPriceRange([0, 250]); setSearchQuery(""); setCurrentPage(1)
+    setSelectedTechs([]); setPriceRange([0, maxPrice]); setSearchQuery(""); setCurrentPage(1)
   }
 
-  const handleCart = (e: React.MouseEvent, p: Product) => {
+  const handleCart = (e: React.MouseEvent, p: FrontendProduct) => {
     e.preventDefault()
     if (!p.inStock) return
     addToCart({ id: p.id, name: p.name, price: p.price, image: p.image, category: p.category })
     toast({ title: "Added to Cart!", description: p.name })
   }
 
-  const handleWishlist = (e: React.MouseEvent, p: Product) => {
+  const handleWishlist = (e: React.MouseEvent, p: FrontendProduct) => {
     e.preventDefault()
     if (isInWishlist(p.id)) {
       removeFromWishlist(p.id)
@@ -110,19 +124,21 @@ export default function ShoesPage() {
 
         <ErrorBoundary>
           <FilterPanel isOpen={filtersOpen} onToggle={() => setFiltersOpen(!filtersOpen)} onClear={clearFilters} activeCount={activeCount}>
-            <CheckboxGroup label="Type"       options={shoesCategories}   selected={selectedCategories} onChange={(v) => { setSelectedCategories(v); setCurrentPage(1) }} />
-            <CheckboxGroup label="Gender"     options={shoesGenders}      selected={selectedGenders}    onChange={(v) => { setSelectedGenders(v);    setCurrentPage(1) }} />
+            <CheckboxGroup label="Type"   options={categories}   selected={selectedCategories} onChange={(v) => { setSelectedCategories(v); setCurrentPage(1) }} />
+            <CheckboxGroup label="Gender" options={genders}      selected={selectedGenders}    onChange={(v) => { setSelectedGenders(v);    setCurrentPage(1) }} />
             <div>
               <p className="ua-filter-label">Size (US)</p>
               <div className="flex flex-wrap gap-1.5">
-                {shoesSizes.map((s) => (
+                {sizes.map((s) => (
                   <PillToggle key={s} label={s} isActive={selectedSizes.includes(s)}
                     onClick={() => { setSelectedSizes(prev => prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s]); setCurrentPage(1) }} />
                 ))}
               </div>
             </div>
-            <CheckboxGroup label="Technology" options={shoesTechnologies} selected={selectedTechs} onChange={(v) => { setSelectedTechs(v); setCurrentPage(1) }} />
-            <PriceRange min={0} max={250} value={priceRange} onChange={(v) => { setPriceRange(v); setCurrentPage(1) }} />
+            {technologies.length > 0 && (
+              <CheckboxGroup label="Technology" options={technologies} selected={selectedTechs} onChange={(v) => { setSelectedTechs(v); setCurrentPage(1) }} />
+            )}
+            <PriceRange min={0} max={maxPrice} value={priceRange} onChange={(v) => { setPriceRange(v); setCurrentPage(1) }} />
           </FilterPanel>
         </ErrorBoundary>
 
@@ -131,7 +147,13 @@ export default function ShoesPage() {
             <div className="mb-6">
               <ResultsCount shown={paginated.length} total={filtered.length} label="shoes" />
             </div>
-            {paginated.length === 0 ? (
+            {loading ? (
+              <div className="ua-product-grid">
+                {[...Array(6)].map((_, i) => (
+                  <div key={i} className="bg-white border-4 border-gray-200 rounded animate-pulse h-80" />
+                ))}
+              </div>
+            ) : paginated.length === 0 ? (
               <EmptyState title="No shoes found" onClear={clearFilters} />
             ) : (
               <div className={viewMode === "grid" ? "ua-product-grid" : "ua-list-view"}>

@@ -5,71 +5,90 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { ShoppingCart, Lock, CheckCircle, ArrowRight, User, Mail, MapPin, Phone } from "lucide-react"
-import { Link } from "wouter"
+import { Link, useLocation } from "wouter"
 
 import PageLayout from "@/components/layout/page-layout"
 import { useCart } from "@/context/cart-context"
+import { useAuth } from "@/context/auth-context"
+import { checkout as checkoutApi } from "@/lib/api"
 import type { CustomerInfo } from "@/types/checkout"
 
 export default function CheckoutPage() {
   const { cartItems, cartTotal, clearCart } = useCart()
+  const { user, isAuthenticated } = useAuth()
+  const [, navigate] = useLocation()
   const [isLoading, setIsLoading] = useState(false)
+  const [orderSuccess, setOrderSuccess] = useState(false)
+  const [orderNumber, setOrderNumber] = useState("")
+  const [error, setError] = useState("")
 
   const [customerInfo, setCustomerInfo] = useState<CustomerInfo>({
-    fullName: '',
-    email: '',
-    phone: '',
-    address: '',
-    city: '',
-    state: '',
-    zipCode: '',
+    fullName: user?.name ?? '',
+    email: user?.email ?? '',
+    phone: user?.phone ?? '',
+    address: user?.address ?? '',
+    city: user?.city ?? '',
+    state: user?.state ?? '',
+    zipCode: user?.zip_code ?? '',
     country: 'US'
   })
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setCustomerInfo({
-      ...customerInfo,
-      [e.target.name]: e.target.value
-    })
+    setCustomerInfo({ ...customerInfo, [e.target.name]: e.target.value })
   }
 
   const handleCheckout = async (e: React.FormEvent) => {
     e.preventDefault()
     if (cartItems.length === 0) return
+    setError("")
     setIsLoading(true)
+
     try {
-      const response = await fetch("/api/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          items: cartItems.map((item) => ({ id: item.id, quantity: item.quantity })),
-          customerInfo,
-        }),
+      const data = await checkoutApi.process({
+        address: customerInfo.address,
+        city: customerInfo.city,
+        state: customerInfo.state,
+        zip_code: customerInfo.zipCode,
+        country: customerInfo.country,
+        full_name: customerInfo.fullName,
+        email: customerInfo.email,
+        items: cartItems.map(i => ({ id: i.id, quantity: i.quantity })),
       })
-
-      const data = await response.json()
-
-      if (!response.ok) {
-        console.error("Checkout error:", data.error)
-        setIsLoading(false)
-        return
-      }
-
-      if (data.url) {
-        clearCart()
-        window.location.href = data.url
-      } else {
-        console.error("No checkout URL received")
-        setIsLoading(false)
-      }
-    } catch (error) {
-      console.error("Checkout error:", error)
+      clearCart()
+      setOrderNumber(data.order_number || String(data.id) || 'N/A')
+      setOrderSuccess(true)
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.')
       setIsLoading(false)
     }
   }
 
-  const shipping = 5.99
-  const orderTotal = cartTotal + shipping
+  const shipping = cartTotal > 100 ? 0 : 5.99
+  const tax = cartTotal * 0.10
+  const orderTotal = cartTotal + shipping + tax
+
+  if (orderSuccess) {
+    return (
+      <PageLayout seoTitle="Order Confirmed | Under Armour®">
+        <main className="flex-1 ua-bg-light ua-section-lg">
+          <div className="ua-page-container text-center max-w-md mx-auto">
+            <CheckCircle className="h-20 w-20 text-green-600 mx-auto mb-6" />
+            <h1 className="text-4xl font-black uppercase mb-4">Order Confirmed!</h1>
+            <p className="text-gray-600 font-bold mb-2">Your order has been placed successfully.</p>
+            {orderNumber && <p className="font-black text-red-600 text-lg mb-8">Order #{orderNumber}</p>}
+            <div className="flex flex-col gap-4">
+              <Link href="/account/orders">
+                <Button className="ua-btn-primary w-full text-lg py-4">View My Orders</Button>
+              </Link>
+              <Link href="/men">
+                <Button className="ua-btn-secondary w-full text-lg py-4">Continue Shopping</Button>
+              </Link>
+            </div>
+          </div>
+        </main>
+      </PageLayout>
+    )
+  }
 
   if (cartItems.length === 0) {
     return (
@@ -101,7 +120,20 @@ export default function CheckoutPage() {
                 <Lock className="h-5 w-5" />
                 <p className="font-bold text-sm md:text-base">Your payment is secure and encrypted</p>
               </div>
+              {!isAuthenticated && (
+                <div className="mt-4 p-3 bg-yellow-50 border-2 border-yellow-400 rounded inline-block">
+                  <p className="font-bold text-yellow-800 text-sm">
+                    <Link href="/account" className="underline">Sign in</Link> to save your order history
+                  </p>
+                </div>
+              )}
             </div>
+
+            {error && (
+              <div className="mb-6 p-4 bg-red-50 border-2 border-red-400 rounded text-red-700 font-bold text-center">
+                {error}
+              </div>
+            )}
 
             <form onSubmit={handleCheckout}>
               <div className="grid lg:grid-cols-3 gap-6 lg:gap-8">
@@ -122,8 +154,8 @@ export default function CheckoutPage() {
                           <Input id="email" name="email" type="email" required value={customerInfo.email} onChange={handleInputChange} className="sketchy-border border-2 border-gray-300 focus:border-red-600 font-bold" placeholder="john@example.com" />
                         </div>
                         <div>
-                          <Label htmlFor="phone" className="font-black uppercase text-sm mb-2 block"><Phone className="h-4 w-4 inline mr-1" />Phone *</Label>
-                          <Input id="phone" name="phone" type="tel" required value={customerInfo.phone} onChange={handleInputChange} className="sketchy-border border-2 border-gray-300 focus:border-red-600 font-bold" placeholder="+1 (555) 123-4567" />
+                          <Label htmlFor="phone" className="font-black uppercase text-sm mb-2 block"><Phone className="h-4 w-4 inline mr-1" />Phone</Label>
+                          <Input id="phone" name="phone" type="tel" value={customerInfo.phone} onChange={handleInputChange} className="sketchy-border border-2 border-gray-300 focus:border-red-600 font-bold" placeholder="+1 (555) 123-4567" />
                         </div>
                         <div>
                           <Label htmlFor="country" className="font-black uppercase text-sm mb-2 block">Country *</Label>
@@ -194,20 +226,33 @@ export default function CheckoutPage() {
                           <span>Subtotal:</span><span>${cartTotal.toFixed(2)}</span>
                         </div>
                         <div className="flex justify-between font-bold">
-                          <span>Shipping:</span><span>${shipping.toFixed(2)}</span>
+                          <span>Tax (10%):</span><span>${tax.toFixed(2)}</span>
+                        </div>
+                        <div className="flex justify-between font-bold">
+                          <span>Shipping:</span>
+                          <span>{shipping === 0 ? <span className="text-green-600">FREE</span> : `$${shipping.toFixed(2)}`}</span>
                         </div>
                         <div className="flex justify-between font-black text-xl border-t-2 border-gray-300 pt-3">
                           <span>Total:</span>
                           <span className="text-red-600">${orderTotal.toFixed(2)}</span>
                         </div>
                       </div>
-                      <Button type="submit" disabled={isLoading} className="ua-btn-primary w-full text-lg py-6 disabled:opacity-50 disabled:cursor-not-allowed">
-                        {isLoading ? (
-                          <><div className="inline-block animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white mr-2" />Processing...</>
-                        ) : (
-                          <>Proceed to Payment<ArrowRight className="ml-2 h-5 w-5" /></>
-                        )}
-                      </Button>
+                      {!isAuthenticated ? (
+                        <div className="text-center mb-4">
+                          <p className="font-bold text-gray-600 text-sm mb-3">You need to be signed in to complete checkout</p>
+                          <Link href="/account">
+                            <Button className="ua-btn-primary w-full text-lg py-4">Sign In / Register</Button>
+                          </Link>
+                        </div>
+                      ) : (
+                        <Button type="submit" disabled={isLoading} className="ua-btn-primary w-full text-lg py-6 disabled:opacity-50 disabled:cursor-not-allowed">
+                          {isLoading ? (
+                            <><div className="inline-block animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white mr-2" />Processing...</>
+                          ) : (
+                            <>Place Order<ArrowRight className="ml-2 h-5 w-5" /></>
+                          )}
+                        </Button>
+                      )}
                       <div className="mt-4 p-3 bg-gray-50 rounded sketchy-border">
                         <div className="flex items-center gap-2 text-xs">
                           <CheckCircle className="h-4 w-4 text-green-600 flex-shrink-0" />
