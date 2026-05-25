@@ -519,6 +519,55 @@ body {
   .ua-products-section  { @apply py-12 bg-gray-100; }
   .ua-cta-section       { @apply py-16 bg-black text-white; }
 
+  /* ── Section padding utilities ──────────────────────── */
+  .ua-section-sm        { @apply py-8; }
+  .ua-section-md        { @apply py-12; }
+  .ua-section-lg        { @apply py-16 lg:py-20; }
+  .ua-section-xl        { @apply py-20 lg:py-32; }
+
+  /* ── Section background utilities ───────────────────── */
+  .ua-bg-light          { @apply bg-gray-100; }
+  .ua-bg-white          { @apply bg-white; }
+  .ua-bg-dark           { @apply bg-black text-white; }
+  .ua-bg-accent         { @apply bg-red-600 text-white; }
+
+  /* ── Category cards (home + sports index) ───────────── */
+  .ua-cat-card          { @apply relative overflow-hidden rounded-lg bg-white border-4 border-black transition-all duration-300 text-center p-6; will-change: transform; }
+  .ua-cat-card:hover    { border-color: #dc2626; transform: scale(1.05); }
+  .ua-cat-card-heading  { @apply font-black text-lg uppercase transition-colors; }
+  .ua-cat-card:hover .ua-cat-card-heading { color: #dc2626; }
+  .ua-cat-card-desc     { @apply text-xs font-bold text-gray-500 mt-1; }
+
+  /* ── Mission / feature cards (dark bg) ──────────────── */
+  .ua-feature-card {
+    @apply bg-gray-900 p-8 border-2 border-red-600 text-center overflow-hidden;
+    border-radius: 0.5rem;
+    position: relative;
+    box-shadow: 4px 6px 0px rgba(0,0,0,0.2), inset -1px -1px 0px rgba(0,0,0,0.1);
+    transform: rotate(-0.3deg);
+  }
+  .ua-feature-card:hover {
+    transform: rotate(0deg);
+    box-shadow: 6px 8px 0px rgba(0,0,0,0.3), inset -1px -1px 0px rgba(0,0,0,0.15);
+  }
+
+  /* ── Testimonial cards ──────────────────────────────── */
+  .ua-testimonial-card {
+    @apply bg-white p-8 border-4 border-black overflow-hidden;
+    border-radius: 0.5rem;
+    position: relative;
+    box-shadow: 4px 6px 0px rgba(0,0,0,0.2), inset -1px -1px 0px rgba(0,0,0,0.1);
+    transform: rotate(-0.3deg);
+  }
+  .ua-testimonial-card:hover {
+    transform: rotate(0deg);
+    box-shadow: 6px 8px 0px rgba(0,0,0,0.3), inset -1px -1px 0px rgba(0,0,0,0.15);
+  }
+
+  /* ── Hero stat display ──────────────────────────────── */
+  .ua-stat-value        { @apply text-2xl font-black text-red-600; }
+  .ua-stat-label        { @apply text-xs font-black uppercase text-gray-400; }
+
   /* ── Filter bar ─────────────────────────────────────── */
   .ua-filter-bar        { @apply bg-white border-b-4 border-black sticky z-30; }
 
