@@ -2,6 +2,8 @@ import { Switch, Route, Router as WouterRouter } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { CartProvider } from "@/context/cart-context";
+import { WishlistProvider } from "@/context/wishlist-context";
 
 import HomePage from "@/pages/home";
 import MenPage from "@/pages/men";
@@ -9,6 +11,9 @@ import WomenPage from "@/pages/women";
 import ShoesPage from "@/pages/shoes";
 import KidsPage from "@/pages/kids";
 import AccessoriesPage from "@/pages/accessories";
+import SalePage from "@/pages/sale";
+import NewArrivalsPage from "@/pages/new-arrivals";
+import TrackOrderPage from "@/pages/track-order";
 import SportsPage from "@/pages/sports/index";
 import BasketballPage from "@/pages/sports/basketball";
 import FootballPage from "@/pages/sports/football";
@@ -40,6 +45,9 @@ function Router() {
       <Route path="/shoes" component={ShoesPage} />
       <Route path="/kids" component={KidsPage} />
       <Route path="/accessories" component={AccessoriesPage} />
+      <Route path="/sale" component={SalePage} />
+      <Route path="/new-arrivals" component={NewArrivalsPage} />
+      <Route path="/track-order" component={TrackOrderPage} />
       <Route path="/sports" component={SportsPage} />
       <Route path="/sports/basketball" component={BasketballPage} />
       <Route path="/sports/football" component={FootballPage} />
@@ -67,10 +75,14 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-          <Router />
-        </WouterRouter>
-        <Toaster />
+        <CartProvider>
+          <WishlistProvider>
+            <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+              <Router />
+            </WouterRouter>
+            <Toaster />
+          </WishlistProvider>
+        </CartProvider>
       </TooltipProvider>
     </QueryClientProvider>
   );
