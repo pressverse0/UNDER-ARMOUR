@@ -95,7 +95,7 @@ export const products = {
     return request<{ data: unknown[]; meta?: unknown }>('GET', path)
   },
   getById: (id: number | string) =>
-    request<unknown>('GET', `/products/${id}`),
+    request<{ data: unknown }>('GET', `/products/${id}`).then(r => r.data),
   getNewArrivals: (limit = 10) =>
     request<unknown[]>('GET', `/products/new-arrivals?limit=${limit}`),
   getSale: (limit = 10) =>

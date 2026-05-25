@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
+use App\Models\Product;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
 
@@ -38,7 +39,7 @@ class ProductController extends Controller
      */
     public function show(int $id)
     {
-        $product = $this->productService->getProductDetails($id);
+        $product = Product::with(['category', 'variants', 'reviews'])->findOrFail($id);
         return new ProductResource($product);
     }
 
