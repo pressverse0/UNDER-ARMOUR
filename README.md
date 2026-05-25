@@ -7,6 +7,8 @@ A full-stack e-commerce platform built with **React 18**, **Laravel 11**, and **
 - **[Setup & Installation](./docs/SETUP.md)** - Quick start guide
 - **[API Reference](./docs/API.md)** - Complete endpoint documentation
 - **[System Design](./docs/ARCHITECTURE.md)** - Architecture & database design
+- **[Security & Best Practices](./docs/SECURITY.md)** - Security guidelines
+- **[Performance Optimization](./docs/PERFORMANCE.md)** - Performance strategies
 - **[Contributing](./docs/CONTRIBUTING.md)** - Development guidelines
 
 ---
@@ -183,31 +185,27 @@ npm run dev
 
 ---
 
-## 🔐 Security & Performance
+## 🚀 Quick Start
 
-**Security**:
-- SQL injection prevention (Eloquent ORM)
-- CSRF protection & input validation
-- Password hashing (bcrypt)
-- API token authentication (Sanctum)
-- PCI compliance (Stripe)
+### Prerequisites
+- PHP 8.2+, Node.js 18+, MySQL 8.0+, Composer, Git
 
-**Performance**:
-- Eager loading (prevents N+1 queries)
-- Strategic database indexing
-- API response pagination
-- Full-text search support
-- Code splitting (frontend)
+### Backend (5 min)
+```bash
+cd backend
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate
+php artisan serve
+```
 
----
-
-## 📊 Project Stats
-
-- **Backend**: 10 models, 4 services, 5 controllers, 7 resources
-- **API**: 30+ endpoints, fully documented
-- **Database**: 11 tables, optimized indexes
-- **Frontend**: 20+ components, TypeScript
-- **Code**: ~3,000+ lines of production-ready code
+### Frontend (5 min)
+```bash
+cd under-armour
+npm install
+npm run dev
+```
 
 ---
 
