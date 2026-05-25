@@ -1,9 +1,10 @@
 import Header from "@/components/header"
 import Footer from "@/components/footer"
 import { usePageSeo } from "@/hooks/use-page-seo"
+import type { ActivePage } from "@/types/ui"
 
 interface PageLayoutProps {
-  activePage?: string
+  activePage?: ActivePage
   seoTitle?: string
   seoDescription?: string
   children: React.ReactNode

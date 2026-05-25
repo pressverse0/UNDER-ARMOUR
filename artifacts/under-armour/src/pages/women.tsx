@@ -1,484 +1,159 @@
-
 import { useState, useMemo } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Badge } from "@/components/ui/badge"
-
-import { Link } from "wouter"
+import { useToast } from "@/hooks/use-toast"
+import { useCart } from "@/context/cart-context"
+import { useWishlist } from "@/context/wishlist-context"
 import PageLayout from "@/components/layout/page-layout"
-import StarRating from "@/components/star-rating"
-import { 
-  Search, 
-  SlidersHorizontal, 
-  ChevronDown, 
-  ChevronLeft, 
-  ChevronRight,
-  Heart,
-  ShoppingCart,
-  X,
-  Grid3x3,
-  List
-} from "lucide-react"
-
+import ErrorBoundary from "@/components/error-boundary"
+import ProductCard from "@/components/product-card"
+import EmptyState from "@/components/EmptyState"
+import {
+  SearchInput, SortSelect, PillToggle, CheckboxGroup,
+  PriceRange, ViewToggle, FilterPanel, FilterToggleButton,
+  ResultsCount, Pagination,
+} from "@/components/filters"
+import { womenProducts, womenCategories, womenSizes, womenColors } from "@/data/products/women"
 import type { Product } from "@/types/product"
 
+const SORT_OPTIONS = [
+  { label: "Featured",          value: "featured"   },
+  { label: "Newest First",      value: "newest"     },
+  { label: "Price: Low → High", value: "price-low"  },
+  { label: "Price: High → Low", value: "price-high" },
+  { label: "Highest Rated",     value: "rating"     },
+]
+const ITEMS_PER_PAGE = 9
+
 export default function WomenPage() {
-  const [searchQuery, setSearchQuery] = useState('')
+  const { toast } = useToast()
+  const { addToCart } = useCart()
+  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist()
+
+  const [searchQuery,        setSearchQuery]        = useState("")
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
-  const [selectedSizes, setSelectedSizes] = useState<string[]>([])
-  const [selectedColors, setSelectedColors] = useState<string[]>([])
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 200])
-  const [sortBy, setSortBy] = useState('featured')
-  const [currentPage, setCurrentPage] = useState(1)
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
-  const [showFilters, setShowFilters] = useState(false)
-  const itemsPerPage = 9
+  const [selectedSizes,      setSelectedSizes]      = useState<string[]>([])
+  const [selectedColors,     setSelectedColors]     = useState<string[]>([])
+  const [priceRange,         setPriceRange]         = useState<[number, number]>([0, 200])
+  const [sortBy,             setSortBy]             = useState("featured")
+  const [currentPage,        setCurrentPage]        = useState(1)
+  const [viewMode,           setViewMode]           = useState<"grid" | "list">("grid")
+  const [filtersOpen,        setFiltersOpen]        = useState(false)
 
-  const allProducts: Product[] = [
-    { id: 1, name: "HeatGear Armour Sports Bra", price: 30, category: "Training", size: ["XS", "S", "M", "L", "XL"], color: ["Black", "Pink", "Purple"], rating: 4.7, reviews: 342, image: "/ARMOUR/HeatGear Armour Sports Bra.jpg", isNew: true, inStock: true },
-    { id: 2, name: "HOVR Sonic 5", price: 120, category: "Footwear", size: ["6", "7", "8", "9", "10"], color: ["White", "Pink", "Blue"], rating: 4.6, reviews: 198, image: "/ARMOUR/HOVR Sonic 5.jpg", inStock: true },
-    { id: 3, name: "Fly Fast 2.0 Tights", price: 50, originalPrice: 70, category: "Bottoms", size: ["XS", "S", "M", "L", "XL"], color: ["Black", "Navy", "Purple"], rating: 4.5, reviews: 267, image: "/ARMOUR/Fly Fast 2.0 Tights.jpg", isSale: true, inStock: true },
-    { id: 4, name: "Meridian Crop Tank", price: 35, category: "Training", size: ["XS", "S", "M", "L"], color: ["Black", "White", "Pink"], rating: 4.8, reviews: 421, image: "/ARMOUR/Meridian Crop Tank.jpg", inStock: true },
-    { id: 5, name: "Charged Pursuit 3", price: 70, category: "Footwear", size: ["6", "7", "8", "9", "10"], color: ["Black", "Gray", "Pink"], rating: 4.4, reviews: 156, image: "/ARMOUR/Charged Pursuit 3.jpg", inStock: true },
-    { id: 6, name: "Storm Windstrike Jacket", price: 100, category: "Outerwear", size: ["S", "M", "L", "XL"], color: ["Black", "Navy", "Pink"], rating: 4.6, reviews: 189, image: "/ARMOUR/Storm Windstrike Jacket.jpg", isNew: true, inStock: true },
-    { id: 7, name: "Infinity High Sports Bra", price: 45, category: "Training", size: ["XS", "S", "M", "L", "XL"], color: ["Black", "Purple", "Blue"], rating: 4.9, reviews: 512, image: "/ARMOUR/Infinity High Sports Bra.jpg", inStock: true },
-    { id: 8, name: "Rival Fleece Hoodie", price: 55, originalPrice: 75, category: "Outerwear", size: ["S", "M", "L", "XL"], color: ["Gray", "Pink", "Black"], rating: 4.7, reviews: 298, image: "/ARMOUR/Rival Fleece Hoodie.jpg", isSale: true, inStock: true },
-    { id: 9, name: "Play Up 3.0 Shorts", price: 25, category: "Bottoms", size: ["XS", "S", "M", "L", "XL"], color: ["Black", "Pink", "Blue"], rating: 4.5, reviews: 234, image: "/ARMOUR/Play Up 3.0 Shorts.jpg", inStock: true },
-    { id: 10, name: "Flow Velociti Wind 2", price: 150, category: "Footwear", size: ["6", "7", "8", "9", "10"], color: ["White", "Pink", "Purple"], rating: 4.8, reviews: 387, image: "/ARMOUR/Flow Velociti Wind 2.jpg", isNew: true, inStock: true },
-    { id: 11, name: "Tech Twist T-Shirt", price: 28, category: "Training", size: ["XS", "S", "M", "L", "XL"], color: ["Black", "White", "Pink", "Purple"], rating: 4.6, reviews: 445, image: "/ARMOUR/Tech Twist T-Shirt.jpg", inStock: true },
-    { id: 12, name: "Unstoppable Bomber Jacket", price: 110, category: "Outerwear", size: ["S", "M", "L", "XL"], color: ["Black", "Navy"], rating: 4.7, reviews: 167, image: "/ARMOUR/Unstoppable Bomber Jacket.jpg", inStock: false },
-  ]
-
-  const categories = ["Training", "Footwear", "Bottoms", "Outerwear"]
-  const sizes = ["XS", "S", "M", "L", "XL", "6", "7", "8", "9", "10"]
-  const colors = ["Black", "White", "Pink", "Purple", "Blue", "Gray", "Navy"]
-
-  const filteredProducts = useMemo(() => {
-    let filtered = allProducts.filter(product => {
-      const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase())
-      const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(product.category)
-      const matchesSize = selectedSizes.length === 0 || product.size.some(s => selectedSizes.includes(s))
-      const matchesColor = selectedColors.length === 0 || product.color.some(c => selectedColors.includes(c))
-      const matchesPrice = product.price >= priceRange[0] && product.price <= priceRange[1]
-      
-      return matchesSearch && matchesCategory && matchesSize && matchesColor && matchesPrice
+  const filtered = useMemo(() => {
+    let items = womenProducts.filter((p) => {
+      const q = searchQuery.toLowerCase()
+      return (
+        (p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q)) &&
+        (selectedCategories.length === 0 || selectedCategories.includes(p.category)) &&
+        (selectedSizes.length   === 0 || p.size.some((s) => selectedSizes.includes(s))) &&
+        (selectedColors.length  === 0 || p.color.some((c) => selectedColors.includes(c))) &&
+        p.price >= priceRange[0] && p.price <= priceRange[1]
+      )
     })
-
     switch (sortBy) {
-      case 'price-low':
-        filtered.sort((a, b) => a.price - b.price)
-        break
-      case 'price-high':
-        filtered.sort((a, b) => b.price - a.price)
-        break
-      case 'rating':
-        filtered.sort((a, b) => b.rating - a.rating)
-        break
-      case 'newest':
-        filtered.sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0))
-        break
+      case "price-low":  items.sort((a, b) => a.price - b.price); break
+      case "price-high": items.sort((a, b) => b.price - a.price); break
+      case "rating":     items.sort((a, b) => b.rating - a.rating); break
+      case "newest":     items.sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0)); break
     }
+    return items
+  }, [searchQuery, selectedCategories, selectedSizes, selectedColors, priceRange, sortBy])
 
-    return filtered
-  }, [allProducts, searchQuery, selectedCategories, selectedSizes, selectedColors, priceRange, sortBy])
-
-  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage)
-  const paginatedProducts = filteredProducts.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  )
-
-  const toggleCategory = (category: string) => {
-    setSelectedCategories(prev =>
-      prev.includes(category) ? prev.filter(c => c !== category) : [...prev, category]
-    )
-    setCurrentPage(1)
-  }
-
-  const toggleSize = (size: string) => {
-    setSelectedSizes(prev =>
-      prev.includes(size) ? prev.filter(s => s !== size) : [...prev, size]
-    )
-    setCurrentPage(1)
-  }
-
-  const toggleColor = (color: string) => {
-    setSelectedColors(prev =>
-      prev.includes(color) ? prev.filter(c => c !== color) : [...prev, color]
-    )
-    setCurrentPage(1)
-  }
+  const totalPages  = Math.ceil(filtered.length / ITEMS_PER_PAGE)
+  const paginated   = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)
+  const activeCount = selectedCategories.length + selectedSizes.length + selectedColors.length
 
   const clearFilters = () => {
-    setSelectedCategories([])
-    setSelectedSizes([])
-    setSelectedColors([])
-    setPriceRange([0, 200])
-    setSearchQuery('')
-    setCurrentPage(1)
+    setSelectedCategories([]); setSelectedSizes([]); setSelectedColors([])
+    setPriceRange([0, 200]);   setSearchQuery("");   setCurrentPage(1)
   }
 
-  const activeFiltersCount = selectedCategories.length + selectedSizes.length + selectedColors.length
+  const handleCart = (e: React.MouseEvent, p: Product) => {
+    e.preventDefault()
+    if (!p.inStock) return
+    addToCart({ id: p.id, name: p.name, price: p.price, image: p.image, category: p.category })
+    toast({ title: "Added to Cart!", description: p.name })
+  }
+
+  const handleWishlist = (e: React.MouseEvent, p: Product) => {
+    e.preventDefault()
+    if (isInWishlist(p.id)) {
+      removeFromWishlist(p.id)
+      toast({ title: "Removed from Wishlist", description: p.name, variant: "destructive" })
+    } else {
+      addToWishlist({ id: p.id, name: p.name, price: p.price, originalPrice: p.originalPrice, image: p.image, category: p.category, inStock: p.inStock })
+      toast({ title: "Saved!", description: p.name })
+    }
+  }
 
   return (
-    <PageLayout activePage="women" seoTitle="Women's Athletic Clothing &amp; Shoes | Under Armour®" seoDescription="Shop women's performance activewear, sports bras, running shoes, and training gear. Under Armour® technology engineered to push your limits.">
+    <PageLayout activePage="women" seoTitle="Women's Athletic Clothing & Shoes | Under Armour®">
       <main className="flex-1 bg-gray-100">
-        <section className="relative bg-black text-white py-12 lg:py-16 overflow-hidden">
-          <div className="container mx-auto px-4">
-            <div className="max-w-3xl">
-              <h1 className="text-4xl lg:text-5xl font-black uppercase leading-none tracking-tight mb-4">
-                Women's <span className="text-red-600">Performance Gear</span>
-              </h1>
-              <p className="text-lg text-gray-300 font-bold">
-                Designed for powerful women. Engineered for peak performance and unstoppable confidence.
-              </p>
-            </div>
+        <section className="ua-hero-simple">
+          <div className="ua-page-container">
+            <h1 className="ua-hero-simple-h1">Women's <span className="text-red-600">Gear</span></h1>
+            <p className="ua-hero-simple-sub">Designed for powerful women. Engineered for performance.</p>
           </div>
         </section>
 
-        <section className="bg-white border-b-4 border-black sticky top-0 z-30 shadow-lg">
-          <div className="container mx-auto px-4 py-4">
-            <div className="flex flex-col md:flex-row gap-4 items-center">
-              <div className="relative flex-1 w-full">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                <Input
-                  type="text"
-                  placeholder="Search products..."
-                  value={searchQuery}
-                  onChange={(e) => {
-                    setSearchQuery(e.target.value)
-                    setCurrentPage(1)
-                  }}
-                  className="pl-10 border-2 border-gray-300 focus:border-red-600 font-bold"
-                />
-              </div>
-
-              <Button
-                onClick={() => setShowFilters(!showFilters)}
-                className="sketchy-btn bg-black text-white hover:bg-gray-800 font-black uppercase w-full md:w-auto"
-              >
-                <SlidersHorizontal className="h-5 w-5 mr-2" />
-                Filters
-                {activeFiltersCount > 0 && (
-                  <Badge className="ml-2 bg-red-600">{activeFiltersCount}</Badge>
-                )}
-              </Button>
-
-              <div className="relative w-full md:w-auto">
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="w-full md:w-48 border-2 border-gray-300 rounded px-4 py-2 font-bold appearance-none cursor-pointer focus:border-red-600"
-                >
-                  <option value="featured">Featured</option>
-                  <option value="newest">Newest</option>
-                  <option value="price-low">Price: Low to High</option>
-                  <option value="price-high">Price: High to Low</option>
-                  <option value="rating">Highest Rated</option>
-                </select>
-                <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 pointer-events-none" />
-              </div>
-
-              <div className="flex gap-2">
-                <Button
-                  onClick={() => setViewMode('grid')}
-                  variant={viewMode === 'grid' ? 'default' : 'outline'}
-                  size="icon"
-                  className={viewMode === 'grid' ? 'bg-red-600' : ''}
-                >
-                  <Grid3x3 className="h-5 w-5" />
-                </Button>
-                <Button
-                  onClick={() => setViewMode('list')}
-                  variant={viewMode === 'list' ? 'default' : 'outline'}
-                  size="icon"
-                  className={viewMode === 'list' ? 'bg-red-600' : ''}
-                >
-                  <List className="h-5 w-5" />
-                </Button>
-              </div>
+        <div className="ua-toolbar">
+          <div className="ua-toolbar-inner">
+            <SearchInput value={searchQuery} onChange={(v) => { setSearchQuery(v); setCurrentPage(1) }} placeholder="Search women's gear…" className="max-w-xs" />
+            <FilterToggleButton isOpen={filtersOpen} onToggle={() => setFiltersOpen(!filtersOpen)} activeCount={activeCount} />
+            <div className="ml-auto flex items-center gap-3">
+              <SortSelect value={sortBy} options={SORT_OPTIONS} onChange={(v) => { setSortBy(v); setCurrentPage(1) }} />
+              <ViewToggle value={viewMode} onChange={setViewMode} />
             </div>
           </div>
-        </section>
+        </div>
 
-        {showFilters && (
-          <section className="bg-gray-50 border-b-4 border-gray-300">
-            <div className="container mx-auto px-4 py-6">
-              <div className="grid md:grid-cols-4 gap-6">
-                <div>
-                  <Label className="font-black uppercase text-sm mb-3 block">Category</Label>
-                  <div className="space-y-2">
-                    {categories.map(category => (
-                      <label key={category} className="flex items-center cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={selectedCategories.includes(category)}
-                          onChange={() => toggleCategory(category)}
-                          className="mr-2 w-4 h-4 accent-red-600"
-                        />
-                        <span className="font-bold text-sm">{category}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
+        <ErrorBoundary>
+          <FilterPanel isOpen={filtersOpen} onToggle={() => setFiltersOpen(!filtersOpen)} onClear={clearFilters} activeCount={activeCount}>
+            <CheckboxGroup label="Category" options={womenCategories} selected={selectedCategories} onChange={(v) => { setSelectedCategories(v); setCurrentPage(1) }} />
+            <div>
+              <p className="ua-filter-label">Size</p>
+              <div className="flex flex-wrap gap-1.5">
+                {womenSizes.map((s) => (
+                  <PillToggle key={s} label={s} isActive={selectedSizes.includes(s)}
+                    onClick={() => { setSelectedSizes(prev => prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s]); setCurrentPage(1) }} />
+                ))}
+              </div>
+            </div>
+            <div>
+              <p className="ua-filter-label">Color</p>
+              <div className="flex flex-wrap gap-1.5">
+                {womenColors.map((c) => (
+                  <PillToggle key={c} label={c} isActive={selectedColors.includes(c)}
+                    onClick={() => { setSelectedColors(prev => prev.includes(c) ? prev.filter(x => x !== c) : [...prev, c]); setCurrentPage(1) }} />
+                ))}
+              </div>
+            </div>
+            <PriceRange min={0} max={200} value={priceRange} onChange={(v) => { setPriceRange(v); setCurrentPage(1) }} />
+          </FilterPanel>
+        </ErrorBoundary>
 
-                <div>
-                  <Label className="font-black uppercase text-sm mb-3 block">Size</Label>
-                  <div className="flex flex-wrap gap-2">
-                    {sizes.map(size => (
-                      <button
-                        key={size}
-                        onClick={() => toggleSize(size)}
-                        className={`px-3 py-1 border-2 font-bold text-sm rounded transition-colors ${
-                          selectedSizes.includes(size)
-                            ? 'bg-red-600 text-white border-red-600'
-                            : 'bg-white border-gray-300 hover:border-red-600'
-                        }`}
-                      >
-                        {size}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <Label className="font-black uppercase text-sm mb-3 block">Color</Label>
-                  <div className="flex flex-wrap gap-2">
-                    {colors.map(color => (
-                      <button
-                        key={color}
-                        onClick={() => toggleColor(color)}
-                        className={`px-3 py-1 border-2 font-bold text-sm rounded transition-colors ${
-                          selectedColors.includes(color)
-                            ? 'bg-red-600 text-white border-red-600'
-                            : 'bg-white border-gray-300 hover:border-red-600'
-                        }`}
-                      >
-                        {color}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <Label className="font-black uppercase text-sm mb-3 block">
-                    Price: ${priceRange[0]} - ${priceRange[1]}
-                  </Label>
-                  <input
-                    type="range"
-                    min="0"
-                    max="200"
-                    value={priceRange[1]}
-                    onChange={(e) => setPriceRange([0, parseInt(e.target.value)])}
-                    className="w-full accent-red-600"
+        <section className="ua-products-section">
+          <div className="ua-page-container">
+            <div className="mb-6">
+              <ResultsCount shown={paginated.length} total={filtered.length} label="women's products" />
+            </div>
+            {paginated.length === 0 ? (
+              <EmptyState onClear={clearFilters} />
+            ) : (
+              <div className={viewMode === "grid" ? "ua-product-grid" : "ua-list-view"}>
+                {paginated.map((p) => (
+                  <ProductCard key={p.id} viewMode={viewMode}
+                    id={p.id} name={p.name} price={p.price} originalPrice={p.originalPrice}
+                    category={p.category} image={p.image} inStock={p.inStock}
+                    isNew={p.isNew} isSale={p.isSale} rating={p.rating} reviews={p.reviews}
+                    isWishlisted={isInWishlist(p.id)}
+                    onAddToCart={(e) => handleCart(e, p)} onToggleWishlist={(e) => handleWishlist(e, p)}
                   />
-                  <Button
-                    onClick={clearFilters}
-                    variant="outline"
-                    className="w-full mt-4 font-bold"
-                  >
-                    <X className="h-4 w-4 mr-2" />
-                    Clear All
-                  </Button>
-                </div>
+                ))}
               </div>
-            </div>
-          </section>
-        )}
-
-        <section className="container mx-auto px-4 py-6">
-          <p className="font-bold text-gray-700">
-            Showing {paginatedProducts.length} of {filteredProducts.length} products
-          </p>
+            )}
+            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+          </div>
         </section>
-
-        <section className="container mx-auto px-4 pb-12">
-          {paginatedProducts.length === 0 ? (
-            <div className="text-center py-20">
-              <p className="text-2xl font-black text-gray-600 mb-4">No products found</p>
-              <Button onClick={clearFilters} className="sketchy-btn bg-red-600 text-white font-black uppercase">
-                Clear Filters
-              </Button>
-            </div>
-          ) : (
-            <div className={viewMode === 'grid' ? 'ua-product-grid-3' : 'space-y-6'}>
-              {paginatedProducts.map((product) => (
-                viewMode === 'grid' ? (
-                  <Link key={product.id} href={`/product/${product.id}`}>
-                  <Card className="sketchy-card bg-white border-4 border-black transform hover:scale-105 transition-all duration-300 group h-full flex flex-col cursor-pointer">
-                    <CardContent className="p-6 flex flex-col flex-1">
-                      <div className="relative sketchy-frame bg-gray-900 p-4 mb-4 h-64 flex items-center justify-center overflow-hidden">
-                        {product.isNew && (
-                          <Badge className="absolute top-2 left-2 bg-red-600 font-black uppercase z-10">New</Badge>
-                        )}
-                        {product.isSale && (
-                          <Badge className="absolute top-2 left-2 bg-green-600 font-black uppercase z-10">Sale</Badge>
-                        )}
-                        {!product.inStock && (
-                          <div className="absolute inset-0 bg-black bg-opacity-70 flex items-center justify-center z-10">
-                            <span className="text-white font-black text-xl uppercase">Out of Stock</span>
-                          </div>
-                        )}
-                        <img
-                          src={product.image}
-                          alt={product.name}
-                          width={300}
-                          height={250}
-                          className="w-full h-full object-cover filter grayscale group-hover:grayscale-0 transition-all duration-300"
-                        />
-                        <button className="absolute top-2 right-2 bg-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
-                          <Heart className="h-5 w-5 text-red-600" />
-                        </button>
-                      </div>
-                      <div className="space-y-3 flex-1 flex flex-col">
-                        <div className="sketchy-border bg-red-600 inline-block px-3 py-1 self-start">
-                          <span className="text-white font-bold text-xs uppercase">{product.category}</span>
-                        </div>
-                        <h3 className="font-black text-lg text-black uppercase leading-tight">{product.name}</h3>
-                        
-                        <StarRating rating={product.rating} reviews={product.reviews} size="md" />
-
-                        <div className="flex items-center gap-2 flex-1">
-                          <p className="text-2xl font-black text-red-600">${product.price}</p>
-                          {product.originalPrice && (
-                            <p className="text-lg font-bold text-gray-400 line-through">${product.originalPrice}</p>
-                          )}
-                        </div>
-
-                        <Button 
-                          disabled={!product.inStock}
-                          className="sketchy-btn bg-black text-white hover:bg-red-600 hover:text-white font-black uppercase disabled:opacity-50 w-full mt-auto"
-                        >
-                          <ShoppingCart className="h-4 w-4 mr-2" />
-                          Add to Cart
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                  </Link>
-                ) : (
-                  <Link key={product.id} href={`/product/${product.id}`}>
-                  <Card className="sketchy-card bg-white border-4 border-black hover:shadow-xl transition-all duration-300 group cursor-pointer">
-                    <CardContent className="p-6">
-                      <div className="flex gap-6">
-                        <div className="relative sketchy-frame bg-gray-900 p-4 w-48 flex-shrink-0">
-                          {product.isNew && (
-                            <Badge className="absolute top-2 left-2 bg-red-600 font-black uppercase z-10">New</Badge>
-                          )}
-                          {product.isSale && (
-                            <Badge className="absolute top-2 left-2 bg-green-600 font-black uppercase z-10">Sale</Badge>
-                          )}
-                          {!product.inStock && (
-                            <div className="absolute inset-0 bg-black bg-opacity-70 flex items-center justify-center z-10">
-                              <span className="text-white font-black text-sm uppercase">Out of Stock</span>
-                            </div>
-                          )}
-                          <img
-                            src={product.image}
-                            alt={product.name}
-                            width={200}
-                            height={200}
-                            className="w-full h-auto filter grayscale group-hover:grayscale-0 transition-all duration-300"
-                          />
-                        </div>
-                        <div className="flex-1 flex flex-col justify-between">
-                          <div>
-                            <div className="sketchy-border bg-red-600 inline-block px-3 py-1 mb-3">
-                              <span className="text-white font-bold text-xs uppercase">{product.category}</span>
-                            </div>
-                            <h3 className="font-black text-2xl text-black uppercase mb-2">{product.name}</h3>
-                            
-                            <StarRating rating={product.rating} reviews={product.reviews} size="md" />
-
-                            <div className="mb-3">
-                              <span className="font-bold text-sm text-gray-600 mr-2">Sizes:</span>
-                              {product.size.map(s => (
-                                <span key={s} className="inline-block px-2 py-1 border border-gray-300 text-xs font-bold mr-1 mb-1">{s}</span>
-                              ))}
-                            </div>
-
-                            <div>
-                              <span className="font-bold text-sm text-gray-600 mr-2">Colors:</span>
-                              {product.color.map(c => (
-                                <span key={c} className="inline-block px-2 py-1 border border-gray-300 text-xs font-bold mr-1 mb-1">{c}</span>
-                              ))}
-                            </div>
-                          </div>
-
-                          <div className="flex items-center justify-between mt-4">
-                            <div className="flex items-center gap-2">
-                              <p className="text-3xl font-black text-red-600">${product.price}</p>
-                              {product.originalPrice && (
-                                <p className="text-xl font-bold text-gray-400 line-through">${product.originalPrice}</p>
-                              )}
-                            </div>
-                            <div className="flex gap-2">
-                              <Button 
-                                variant="outline"
-                                size="icon"
-                                className="border-2 border-black hover:bg-red-600 hover:text-white"
-                              >
-                                <Heart className="h-5 w-5" />
-                              </Button>
-                              <Button 
-                                disabled={!product.inStock}
-                                className="sketchy-btn bg-black text-white hover:bg-red-600 font-black uppercase disabled:opacity-50"
-                              >
-                                <ShoppingCart className="h-5 w-5 mr-2" />
-                                Add to Cart
-                              </Button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                  </Link>
-                )
-              ))}
-            </div>
-          )}
-        </section>
-
-        {totalPages > 1 && (
-          <section className="container mx-auto px-4 pb-12">
-            <div className="flex justify-center items-center gap-2">
-              <Button
-                onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-                disabled={currentPage === 1}
-                variant="outline"
-                className="border-2 border-black font-black disabled:opacity-50"
-              >
-                <ChevronLeft className="h-5 w-5" />
-              </Button>
-
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
-                <Button
-                  key={`page-${pageNum}`}
-                  onClick={() => setCurrentPage(pageNum)}
-                  className={`font-black ${
-                    currentPage === pageNum
-                      ? 'bg-red-600 text-white'
-                      : 'bg-white text-black border-2 border-black hover:bg-gray-100'
-                  }`}
-                >
-                  {pageNum}
-                </Button>
-              ))}
-
-              <Button
-                onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
-                disabled={currentPage === totalPages}
-                variant="outline"
-                className="border-2 border-black font-black disabled:opacity-50"
-              >
-                <ChevronRight className="h-5 w-5" />
-              </Button>
-            </div>
-          </section>
-        )}
       </main>
     </PageLayout>
   )

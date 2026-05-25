@@ -1,144 +1,129 @@
 import { useState, useMemo } from "react"
-import { Button } from "@/components/ui/button"
-import { Link } from "wouter"
 import { useToast } from "@/hooks/use-toast"
 import { useCart } from "@/context/cart-context"
 import { useWishlist } from "@/context/wishlist-context"
+import PageLayout from "@/components/layout/page-layout"
+import { PageHero } from "@/components/layout"
+import ErrorBoundary from "@/components/error-boundary"
 import ProductCard from "@/components/product-card"
-import { PageLayout, PageHero, FilterBar } from "@/components/layout"
-
+import EmptyState from "@/components/EmptyState"
+import {
+  SearchInput, SortSelect, CheckboxGroup,
+  ViewToggle, FilterPanel, FilterToggleButton,
+  ResultsCount, Pagination,
+} from "@/components/filters"
+import { accessoryProducts, accessoryCategoryFilters } from "@/data/products/accessories"
 import type { AccessoryProduct } from "@/types/product"
 
-const products: AccessoryProduct[] = [
-  { id: 201, name: "Project Rock Gym Bag", price: 75, category: "Bags", rating: 4.8, reviews: 234, image: "/ARMOUR/ProjectRockGymBag.jpg", inStock: true, isNew: true, description: "Built for champions, by champions. 42L capacity." },
-  { id: 202, name: "UA Blitzing Cap", price: 25, category: "Headwear", rating: 4.5, reviews: 167, image: "/ARMOUR/HeatGear Training Shirt.jpg", inStock: true, description: "Stretch-fit cap with moisture-wicking sweatband" },
-  { id: 203, name: "Training Gloves Pro", price: 35, originalPrice: 45, category: "Gloves", rating: 4.4, reviews: 88, image: "/ARMOUR/Project Rock Tank.jpg", inStock: true, isSale: true, description: "Grip-enhanced gloves with palm protection" },
-  { id: 204, name: "Storm Laptop Backpack", price: 65, category: "Bags", rating: 4.6, reviews: 143, image: "/ARMOUR/Sportstyle Jacket.jpg", inStock: true, description: "Water-resistant 20L backpack for work & gym" },
-  { id: 205, name: "Performance Socks 6-Pack", price: 28, category: "Socks", rating: 4.7, reviews: 312, image: "/ARMOUR/HeatGearCompressionShirt.jpg", inStock: true, description: "Arch support and blister protection built in" },
-  { id: 206, name: "UA 32oz Squeeze Bottle", price: 18, category: "Hydration", rating: 4.3, reviews: 56, image: "/ARMOUR/HOVRPhantom3.jpg", inStock: true, description: "Leak-proof sports bottle with wide mouth" },
-  { id: 207, name: "HOVR Running Belt", price: 30, category: "Accessories", rating: 4.5, reviews: 79, image: "/ARMOUR/UA RUSH Training Pants.jpg", inStock: true, isNew: true, description: "Secure belt for hands-free running storage" },
-  { id: 208, name: "Undeniable 5.0 Duffle Bag", price: 55, category: "Bags", rating: 4.7, reviews: 198, image: "/ARMOUR/Storm Windbreaker.jpg", inStock: true, description: "D-shaped lid & vented shoe pocket" },
-  { id: 209, name: "Liner Socks 3-Pack", price: 14, originalPrice: 18, category: "Socks", rating: 4.4, reviews: 224, image: "/ARMOUR/Tech2.0Shorts.jpg", inStock: true, isSale: true, description: "No-show design with UA logo on the heel" },
-  { id: 210, name: "UA Hustle 5.0 Backpack", price: 55, category: "Bags", rating: 4.8, reviews: 411, image: "/ARMOUR/ColdGear Base Layer.jpg", inStock: true, description: '16" laptop sleeve & water-resistant base' },
-  { id: 211, name: "Training Headband 2-Pack", price: 14, category: "Headwear", rating: 4.3, reviews: 47, image: "/ARMOUR/Rival Fleece Hoodie.jpg", inStock: false, description: "Keeps sweat out of your eyes during training" },
-  { id: 212, name: "UA 24oz Stainless Bottle", price: 35, category: "Hydration", rating: 4.6, reviews: 92, image: "/ARMOUR/Curry Flow 11.jpg", inStock: true, isNew: true, description: "Vacuum-insulated keeps drinks cold 24hrs" },
+const SORT_OPTIONS = [
+  { label: "Featured",          value: "featured"   },
+  { label: "Newest First",      value: "newest"     },
+  { label: "Price: Low → High", value: "price-low"  },
+  { label: "Price: High → Low", value: "price-high" },
+  { label: "Top Rated",         value: "rating"     },
 ]
-
-const categoryFilters = ["All", "Bags", "Headwear", "Gloves", "Socks", "Hydration", "Accessories"]
+const ITEMS_PER_PAGE = 9
+const ALL_CATEGORIES = accessoryCategoryFilters.filter((c) => c !== "All")
 
 export default function AccessoriesPage() {
   const { toast } = useToast()
   const { addToCart } = useCart()
   const { addToWishlist, isInWishlist, removeFromWishlist } = useWishlist()
-  const [category, setCategory] = useState("All")
-  const [sortBy, setSortBy] = useState("featured")
+
+  const [searchQuery, setSearchQuery] = useState("")
+  const [categories,  setCategories]  = useState<string[]>([])
+  const [sortBy,      setSortBy]      = useState("featured")
+  const [currentPage, setCurrentPage] = useState(1)
+  const [viewMode,    setViewMode]    = useState<"grid" | "list">("grid")
+  const [filtersOpen, setFiltersOpen] = useState(false)
 
   const filtered = useMemo(() => {
-    let items = products.filter(p => category === "All" || p.category === category)
+    let items = accessoryProducts.filter((p) => {
+      const q = searchQuery.toLowerCase()
+      return (
+        (p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q)) &&
+        (categories.length === 0 || categories.includes(p.category))
+      )
+    })
     switch (sortBy) {
-      case "price-low": return items.sort((a, b) => a.price - b.price)
-      case "price-high": return items.sort((a, b) => b.price - a.price)
-      case "rating": return items.sort((a, b) => b.rating - a.rating)
-      case "newest": return items.sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0))
-      default: return items
+      case "price-low":  items.sort((a, b) => a.price - b.price); break
+      case "price-high": items.sort((a, b) => b.price - a.price); break
+      case "rating":     items.sort((a, b) => b.rating - a.rating); break
+      case "newest":     items.sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0)); break
     }
-  }, [category, sortBy])
+    return items
+  }, [searchQuery, categories, sortBy])
 
-  const handleAddToCart = (e: React.MouseEvent, product: AccessoryProduct) => {
+  const totalPages  = Math.ceil(filtered.length / ITEMS_PER_PAGE)
+  const paginated   = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)
+  const activeCount = categories.length
+
+  const clearFilters = () => { setCategories([]); setSearchQuery(""); setCurrentPage(1) }
+
+  const handleCart = (e: React.MouseEvent, p: AccessoryProduct) => {
     e.preventDefault()
-    if (!product.inStock) return
-    addToCart({ id: product.id, name: product.name, price: product.price, image: product.image, category: product.category })
-    toast({ title: "Added to Cart!", description: product.name })
+    if (!p.inStock) return
+    addToCart({ id: p.id, name: p.name, price: p.price, image: p.image, category: p.category })
+    toast({ title: "Added to Cart!", description: p.name })
   }
 
-  const handleWishlist = (e: React.MouseEvent, product: AccessoryProduct) => {
+  const handleWishlist = (e: React.MouseEvent, p: AccessoryProduct) => {
     e.preventDefault()
-    if (isInWishlist(product.id)) {
-      removeFromWishlist(product.id)
-      toast({ title: "Removed from Wishlist", description: product.name, variant: "destructive" })
+    if (isInWishlist(p.id)) {
+      removeFromWishlist(p.id)
+      toast({ title: "Removed from Wishlist", description: p.name, variant: "destructive" })
     } else {
-      addToWishlist({ id: product.id, name: product.name, price: product.price, originalPrice: product.originalPrice, image: product.image, category: product.category, inStock: product.inStock })
-      toast({ title: "Added to Wishlist!", description: product.name })
+      addToWishlist({ id: p.id, name: p.name, price: p.price, originalPrice: p.originalPrice, image: p.image, category: p.category, inStock: p.inStock })
+      toast({ title: "Saved to Wishlist!", description: p.name })
     }
   }
 
   return (
-    <PageLayout activePage="accessories" seoTitle="Athletic Accessories &amp; Gear | Under Armour®" seoDescription="Shop Under Armour bags, headwear, socks, water bottles, and accessories. Complete your athletic kit with performance-engineered gear.">
+    <PageLayout activePage="accessories" seoTitle="Accessories & Gear | Under Armour®">
       <main className="flex-1 bg-gray-100">
-      <PageHero
-        variant="full"
-        title="Athletic"
-        titleAccent="Accessories"
-        subtitle="Every detail counts. Bags, headwear, hydration, and more — built for performance."
-        badge={
-          <div className="sketchy-border bg-red-600 inline-block px-4 py-2 transform -rotate-1">
-            <span className="text-white font-black text-sm uppercase tracking-widest">Complete Your Kit</span>
-          </div>
-        }
-      />
+        <PageHero variant="full" title="UA" titleAccent="Accessories" subtitle="Complete your kit with premium bags, headwear, hydration and more." align="left" />
 
-      <FilterBar
-        filterGroups={[
-          {
-            label: "Category",
-            options: categoryFilters.map(c => ({ label: c, value: c })),
-            value: category,
-            onChange: setCategory,
-          },
-        ]}
-        sortOptions={[
-          { label: "Featured", value: "featured" },
-          { label: "Newest", value: "newest" },
-          { label: "Price: Low to High", value: "price-low" },
-          { label: "Price: High to Low", value: "price-high" },
-          { label: "Top Rated", value: "rating" },
-        ]}
-        sortBy={sortBy}
-        onSortChange={setSortBy}
-      />
-
-      {/* Products */}
-      <section className="ua-products-section">
-        <div className="ua-page-container">
-          <p className="ua-results-count">
-            Showing <span className="text-red-600">{filtered.length}</span> accessories
-          </p>
-          <div className="ua-product-grid">
-            {filtered.map(product => (
-              <ProductCard
-                key={product.id}
-                id={product.id}
-                name={product.name}
-                price={product.price}
-                originalPrice={product.originalPrice}
-                category={product.category}
-                image={product.image}
-                inStock={product.inStock}
-                isNew={product.isNew}
-                isSale={product.isSale}
-                rating={product.rating}
-                reviews={product.reviews}
-                description={product.description}
-                isWishlisted={isInWishlist(product.id)}
-                onAddToCart={(e) => handleAddToCart(e, product)}
-                onToggleWishlist={(e) => handleWishlist(e, product)}
-              />
-            ))}
+        <div className="ua-toolbar">
+          <div className="ua-toolbar-inner">
+            <SearchInput value={searchQuery} onChange={(v) => { setSearchQuery(v); setCurrentPage(1) }} placeholder="Search accessories…" className="max-w-xs" />
+            <FilterToggleButton isOpen={filtersOpen} onToggle={() => setFiltersOpen(!filtersOpen)} activeCount={activeCount} />
+            <div className="ml-auto flex items-center gap-3">
+              <SortSelect value={sortBy} options={SORT_OPTIONS} onChange={(v) => { setSortBy(v); setCurrentPage(1) }} />
+              <ViewToggle value={viewMode} onChange={setViewMode} />
+            </div>
           </div>
         </div>
-      </section>
 
-      {/* CTA */}
-      <section className="ua-cta-section">
-        <div className="ua-page-container text-center max-w-3xl mx-auto">
-          <h2 className="text-4xl font-black uppercase mb-4">Gear Up <span className="text-red-600">Completely</span></h2>
-          <p className="text-gray-300 font-bold mb-8">Complete your look with the right accessories for your sport.</p>
-          <Link href="/men">
-            <Button className="ua-btn-primary text-lg px-10 py-4">Shop All Gear</Button>
-          </Link>
-        </div>
-      </section>
+        <ErrorBoundary>
+          <FilterPanel isOpen={filtersOpen} onToggle={() => setFiltersOpen(!filtersOpen)} onClear={clearFilters} activeCount={activeCount}>
+            <CheckboxGroup label="Category" options={ALL_CATEGORIES} selected={categories} onChange={(v) => { setCategories(v); setCurrentPage(1) }} />
+          </FilterPanel>
+        </ErrorBoundary>
 
+        <section className="ua-products-section">
+          <div className="ua-page-container">
+            <div className="mb-6">
+              <ResultsCount shown={paginated.length} total={filtered.length} label="accessories" />
+            </div>
+            {paginated.length === 0 ? (
+              <EmptyState title="No accessories found" onClear={clearFilters} />
+            ) : (
+              <div className={viewMode === "grid" ? "ua-product-grid" : "ua-list-view"}>
+                {paginated.map((p) => (
+                  <ProductCard key={p.id} viewMode={viewMode}
+                    id={p.id} name={p.name} price={p.price} originalPrice={p.originalPrice}
+                    category={p.category} image={p.image} inStock={p.inStock}
+                    isNew={p.isNew} isSale={p.isSale} rating={p.rating} reviews={p.reviews}
+                    description={p.description}
+                    isWishlisted={isInWishlist(p.id)}
+                    onAddToCart={(e) => handleCart(e, p)} onToggleWishlist={(e) => handleWishlist(e, p)}
+                  />
+                ))}
+              </div>
+            )}
+            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+          </div>
+        </section>
       </main>
     </PageLayout>
   )

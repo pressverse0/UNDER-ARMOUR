@@ -66,7 +66,7 @@ export default function GolfPage() {
     let filtered = allProducts.filter(product => {
       const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase())
       const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(product.category)
-      const matchesGender = selectedGenders.length === 0 || selectedGenders.includes(product.gender)
+      const matchesGender = selectedGenders.length === 0 || selectedGenders.includes(product.gender ?? "")
       const matchesSize = selectedSizes.length === 0 || product.size.some(s => selectedSizes.includes(s))
       const matchesColor = selectedColors.length === 0 || product.color.some(c => selectedColors.includes(c))
       const matchesPrice = product.price >= priceRange[0] && product.price <= priceRange[1]
