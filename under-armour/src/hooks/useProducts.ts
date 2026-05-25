@@ -43,19 +43,20 @@ export interface FrontendProduct {
 }
 
 export function adaptProduct(p: ApiProduct): FrontendProduct {
-  const sizes = [...new Set(p.variants.map(v => v.size).filter(Boolean))]
-  const colors = [...new Set(p.variants.map(v => v.color).filter(Boolean))]
+  const variants = Array.isArray(p.variants) ? p.variants : []
+  const sizes = [...new Set(variants.map(v => v.size).filter(Boolean))]
+  const colors = [...new Set(variants.map(v => v.color).filter(Boolean))]
   return {
     id: p.id,
-    name: p.name,
-    slug: p.slug,
-    description: p.description,
-    price: Number(p.price),
+    name: p.name ?? '',
+    slug: p.slug ?? '',
+    description: p.description ?? '',
+    price: Number(p.price) || 0,
     originalPrice: p.original_price ? Number(p.original_price) : undefined,
     category: p.category?.name ?? '',
     image: p.image ?? '',
-    rating: Number(p.rating),
-    reviews: p.reviews_count,
+    rating: Number(p.rating) || 0,
+    reviews: p.reviews_count ?? 0,
     gender: p.gender ?? undefined,
     technology: p.technology ?? undefined,
     isNew: Boolean(p.is_new),

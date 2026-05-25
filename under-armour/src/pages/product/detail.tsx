@@ -64,12 +64,13 @@ export default function ProductDetailPage() {
     setNotFound(false)
     productsApi.getById(productId)
       .then((data) => {
+        if (!data) { setNotFound(true); return }
         const adapted = adaptProduct(data as ApiProduct)
         setProduct(adapted)
         setSelectedColor(adapted.color[0] ?? "")
         setSelectedSize("")
       })
-      .catch(() => setNotFound(true))
+      .catch((err) => { console.error('[ProductDetail] fetch error:', err); setNotFound(true) })
       .finally(() => setLoading(false))
   }, [productId])
 
