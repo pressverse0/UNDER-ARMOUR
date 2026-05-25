@@ -143,7 +143,7 @@ export default function UnderArmourLanding() {
             </div>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
               {categories.map(cat => (
-                <Link key={cat.label} href={cat.href} className="group relative overflow-hidden bg-white border-4 border-black hover:border-red-600 transition-all duration-300 hover:scale-105 text-center p-6">
+                <Link key={cat.label} href={cat.href} className="group relative overflow-hidden rounded-lg bg-white border-4 border-black hover:border-red-600 transition-all duration-300 hover:scale-105 text-center p-6">
                   <div className="absolute inset-0 bg-cover bg-center opacity-20 group-hover:opacity-30 transition-opacity" style={{ backgroundImage: `url('${cat.image}')` }} />
                   <div className="relative z-10">
                     <h3 className="font-black text-lg uppercase group-hover:text-red-600 transition-colors">{cat.label}</h3>
@@ -170,7 +170,7 @@ export default function UnderArmourLanding() {
                   <Link href={`/product/${item.id}`}>
                     <Card className="sketchy-card bg-gray-100 border-4 border-black transform hover:scale-105 transition-all duration-300 h-full flex flex-col cursor-pointer group">
                       <CardContent className="p-6 flex flex-col flex-1">
-                        <div className="sketchy-frame bg-gray-900 mb-6 overflow-hidden" style={{ height: 240 }}>
+                        <div className="sketchy-frame bg-gray-900 mb-6" style={{ height: 240 }}>
                           <img src={item.image} alt={`${item.name} - ${item.description}`} className="w-full h-full object-cover filter grayscale group-hover:grayscale-0 transition-all duration-500" itemProp="image" />
                         </div>
                         <div className="space-y-2 flex-1 flex flex-col">
@@ -230,8 +230,8 @@ export default function UnderArmourLanding() {
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {newArrivals.map(item => (
                 <Link key={item.id} href={`/product/${item.id}`} className="group">
-                  <div className="bg-white border-4 border-black hover:border-red-600 transition-all duration-300 group-hover:scale-105 overflow-hidden">
-                    <div className="relative bg-gray-900 overflow-hidden" style={{ height: 200 }}>
+                  <div className="rounded-lg bg-white border-4 border-black hover:border-red-600 transition-all duration-300 group-hover:scale-105 overflow-hidden">
+                    <div className="relative bg-gray-900 overflow-hidden rounded-t-lg" style={{ height: 200 }}>
                       <img src={item.image} alt={item.name} className="w-full h-full object-cover filter grayscale group-hover:grayscale-0 transition-all duration-500" />
                       <div className="absolute top-2 left-2">
                         <span className="bg-black text-white text-xs font-black uppercase px-2 py-1 flex items-center gap-1">
@@ -325,13 +325,13 @@ export default function UnderArmourLanding() {
               Get exclusive access to new drops, training tips, and member-only discounts.
             </p>
             {newsletterSubmitted ? (
-              <div className="flex items-center justify-center gap-3 bg-gray-900 border-2 border-green-600 p-5 rounded">
+              <div className="flex items-center justify-center gap-3 bg-gray-900 border-2 border-green-600 p-5 rounded-lg">
                 <CheckCircle className="h-6 w-6 text-green-600" />
                 <p className="font-black uppercase text-green-400">You're in! Welcome to the UA family.</p>
               </div>
             ) : (
               <form onSubmit={handleNewsletter} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-                <div className="flex items-center gap-2 flex-1 bg-gray-900 border-2 border-gray-700 focus-within:border-red-600 transition-colors px-4">
+                <div className="flex items-center gap-2 flex-1 bg-gray-900 border-2 border-gray-700 focus-within:border-red-600 transition-colors px-4 rounded-lg sm:rounded-r-none sm:rounded-l-lg">
                   <Mail className="h-5 w-5 text-gray-500 flex-shrink-0" />
                   <input
                     type="email"
