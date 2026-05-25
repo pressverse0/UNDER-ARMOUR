@@ -10,7 +10,7 @@ import { Link, useLocation } from "wouter"
 import PageLayout from "@/components/layout/page-layout"
 import { useCart } from "@/context/cart-context"
 import { useAuth } from "@/context/auth-context"
-import { getToken } from "@/lib/api"
+import { checkout as checkoutApi } from "@/lib/api"
 import type { CustomerInfo } from "@/types/checkout"
 
 export default function CheckoutPage() {
@@ -44,35 +44,21 @@ export default function CheckoutPage() {
     setIsLoading(true)
 
     try {
-      const token = getToken()
-      const headers: HeadersInit = { 'Content-Type': 'application/json' }
-      if (token) headers['Authorization'] = `Bearer ${token}`
-
-      const response = await fetch("/api/checkout/process", {
-        method: "POST",
-        headers,
-        body: JSON.stringify({
-          address: customerInfo.address,
-          city: customerInfo.city,
-          state: customerInfo.state,
-          zip_code: customerInfo.zipCode,
-          country: customerInfo.country,
-        }),
+      const data = await checkoutApi.process({
+        address: customerInfo.address,
+        city: customerInfo.city,
+        state: customerInfo.state,
+        zip_code: customerInfo.zipCode,
+        country: customerInfo.country,
+        full_name: customerInfo.fullName,
+        email: customerInfo.email,
+        items: cartItems.map(i => ({ id: i.id, quantity: i.quantity })),
       })
-
-      const data = await response.json()
-
-      if (!response.ok) {
-        setError(data.message || data.error || 'Checkout failed. Please try again.')
-        setIsLoading(false)
-        return
-      }
-
       clearCart()
-      setOrderNumber(data.order_number || data.id || 'N/A')
+      setOrderNumber(data.order_number || String(data.id) || 'N/A')
       setOrderSuccess(true)
-    } catch (err) {
-      setError('Something went wrong. Please try again.')
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.')
       setIsLoading(false)
     }
   }

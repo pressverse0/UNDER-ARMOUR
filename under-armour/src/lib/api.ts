@@ -82,6 +82,36 @@ export interface Order {
   tracking_history?: { date: string; time: string; status: string; location: string; completed: boolean }[]
 }
 
+// ─── Products ─────────────────────────────────────────────────────────────
+export const products = {
+  getAll: (params?: { gender?: string; categoryId?: number; search?: string; perPage?: number; sort?: string }) => {
+    const qs = new URLSearchParams()
+    if (params?.gender)     qs.set('gender',      params.gender)
+    if (params?.categoryId) qs.set('category_id', String(params.categoryId))
+    if (params?.search)     qs.set('search',       params.search)
+    if (params?.perPage)    qs.set('per_page',     String(params.perPage))
+    if (params?.sort)       qs.set('sort',         params.sort)
+    const path = qs.toString() ? `/products?${qs}` : '/products'
+    return request<{ data: unknown[]; meta?: unknown }>('GET', path)
+  },
+  getById: (id: number | string) =>
+    request<unknown>('GET', `/products/${id}`),
+  getNewArrivals: (limit = 10) =>
+    request<unknown[]>('GET', `/products/new-arrivals?limit=${limit}`),
+  getSale: (limit = 10) =>
+    request<unknown[]>('GET', `/products/sale?limit=${limit}`),
+  getByCategory: (categoryId: number, perPage = 50) =>
+    request<{ data: unknown[] }>('GET', `/products/category/${categoryId}?per_page=${perPage}`),
+  search: (q: string, perPage = 20) =>
+    request<{ data: unknown[] }>('GET', `/products/search?q=${encodeURIComponent(q)}&per_page=${perPage}`),
+}
+
+// ─── Categories ───────────────────────────────────────────────────────────
+export const categories = {
+  getAll: () =>
+    request<{ id: number; name: string; slug: string; description: string; image: string | null }[]>('GET', '/categories'),
+}
+
 // ─── Auth ──────────────────────────────────────────────────────────────────
 export const auth = {
   register: (data: { name: string; email: string; password: string }) =>

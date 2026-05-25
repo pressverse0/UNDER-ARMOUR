@@ -34,6 +34,7 @@ import {
 } from "lucide-react"
 
 import { adaptProduct, type FrontendProduct, type ApiProduct } from "@/hooks/useProducts"
+import { products as productsApi } from "@/lib/api"
 
 export default function ProductDetailPage() {
   const params = useParams()
@@ -61,14 +62,9 @@ export default function ProductDetailPage() {
     if (!productId) return
     setLoading(true)
     setNotFound(false)
-    fetch(`/api/products/${productId}`)
-      .then(r => {
-        if (!r.ok) { setNotFound(true); return null }
-        return r.json()
-      })
-      .then((data: ApiProduct | null) => {
-        if (!data) return
-        const adapted = adaptProduct(data)
+    productsApi.getById(productId)
+      .then((data) => {
+        const adapted = adaptProduct(data as ApiProduct)
         setProduct(adapted)
         setSelectedColor(adapted.color[0] ?? "")
         setSelectedSize("")
