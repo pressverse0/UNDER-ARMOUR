@@ -12,8 +12,8 @@ import {
   ViewToggle, FilterPanel, FilterToggleButton,
   ResultsCount, Pagination,
 } from "@/components/filters"
-import { kidsProducts, kidsGenderFilters, kidsCategoryFilters } from "@/data/products/kids"
-import type { KidsProduct } from "@/types/product"
+import { useProducts } from "@/hooks/useProducts"
+import type { FrontendProduct } from "@/hooks/useProducts"
 
 const SORT_OPTIONS = [
   { label: "Featured",          value: "featured"   },
@@ -23,13 +23,12 @@ const SORT_OPTIONS = [
   { label: "Top Rated",         value: "rating"     },
 ]
 const ITEMS_PER_PAGE = 9
-const ALL_GENDERS    = kidsGenderFilters.filter((g) => g !== "All")
-const ALL_CATEGORIES = kidsCategoryFilters.filter((c) => c !== "All")
 
 export default function KidsPage() {
   const { toast } = useToast()
   const { addToCart } = useCart()
   const { addToWishlist, isInWishlist, removeFromWishlist } = useWishlist()
+  const { products: allProducts, loading } = useProducts({ gender: "Kids", perPage: 100 })
 
   const [searchQuery, setSearchQuery] = useState("")
   const [genders,     setGenders]     = useState<string[]>([])
@@ -39,23 +38,26 @@ export default function KidsPage() {
   const [viewMode,    setViewMode]    = useState<"grid" | "list">("grid")
   const [filtersOpen, setFiltersOpen] = useState(false)
 
+  const availableGenders    = useMemo(() => [...new Set(allProducts.map(p => p.gender).filter(Boolean) as string[])].sort(), [allProducts])
+  const availableCategories = useMemo(() => [...new Set(allProducts.map(p => p.category))].sort(), [allProducts])
+
   const filtered = useMemo(() => {
-    let items = kidsProducts.filter((p) => {
+    let items = allProducts.filter((p) => {
       const q = searchQuery.toLowerCase()
       return (
         (p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q)) &&
-        (genders.length    === 0 || genders.includes(p.gender)) &&
+        (genders.length    === 0 || genders.includes(p.gender ?? "")) &&
         (categories.length === 0 || categories.includes(p.category))
       )
     })
     switch (sortBy) {
-      case "price-low":  items.sort((a, b) => a.price - b.price); break
-      case "price-high": items.sort((a, b) => b.price - a.price); break
-      case "rating":     items.sort((a, b) => b.rating - a.rating); break
-      case "newest":     items.sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0)); break
+      case "price-low":  items = [...items].sort((a, b) => a.price - b.price); break
+      case "price-high": items = [...items].sort((a, b) => b.price - a.price); break
+      case "rating":     items = [...items].sort((a, b) => b.rating - a.rating); break
+      case "newest":     items = [...items].sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0)); break
     }
     return items
-  }, [searchQuery, genders, categories, sortBy])
+  }, [allProducts, searchQuery, genders, categories, sortBy])
 
   const totalPages  = Math.ceil(filtered.length / ITEMS_PER_PAGE)
   const paginated   = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)
@@ -63,14 +65,14 @@ export default function KidsPage() {
 
   const clearFilters = () => { setGenders([]); setCategories([]); setSearchQuery(""); setCurrentPage(1) }
 
-  const handleCart = (e: React.MouseEvent, p: KidsProduct) => {
+  const handleCart = (e: React.MouseEvent, p: FrontendProduct) => {
     e.preventDefault()
     if (!p.inStock) return
     addToCart({ id: p.id, name: p.name, price: p.price, image: p.image, category: p.category })
     toast({ title: "Added to Cart!", description: p.name })
   }
 
-  const handleWishlist = (e: React.MouseEvent, p: KidsProduct) => {
+  const handleWishlist = (e: React.MouseEvent, p: FrontendProduct) => {
     e.preventDefault()
     if (isInWishlist(p.id)) {
       removeFromWishlist(p.id)
@@ -99,16 +101,18 @@ export default function KidsPage() {
 
         <ErrorBoundary>
           <FilterPanel isOpen={filtersOpen} onToggle={() => setFiltersOpen(!filtersOpen)} onClear={clearFilters} activeCount={activeCount}>
-            <div>
-              <p className="ua-filter-label">Gender</p>
-              <div className="flex flex-wrap gap-1.5">
-                {ALL_GENDERS.map((g) => (
-                  <PillToggle key={g} label={g} isActive={genders.includes(g)}
-                    onClick={() => { setGenders(prev => prev.includes(g) ? prev.filter(x => x !== g) : [...prev, g]); setCurrentPage(1) }} />
-                ))}
+            {availableGenders.length > 0 && (
+              <div>
+                <p className="ua-filter-label">Gender</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {availableGenders.map((g) => (
+                    <PillToggle key={g} label={g} isActive={genders.includes(g)}
+                      onClick={() => { setGenders(prev => prev.includes(g) ? prev.filter(x => x !== g) : [...prev, g]); setCurrentPage(1) }} />
+                  ))}
+                </div>
               </div>
-            </div>
-            <CheckboxGroup label="Category" options={ALL_CATEGORIES} selected={categories} onChange={(v) => { setCategories(v); setCurrentPage(1) }} />
+            )}
+            <CheckboxGroup label="Category" options={availableCategories} selected={categories} onChange={(v) => { setCategories(v); setCurrentPage(1) }} />
           </FilterPanel>
         </ErrorBoundary>
 
@@ -117,7 +121,13 @@ export default function KidsPage() {
             <div className="mb-6">
               <ResultsCount shown={paginated.length} total={filtered.length} label="kids' products" />
             </div>
-            {paginated.length === 0 ? (
+            {loading ? (
+              <div className="ua-product-grid">
+                {[...Array(6)].map((_, i) => (
+                  <div key={i} className="bg-white border-4 border-gray-200 rounded animate-pulse h-80" />
+                ))}
+              </div>
+            ) : paginated.length === 0 ? (
               <EmptyState onClear={clearFilters} />
             ) : (
               <div className={viewMode === "grid" ? "ua-product-grid" : "ua-list-view"}>

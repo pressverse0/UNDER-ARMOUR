@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\WishlistController;
 use App\Http\Controllers\Api\CheckoutController;
+use App\Models\Category;
 
 // Auth routes
 Route::prefix('auth')->group(function () {
@@ -16,6 +17,15 @@ Route::prefix('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
     Route::get('/me', [AuthController::class, 'me'])->middleware('auth:sanctum');
     Route::put('/profile', [AuthController::class, 'updateProfile'])->middleware('auth:sanctum');
+});
+
+// Public categories route
+Route::get('/categories', function () {
+    return response()->json(
+        Category::where('is_active', true)
+            ->orderBy('sort_order')
+            ->get(['id', 'name', 'slug', 'description', 'image'])
+    );
 });
 
 // Public product routes

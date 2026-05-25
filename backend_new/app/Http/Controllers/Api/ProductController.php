@@ -39,7 +39,7 @@ class ProductController extends Controller
     public function show(int $id)
     {
         $product = $this->productService->getProductDetails($id);
-        return response()->json($product);
+        return new ProductResource($product);
     }
 
     /**

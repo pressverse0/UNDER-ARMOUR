@@ -11,8 +11,8 @@ import {
   PriceRange, ViewToggle, FilterPanel, FilterToggleButton,
   ResultsCount, Pagination,
 } from "@/components/filters"
-import { menProducts, menCategories, menSizes, menColors } from "@/data/products/men"
-import type { Product } from "@/types/product"
+import { useProducts } from "@/hooks/useProducts"
+import type { FrontendProduct } from "@/hooks/useProducts"
 
 const SORT_OPTIONS = [
   { label: "Featured",          value: "featured"   },
@@ -27,6 +27,7 @@ export default function MenPage() {
   const { toast } = useToast()
   const { addToCart } = useCart()
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist()
+  const { products: allProducts, loading } = useProducts({ gender: "Men", perPage: 100 })
 
   const [searchQuery,        setSearchQuery]        = useState("")
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
@@ -38,8 +39,13 @@ export default function MenPage() {
   const [viewMode,           setViewMode]           = useState<"grid" | "list">("grid")
   const [filtersOpen,        setFiltersOpen]        = useState(false)
 
+  const categories = useMemo(() => [...new Set(allProducts.map(p => p.category))].sort(), [allProducts])
+  const sizes      = useMemo(() => [...new Set(allProducts.flatMap(p => p.size))].sort(), [allProducts])
+  const colors     = useMemo(() => [...new Set(allProducts.flatMap(p => p.color))].sort(), [allProducts])
+  const maxPrice   = useMemo(() => Math.ceil(Math.max(...allProducts.map(p => p.price), 200)), [allProducts])
+
   const filtered = useMemo(() => {
-    let items = menProducts.filter((p) => {
+    let items = allProducts.filter((p) => {
       const q = searchQuery.toLowerCase()
       return (
         (p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q)) &&
@@ -50,13 +56,13 @@ export default function MenPage() {
       )
     })
     switch (sortBy) {
-      case "price-low":  items.sort((a, b) => a.price - b.price); break
-      case "price-high": items.sort((a, b) => b.price - a.price); break
-      case "rating":     items.sort((a, b) => b.rating - a.rating); break
-      case "newest":     items.sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0)); break
+      case "price-low":  items = [...items].sort((a, b) => a.price - b.price); break
+      case "price-high": items = [...items].sort((a, b) => b.price - a.price); break
+      case "rating":     items = [...items].sort((a, b) => b.rating - a.rating); break
+      case "newest":     items = [...items].sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0)); break
     }
     return items
-  }, [searchQuery, selectedCategories, selectedSizes, selectedColors, priceRange, sortBy])
+  }, [allProducts, searchQuery, selectedCategories, selectedSizes, selectedColors, priceRange, sortBy])
 
   const totalPages  = Math.ceil(filtered.length / ITEMS_PER_PAGE)
   const paginated   = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)
@@ -64,17 +70,17 @@ export default function MenPage() {
 
   const clearFilters = () => {
     setSelectedCategories([]); setSelectedSizes([]); setSelectedColors([])
-    setPriceRange([0, 200]);   setSearchQuery("");   setCurrentPage(1)
+    setPriceRange([0, maxPrice]); setSearchQuery(""); setCurrentPage(1)
   }
 
-  const handleCart = (e: React.MouseEvent, p: Product) => {
+  const handleCart = (e: React.MouseEvent, p: FrontendProduct) => {
     e.preventDefault()
     if (!p.inStock) return
     addToCart({ id: p.id, name: p.name, price: p.price, image: p.image, category: p.category })
     toast({ title: "Added to Cart!", description: p.name })
   }
 
-  const handleWishlist = (e: React.MouseEvent, p: Product) => {
+  const handleWishlist = (e: React.MouseEvent, p: FrontendProduct) => {
     e.preventDefault()
     if (isInWishlist(p.id)) {
       removeFromWishlist(p.id)
@@ -108,11 +114,11 @@ export default function MenPage() {
 
         <ErrorBoundary>
           <FilterPanel isOpen={filtersOpen} onToggle={() => setFiltersOpen(!filtersOpen)} onClear={clearFilters} activeCount={activeCount}>
-            <CheckboxGroup label="Category" options={menCategories} selected={selectedCategories} onChange={(v) => { setSelectedCategories(v); setCurrentPage(1) }} />
+            <CheckboxGroup label="Category" options={categories} selected={selectedCategories} onChange={(v) => { setSelectedCategories(v); setCurrentPage(1) }} />
             <div>
               <p className="ua-filter-label">Size</p>
               <div className="flex flex-wrap gap-1.5">
-                {menSizes.map((s) => (
+                {sizes.map((s) => (
                   <PillToggle key={s} label={s} isActive={selectedSizes.includes(s)}
                     onClick={() => { setSelectedSizes(prev => prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s]); setCurrentPage(1) }} />
                 ))}
@@ -121,13 +127,13 @@ export default function MenPage() {
             <div>
               <p className="ua-filter-label">Color</p>
               <div className="flex flex-wrap gap-1.5">
-                {menColors.map((c) => (
+                {colors.map((c) => (
                   <PillToggle key={c} label={c} isActive={selectedColors.includes(c)}
                     onClick={() => { setSelectedColors(prev => prev.includes(c) ? prev.filter(x => x !== c) : [...prev, c]); setCurrentPage(1) }} />
                 ))}
               </div>
             </div>
-            <PriceRange min={0} max={200} value={priceRange} onChange={(v) => { setPriceRange(v); setCurrentPage(1) }} />
+            <PriceRange min={0} max={maxPrice} value={priceRange} onChange={(v) => { setPriceRange(v); setCurrentPage(1) }} />
           </FilterPanel>
         </ErrorBoundary>
 
@@ -136,7 +142,13 @@ export default function MenPage() {
             <div className="mb-6">
               <ResultsCount shown={paginated.length} total={filtered.length} label="men's products" />
             </div>
-            {paginated.length === 0 ? (
+            {loading ? (
+              <div className="ua-product-grid">
+                {[...Array(6)].map((_, i) => (
+                  <div key={i} className="bg-white border-4 border-gray-200 rounded animate-pulse h-80" />
+                ))}
+              </div>
+            ) : paginated.length === 0 ? (
               <EmptyState onClear={clearFilters} />
             ) : (
               <div className={viewMode === "grid" ? "ua-product-grid" : "ua-list-view"}>
