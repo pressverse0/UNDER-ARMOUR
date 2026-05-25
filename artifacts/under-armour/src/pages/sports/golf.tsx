@@ -7,8 +7,7 @@ import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 
 import { Link } from "wouter"
-import Header from "@/components/header"
-import Footer from "@/components/footer"
+import PageLayout from "@/components/layout/page-layout"
 import StarRating from "@/components/star-rating"
 import { 
   Search, 
@@ -24,21 +23,10 @@ import {
   Flag
 } from "lucide-react"
 
-interface Product {
-  id: number
-  name: string
-  price: number
-  originalPrice?: number
-  category: string
+import type { Product } from "@/types/product"
+
+interface _GolfProduct extends Product {
   gender: string
-  size: string[]
-  color: string[]
-  rating: number
-  reviews: number
-  image: string
-  isNew?: boolean
-  isSale?: boolean
-  inStock: boolean
 }
 
 export default function GolfPage() {
@@ -151,8 +139,7 @@ export default function GolfPage() {
   const activeFiltersCount = selectedCategories.length + selectedGenders.length + selectedSizes.length + selectedColors.length
 
   return (
-    <>
-      <Header activePage="sports" />
+    <PageLayout activePage="sports" seoTitle="Golf Apparel &amp; Shoes | Under Armour®" seoDescription="Elevate your game with Under Armour golf shirts, pants, shoes, and accessories. Performance meets style on the course.">
       <main className="flex-1 bg-gray-100">
         <section className="relative bg-black text-white py-12 lg:py-16 overflow-hidden">
           <div className="container mx-auto px-4">
@@ -531,8 +518,6 @@ export default function GolfPage() {
           </section>
         )}
       </main>
-
-      <Footer />
-    </>
+    </PageLayout>
   )
 }

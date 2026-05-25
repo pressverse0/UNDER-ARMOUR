@@ -2,8 +2,7 @@ import { useState } from "react"
 import { Mail, Phone, MapPin, Clock, CheckCircle, AlertCircle, Send } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Link } from "wouter"
-import Header from "@/components/header"
-import Footer from "@/components/footer"
+import PageLayout from "@/components/layout/page-layout"
 
 interface FormState {
   name: string
@@ -57,8 +56,7 @@ export default function ContactPage() {
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-gray-100 font-sans">
-        <Header />
+      <PageLayout seoTitle="Contact Us | Under Armour® Customer Support" seoDescription="Get help from the Under Armour support team. Contact us by phone, email, or live chat — Mon–Fri 9AM–9PM EST.">
         <section className="py-20 bg-gray-100">
           <div className="container mx-auto px-4 max-w-2xl text-center">
             <div className="bg-white sketchy-card border-4 border-black p-12">
@@ -87,14 +85,12 @@ export default function ContactPage() {
             </div>
           </div>
         </section>
-        <Footer />
-      </div>
+      </PageLayout>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 font-sans">
-      <Header />
+    <PageLayout>
 
       {/* Hero */}
       <section className="bg-black text-white py-16">
@@ -253,7 +249,6 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <Footer />
-    </div>
+    </PageLayout>
   )
 }

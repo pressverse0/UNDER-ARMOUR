@@ -9,8 +9,7 @@ import { Input } from "@/components/ui/input"
 import { useToast } from "@/hooks/use-toast"
 
 import { Link } from "wouter"
-import Header from "@/components/header"
-import Footer from "@/components/footer"
+import PageLayout from "@/components/layout/page-layout"
 import { 
   Heart,
   ShoppingCart,
@@ -153,8 +152,7 @@ export default function ProductDetailPage() {
   }
 
   return (
-    <>
-      <Header />
+    <PageLayout>
       <main className="flex-1 bg-gray-100">
         {/* Breadcrumb */}
         <section className="bg-white border-b-2 border-gray-200">
@@ -576,7 +574,6 @@ export default function ProductDetailPage() {
           </div>
         </section>
       </main>
-      <Footer />
 
       {/* Review Modal */}
       {showReviewModal && (
@@ -700,7 +697,7 @@ export default function ProductDetailPage() {
           </Card>
         </div>
       )}
-    </>
+    </PageLayout>
   )
 }
 

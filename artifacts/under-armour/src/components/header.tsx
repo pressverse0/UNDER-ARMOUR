@@ -7,7 +7,7 @@ import CartSidebar from "./cart-sidebar"
 import WishlistSidebar from "./wishlist-sidebar"
 import AnnouncementBanner from "./announcement-banner"
 
-type ActivePage = 'men' | 'women' | 'shoes' | 'sports' | 'kids' | 'accessories' | 'sale' | 'new-arrivals' | 'home'
+import type { ActivePage } from "@/types/ui"
 
 interface HeaderProps {
   activePage?: ActivePage

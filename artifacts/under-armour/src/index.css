@@ -179,6 +179,7 @@
     @apply bg-background text-foreground;
     font-family: var(--font-barriecito);
     overflow-x: hidden;
+    max-width: 100vw;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -216,12 +217,9 @@
   background: #8a0016;
 }
 
-* {
+html {
   scrollbar-width: thin;
   scrollbar-color: #C9001F #f1f1f1;
-}
-
-html {
   overflow-x: hidden;
 }
 
@@ -231,7 +229,7 @@ body {
 }
 
 .sketchy-border {
-  border-radius: 2px 8px 3px 6px / 1px 3px 4px 2px;
+  border-radius: 0.5rem;
   position: relative;
 }
 
@@ -249,7 +247,7 @@ body {
 }
 
 .sketchy-btn {
-  border-radius: 2px 6px 3px 5px / 1px 2px 3px 2px;
+  border-radius: 0.375rem;
   position: relative;
   border: 3px solid transparent;
   box-shadow: 2px 3px 0px rgba(0, 0, 0, 0.3), inset -1px -1px 0px rgba(0, 0, 0, 0.2);
@@ -262,7 +260,7 @@ body {
 }
 
 .sketchy-btn-outline {
-  border-radius: 3px 7px 2px 6px / 2px 3px 4px 1px;
+  border-radius: 0.375rem;
   position: relative;
   border: 3px solid currentColor;
   box-shadow: 2px 3px 0px rgba(0, 0, 0, 0.2);
@@ -275,10 +273,11 @@ body {
 }
 
 .sketchy-card {
-  border-radius: 3px 8px 2px 7px / 2px 4px 3px 2px;
+  border-radius: 0.5rem;
   position: relative;
   box-shadow: 4px 6px 0px rgba(0, 0, 0, 0.2), inset -1px -1px 0px rgba(0, 0, 0, 0.1);
   transform: rotate(-0.3deg);
+  overflow: hidden;
 }
 
 .sketchy-card:hover {
@@ -287,10 +286,11 @@ body {
 }
 
 .sketchy-frame {
-  border-radius: 2px 6px 3px 5px / 1px 3px 2px 4px;
+  border-radius: 0.5rem;
   position: relative;
   border: 4px solid #000;
   box-shadow: 3px 5px 0px rgba(0, 0, 0, 0.4), inset -2px -2px 0px rgba(255, 255, 255, 0.1);
+  overflow: hidden;
 }
 
 .sketchy-divider {
@@ -414,13 +414,13 @@ body {
   to { opacity: 1; transform: scale(1); }
 }
 
-.animate-wiggle { animation: wiggle 3s ease-in-out infinite; }
-.animate-float { animation: float 3s ease-in-out infinite; }
-.animate-glow { animation: glow 2s ease-in-out infinite; }
-.animate-slideInLeft { animation: slideInLeft 0.8s ease-out; }
-.animate-slideInRight { animation: slideInRight 0.8s ease-out; }
-.animate-fadeInUp { animation: fadeInUp 0.8s ease-out; }
-.animate-scaleIn { animation: scaleIn 0.6s ease-out; }
+.animate-wiggle { animation: wiggle 3s ease-in-out infinite; will-change: transform; }
+.animate-float { animation: float 3s ease-in-out infinite; will-change: transform; }
+.animate-glow { animation: glow 2s ease-in-out infinite; will-change: box-shadow; }
+.animate-slideInLeft { animation: slideInLeft 0.8s ease-out; will-change: transform, opacity; }
+.animate-slideInRight { animation: slideInRight 0.8s ease-out; will-change: transform, opacity; }
+.animate-fadeInUp { animation: fadeInUp 0.8s ease-out; will-change: transform, opacity; }
+.animate-scaleIn { animation: scaleIn 0.6s ease-out; will-change: transform, opacity; }
 
 .delay-100 { animation-delay: 100ms; }
 .delay-200 { animation-delay: 200ms; }
@@ -430,7 +430,8 @@ body {
 .delay-1000 { animation-delay: 1000ms; }
 
 .hover-lift {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
 }
 
 .hover-lift:hover {
@@ -446,7 +447,29 @@ body {
   100% { text-shadow: 2px 2px 0 #dc2626, -2px -2px 0 #000; }
 }
 
-.animate-glitch { animation: glitch 1s ease-in-out infinite; }
+.animate-glitch { animation: glitch 1s ease-in-out infinite; will-change: text-shadow; }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-wiggle,
+  .animate-float,
+  .animate-glow,
+  .animate-glitch,
+  .animate-slideInLeft,
+  .animate-slideInRight,
+  .animate-fadeInUp,
+  .animate-scaleIn,
+  .animate-in,
+  .hover-lift,
+  .sketchy-btn,
+  .sketchy-btn-outline,
+  .sketchy-card,
+  .ua-product-card {
+    animation: none !important;
+    transition: none !important;
+    will-change: auto !important;
+    transform: none !important;
+  }
+}
 
 @keyframes fade-in {
   from { opacity: 0; }
@@ -496,11 +519,60 @@ body {
   .ua-products-section  { @apply py-12 bg-gray-100; }
   .ua-cta-section       { @apply py-16 bg-black text-white; }
 
+  /* ── Section padding utilities ──────────────────────── */
+  .ua-section-sm        { @apply py-8; }
+  .ua-section-md        { @apply py-12; }
+  .ua-section-lg        { @apply py-16 lg:py-20; }
+  .ua-section-xl        { @apply py-20 lg:py-32; }
+
+  /* ── Section background utilities ───────────────────── */
+  .ua-bg-light          { @apply bg-gray-100; }
+  .ua-bg-white          { @apply bg-white; }
+  .ua-bg-dark           { @apply bg-black text-white; }
+  .ua-bg-accent         { @apply bg-red-600 text-white; }
+
+  /* ── Category cards (home + sports index) ───────────── */
+  .ua-cat-card          { @apply relative overflow-hidden rounded-lg bg-white border-4 border-black transition-all duration-300 text-center p-6; will-change: transform; }
+  .ua-cat-card:hover    { border-color: #dc2626; transform: scale(1.05); }
+  .ua-cat-card-heading  { @apply font-black text-lg uppercase transition-colors; }
+  .ua-cat-card:hover .ua-cat-card-heading { color: #dc2626; }
+  .ua-cat-card-desc     { @apply text-xs font-bold text-gray-500 mt-1; }
+
+  /* ── Mission / feature cards (dark bg) ──────────────── */
+  .ua-feature-card {
+    @apply bg-gray-900 p-8 border-2 border-red-600 text-center overflow-hidden;
+    border-radius: 0.5rem;
+    position: relative;
+    box-shadow: 4px 6px 0px rgba(0,0,0,0.2), inset -1px -1px 0px rgba(0,0,0,0.1);
+    transform: rotate(-0.3deg);
+  }
+  .ua-feature-card:hover {
+    transform: rotate(0deg);
+    box-shadow: 6px 8px 0px rgba(0,0,0,0.3), inset -1px -1px 0px rgba(0,0,0,0.15);
+  }
+
+  /* ── Testimonial cards ──────────────────────────────── */
+  .ua-testimonial-card {
+    @apply bg-white p-8 border-4 border-black overflow-hidden;
+    border-radius: 0.5rem;
+    position: relative;
+    box-shadow: 4px 6px 0px rgba(0,0,0,0.2), inset -1px -1px 0px rgba(0,0,0,0.1);
+    transform: rotate(-0.3deg);
+  }
+  .ua-testimonial-card:hover {
+    transform: rotate(0deg);
+    box-shadow: 6px 8px 0px rgba(0,0,0,0.3), inset -1px -1px 0px rgba(0,0,0,0.15);
+  }
+
+  /* ── Hero stat display ──────────────────────────────── */
+  .ua-stat-value        { @apply text-2xl font-black text-red-600; }
+  .ua-stat-label        { @apply text-xs font-black uppercase text-gray-400; }
+
   /* ── Filter bar ─────────────────────────────────────── */
   .ua-filter-bar        { @apply bg-white border-b-4 border-black sticky z-30; }
 
   /* ── Filter chips (shared across all listing pages) ─── */
-  .ua-filter-chip       { @apply text-xs font-black uppercase px-3 py-1.5 border-2 transition-colors cursor-pointer; }
+  .ua-filter-chip       { @apply text-xs font-black uppercase px-3 py-1.5 border-2 transition-colors cursor-pointer rounded-md; }
   .ua-filter-chip-on    { @apply bg-red-600 text-white border-red-600; }
   .ua-filter-chip-off   { @apply border-gray-300 text-gray-700 hover:border-red-600; }
   .ua-sort-select       { @apply border-2 border-black text-sm font-bold px-2 py-1.5 focus:outline-none focus:border-red-600 bg-white; }
@@ -511,8 +583,8 @@ body {
 
   /* ── Product card ───────────────────────────────────── */
   .ua-product-card {
-    @apply bg-white border-4 border-black hover:scale-105 transition-all duration-300 h-full flex flex-col cursor-pointer;
-    border-radius: 3px 8px 2px 7px / 2px 4px 3px 2px;
+    @apply bg-white border-4 border-black hover:scale-105 transition-all duration-300 h-full flex flex-col cursor-pointer overflow-hidden;
+    border-radius: 0.5rem;
     position: relative;
     box-shadow: 4px 6px 0px rgba(0,0,0,0.2), inset -1px -1px 0px rgba(0,0,0,0.1);
     transform: rotate(-0.3deg);
@@ -523,11 +595,11 @@ body {
   }
   .ua-card-body         { @apply p-4 flex flex-col flex-1; }
   .ua-card-body-lg      { @apply p-6 flex flex-col flex-1; }
-  .ua-card-image-wrap   { @apply relative bg-gray-900 overflow-hidden; }
+  .ua-card-image-wrap   { @apply relative bg-gray-900 overflow-hidden rounded-t-lg; }
   .ua-card-image        { @apply w-full h-full object-cover filter grayscale transition-all duration-500; }
   .ua-card-image-frame {
     @apply relative bg-gray-900 flex items-center justify-center overflow-hidden;
-    border-radius: 2px 6px 3px 5px / 1px 3px 2px 4px;
+    border-radius: 0.5rem;
     position: relative;
     border: 4px solid #000;
     box-shadow: 3px 5px 0px rgba(0,0,0,0.4), inset -2px -2px 0px rgba(255,255,255,0.1);
@@ -544,8 +616,8 @@ body {
   .ua-wishlist-btn      { @apply absolute top-3 right-3 bg-white rounded-full p-1.5 shadow hover:scale-110 transition-transform; }
 
   /* ── Category tag ───────────────────────────────────── */
-  .ua-category-tag      { @apply bg-red-600 inline-block px-2 py-0.5 mb-2 self-start; border-radius: 2px 8px 3px 6px / 1px 3px 4px 2px; position: relative; }
-  .ua-category-tag-lg   { @apply bg-red-600 inline-block px-3 py-1 self-start; border-radius: 2px 8px 3px 6px / 1px 3px 4px 2px; position: relative; }
+  .ua-category-tag      { @apply bg-red-600 inline-block px-2 py-0.5 mb-2 self-start rounded; position: relative; }
+  .ua-category-tag-lg   { @apply bg-red-600 inline-block px-3 py-1 self-start rounded; position: relative; }
   .ua-category-tag-text { @apply text-white font-bold text-xs uppercase; }
 
   /* ── Product typography ─────────────────────────────── */
@@ -567,7 +639,7 @@ body {
   /* ── CTA / action buttons ───────────────────────────── */
   .ua-btn-cart {
     @apply bg-black text-white hover:bg-red-600 font-black uppercase text-xs w-full disabled:opacity-50 disabled:cursor-not-allowed;
-    border-radius: 2px 6px 3px 5px / 1px 2px 3px 2px;
+    border-radius: 0.375rem;
     border: 3px solid transparent;
     box-shadow: 2px 3px 0px rgba(0,0,0,0.3), inset -1px -1px 0px rgba(0,0,0,0.2);
     transform: rotate(-0.5deg);
@@ -575,7 +647,7 @@ body {
   .ua-btn-cart:hover { transform: rotate(0deg) scale(1.02); box-shadow: 3px 4px 0px rgba(0,0,0,0.4); }
   .ua-btn-cart-red {
     @apply bg-red-600 text-white hover:bg-red-700 font-black uppercase text-xs w-full disabled:opacity-50;
-    border-radius: 2px 6px 3px 5px / 1px 2px 3px 2px;
+    border-radius: 0.375rem;
     border: 3px solid transparent;
     box-shadow: 2px 3px 0px rgba(0,0,0,0.3), inset -1px -1px 0px rgba(0,0,0,0.2);
     transform: rotate(-0.5deg);
@@ -583,7 +655,7 @@ body {
   .ua-btn-cart-red:hover { transform: rotate(0deg) scale(1.02); box-shadow: 3px 4px 0px rgba(0,0,0,0.4); }
   .ua-btn-primary {
     @apply bg-red-600 hover:bg-red-700 text-white font-black uppercase;
-    border-radius: 2px 6px 3px 5px / 1px 2px 3px 2px;
+    border-radius: 0.375rem;
     border: 3px solid transparent;
     box-shadow: 2px 3px 0px rgba(0,0,0,0.3), inset -1px -1px 0px rgba(0,0,0,0.2);
     transform: rotate(-0.5deg);
@@ -591,7 +663,7 @@ body {
   .ua-btn-primary:hover { transform: rotate(0deg) scale(1.02); }
   .ua-btn-secondary {
     @apply bg-black hover:bg-gray-900 text-white font-black uppercase;
-    border-radius: 2px 6px 3px 5px / 1px 2px 3px 2px;
+    border-radius: 0.375rem;
     border: 3px solid transparent;
     box-shadow: 2px 3px 0px rgba(0,0,0,0.3), inset -1px -1px 0px rgba(0,0,0,0.2);
     transform: rotate(-0.5deg);
@@ -602,6 +674,35 @@ body {
   .ua-results-count     { @apply text-sm font-black uppercase text-gray-600 mb-6; }
   .ua-section-heading   { @apply text-4xl lg:text-5xl font-black uppercase tracking-tight; }
   .ua-section-subtext   { @apply font-black uppercase text-sm; }
+
+  /* ── Sidebar item row ───────────────────────────────── */
+  .ua-sidebar-item {
+    @apply flex gap-4 p-4 border-2 border-gray-200 transition-colors cursor-pointer;
+    border-radius: 0.375rem;
+  }
+  .ua-sidebar-item:hover { border-color: #dc2626; }
+
+  /* ── Sidebar thumbnail (image container) ────────────── */
+  .ua-sidebar-thumb {
+    @apply bg-gray-900 overflow-hidden flex-shrink-0;
+    width: 5rem;
+    height: 5rem;
+    border-radius: 0.375rem;
+  }
+
+  /* ── Count badge (cart / wishlist count bubble) ─────── */
+  .ua-count-badge {
+    @apply bg-red-600 text-white text-xs font-black flex items-center justify-center;
+    border-radius: 9999px;
+    height: 1.5rem;
+    width: 1.5rem;
+  }
+
+  /* ── Quantity control wrapper ───────────────────────── */
+  .ua-qty-ctrl {
+    @apply flex items-center space-x-1 border-2 border-gray-300;
+    border-radius: 0.375rem;
+  }
 }
 
 @layer utilities {

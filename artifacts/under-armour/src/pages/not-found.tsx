@@ -2,8 +2,7 @@ import { Home, Search, AlertTriangle, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Link } from "wouter"
 import { useEffect, useState } from 'react'
-import Header from "@/components/header"
-import Footer from "@/components/footer"
+import PageLayout from "@/components/layout/page-layout"
 
 export default function NotFound() {
   const [mounted, setMounted] = useState(false)
@@ -13,8 +12,7 @@ export default function NotFound() {
   }, [])
 
   return (
-    <>
-      <Header />
+    <PageLayout>
       <main className="flex-1 bg-gray-100">
         <section className="relative bg-black text-white py-20 lg:py-32 overflow-hidden">
           <div className="absolute inset-0">
@@ -105,7 +103,6 @@ export default function NotFound() {
           </div>
         </section>
       </main>
-      <Footer />
-    </>
+    </PageLayout>
   )
 }

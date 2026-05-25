@@ -7,8 +7,7 @@ import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 
 import { Link } from "wouter"
-import Header from "@/components/header"
-import Footer from "@/components/footer"
+import PageLayout from "@/components/layout/page-layout"
 import StarRating from "@/components/star-rating"
 import { 
   Search, 
@@ -23,21 +22,7 @@ import {
   List
 } from "lucide-react"
 
-interface Product {
-  id: number
-  name: string
-  price: number
-  originalPrice?: number
-  category: string
-  size: string[]
-  color: string[]
-  rating: number
-  reviews: number
-  image: string
-  isNew?: boolean
-  isSale?: boolean
-  inStock: boolean
-}
+import type { Product } from "@/types/product"
 
 export default function WomenPage() {
   const [searchQuery, setSearchQuery] = useState('')
@@ -138,8 +123,7 @@ export default function WomenPage() {
   const activeFiltersCount = selectedCategories.length + selectedSizes.length + selectedColors.length
 
   return (
-    <>
-      <Header activePage="women" />
+    <PageLayout activePage="women" seoTitle="Women's Athletic Clothing &amp; Shoes | Under Armour®" seoDescription="Shop women's performance activewear, sports bras, running shoes, and training gear. Under Armour® technology engineered to push your limits.">
       <main className="flex-1 bg-gray-100">
         <section className="relative bg-black text-white py-12 lg:py-16 overflow-hidden">
           <div className="container mx-auto px-4">
@@ -496,8 +480,6 @@ export default function WomenPage() {
           </section>
         )}
       </main>
-
-      <Footer />
-    </>
+    </PageLayout>
   )
 }

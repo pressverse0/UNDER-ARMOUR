@@ -1,8 +1,7 @@
 import { useState } from "react"
 import { ChevronDown, MessageCircle, Phone, Mail } from "lucide-react"
 import { Link } from "wouter"
-import Header from "@/components/header"
-import Footer from "@/components/footer"
+import PageLayout from "@/components/layout/page-layout"
 
 const faqCategories = [
   {
@@ -109,8 +108,7 @@ export default function FAQPage() {
     : faqCategories
 
   return (
-    <div className="min-h-screen bg-gray-100 font-sans">
-      <Header />
+    <PageLayout seoTitle="FAQs | Under Armour® Help Center" seoDescription="Find answers to common questions about Under Armour orders, shipping, returns, sizing, account management, and more.">
 
       {/* Hero */}
       <section className="bg-black text-white py-16">
@@ -207,7 +205,6 @@ export default function FAQPage() {
         </div>
       </section>
 
-      <Footer />
-    </div>
+    </PageLayout>
   )
 }

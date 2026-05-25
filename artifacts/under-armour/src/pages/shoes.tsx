@@ -7,8 +7,7 @@ import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 
 import { Link } from "wouter"
-import Header from "@/components/header"
-import Footer from "@/components/footer"
+import PageLayout from "@/components/layout/page-layout"
 import StarRating from "@/components/star-rating"
 import { 
   Search, 
@@ -23,21 +22,9 @@ import {
   List
 } from "lucide-react"
 
-interface Product {
-  id: number
-  name: string
-  price: number
-  originalPrice?: number
-  category: string
-  gender: string
-  size: string[]
-  color: string[]
-  rating: number
-  reviews: number
-  image: string
-  isNew?: boolean
-  isSale?: boolean
-  inStock: boolean
+import type { Product } from "@/types/product"
+
+interface _ProductWithTech extends Product {
   technology?: string
 }
 
@@ -162,8 +149,7 @@ export default function ShoesPage() {
   const activeFiltersCount = selectedCategories.length + selectedGenders.length + selectedSizes.length + selectedColors.length + selectedTechnologies.length
 
   return (
-    <>
-      <Header activePage="shoes" />
+    <PageLayout activePage="shoes" seoTitle="Athletic Shoes &amp; Footwear | Under Armour® HOVR™" seoDescription="Shop UA's full lineup of running shoes, training shoes, basketball sneakers, and golf shoes. HOVR™ cushioning for maximum energy return.">
       <main className="flex-1 bg-gray-100">
         <section className="relative bg-black text-white py-12 lg:py-16 overflow-hidden">
           <div className="container mx-auto px-4">
@@ -569,8 +555,6 @@ export default function ShoesPage() {
           </section>
         )}
       </main>
-
-      <Footer />
-    </>
+    </PageLayout>
   )
 }

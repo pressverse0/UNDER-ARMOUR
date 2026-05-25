@@ -6,8 +6,7 @@ import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
 
 import { Link } from "wouter"
-import Header from "@/components/header"
-import Footer from "@/components/footer"
+import PageLayout from "@/components/layout/page-layout"
 
 export default function WishlistPage() {
   const { toast } = useToast()
@@ -23,8 +22,7 @@ export default function WishlistPage() {
   ]
 
   return (
-    <>
-      <Header />
+    <PageLayout>
       <main className="flex-1 bg-gray-100">
 
       {/* Hero Section */}
@@ -204,7 +202,6 @@ export default function WishlistPage() {
       </section>
       </main>
 
-      <Footer />
-    </>
+    </PageLayout>
   )
 }

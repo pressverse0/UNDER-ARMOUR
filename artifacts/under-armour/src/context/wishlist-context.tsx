@@ -1,14 +1,8 @@
-import { createContext, useContext, useState, useCallback, ReactNode } from "react"
+import { createContext, useContext, useState, useCallback, useEffect, ReactNode } from "react"
+import type { WishlistItem } from "@/types/wishlist"
+import { storageGet, storageSet, STORAGE_KEYS } from "@/utils/storage"
 
-export interface WishlistItem {
-  id: number
-  name: string
-  price: number
-  originalPrice?: number
-  image: string
-  category: string
-  inStock: boolean
-}
+export type { WishlistItem }
 
 interface WishlistContextType {
   wishlistItems: WishlistItem[]
@@ -21,11 +15,13 @@ interface WishlistContextType {
 const WishlistContext = createContext<WishlistContextType | null>(null)
 
 export function WishlistProvider({ children }: { children: ReactNode }) {
-  const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>([
-    { id: 1, name: "HeatGear Compression Shirt", price: 35, image: "/ARMOUR/HeatGearCompressionShirt.jpg", category: "Training", inStock: true },
-    { id: 2, name: "HOVR Phantom 3", price: 140, image: "/ARMOUR/HOVRPhantom3.jpg", category: "Footwear", inStock: true },
-    { id: 3, name: "Tech 2.0 Shorts", price: 30, originalPrice: 45, image: "/ARMOUR/Tech2.0Shorts.jpg", category: "Bottoms", inStock: false },
-  ])
+  const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>(() =>
+    storageGet<WishlistItem[]>(STORAGE_KEYS.WISHLIST, [])
+  )
+
+  useEffect(() => {
+    storageSet(STORAGE_KEYS.WISHLIST, wishlistItems)
+  }, [wishlistItems])
 
   const addToWishlist = useCallback((item: WishlistItem) => {
     setWishlistItems(prev => {

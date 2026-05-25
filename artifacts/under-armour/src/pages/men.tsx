@@ -8,8 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
 
-import Header from "@/components/header"
-import Footer from "@/components/footer"
+import PageLayout from "@/components/layout/page-layout"
 import StarRating from "@/components/star-rating"
 import { 
   Search, 
@@ -24,21 +23,7 @@ import {
   List
 } from "lucide-react"
 
-interface Product {
-  id: number
-  name: string
-  price: number
-  originalPrice?: number
-  category: string
-  size: string[]
-  color: string[]
-  rating: number
-  reviews: number
-  image: string
-  isNew?: boolean
-  isSale?: boolean
-  inStock: boolean
-}
+import type { Product } from "@/types/product"
 
 export default function MenPage() {
   const { toast } = useToast()
@@ -162,8 +147,7 @@ export default function MenPage() {
   }
 
   return (
-    <>
-      <Header activePage="men" />
+    <PageLayout activePage="men" seoTitle="Men's Athletic Clothing &amp; Shoes | Under Armour®" seoDescription="Shop men's performance training gear, running shoes, basketball apparel, and compression wear. HeatGear® technology keeps you cool, dry &amp; light.">
       <main className="flex-1 bg-gray-100">
         {/* Hero Section */}
         <section className="relative bg-black text-white py-12 lg:py-16 overflow-hidden">
@@ -544,8 +528,6 @@ export default function MenPage() {
           </section>
         )}
       </main>
-
-      <Footer />
-    </>
+    </PageLayout>
   )
 }
