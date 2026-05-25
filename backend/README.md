@@ -54,6 +54,93 @@ In order to ensure that the Laravel community is welcoming to all, please review
 
 If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
+## Docker Setup
+
+### Prerequisites
+- Docker
+- Docker Compose
+
+### Getting Started with Docker
+
+1. **Clone the repository and navigate to the backend directory:**
+   ```bash
+   cd backend
+   ```
+
+2. **Copy the Docker environment file:**
+   ```bash
+   cp .env.docker .env
+   ```
+
+3. **Build and start the Docker containers:**
+   ```bash
+   docker-compose up -d
+   ```
+
+4. **Generate the application key:**
+   ```bash
+   docker-compose exec app php artisan key:generate
+   ```
+
+5. **Run database migrations:**
+   ```bash
+   docker-compose exec app php artisan migrate
+   ```
+
+6. **Seed the database (optional):**
+   ```bash
+   docker-compose exec app php artisan db:seed
+   ```
+
+### Accessing the Application
+
+- **API:** http://localhost:8000
+- **phpMyAdmin:** http://localhost:8080
+  - Username: `root`
+  - Password: `root`
+
+### Useful Docker Commands
+
+- **View logs:**
+  ```bash
+  docker-compose logs -f app
+  ```
+
+- **Run Artisan commands:**
+  ```bash
+  docker-compose exec app php artisan <command>
+  ```
+
+- **Access the application container:**
+  ```bash
+  docker-compose exec app bash
+  ```
+
+- **Stop containers:**
+  ```bash
+  docker-compose down
+  ```
+
+- **Rebuild containers:**
+  ```bash
+  docker-compose up -d --build
+  ```
+
+### Services
+
+The Docker setup includes:
+- **app**: Laravel application (PHP 8.2 with Apache)
+- **db**: MySQL 8.0 database
+- **phpmyadmin**: Database management interface
+
+### Environment Variables
+
+Edit `.env` file to customize:
+- `DB_DATABASE`: Database name (default: under_armour)
+- `DB_USERNAME`: Database user (default: root)
+- `DB_PASSWORD`: Database password (default: root)
+- `APP_KEY`: Application encryption key (auto-generated)
+
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
