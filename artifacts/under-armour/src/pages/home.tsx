@@ -5,8 +5,7 @@ import { Link } from "wouter"
 import { useState } from "react"
 import { useToast } from "@/hooks/use-toast"
 import { useCart } from "@/context/cart-context"
-import Header from "@/components/header"
-import Footer from "@/components/footer"
+import PageLayout from "@/components/layout/page-layout"
 
 const featuredProducts = [
   { id: 11, name: "HeatGear Training Shirt", price: 35, originalPrice: null, category: "Apparel", description: "Moisture-wicking performance training shirt", image: "/ARMOUR/HeatGear Training Shirt.jpg", rating: 4.4, reviews: 267 },
@@ -53,8 +52,7 @@ export default function UnderArmourLanding() {
   }
 
   return (
-    <>
-      <Header activePage="home" />
+    <PageLayout>
       <main className="flex-1">
 
         {/* Hero Section */}
@@ -377,7 +375,6 @@ export default function UnderArmourLanding() {
         </section>
       </main>
 
-      <Footer />
-    </>
+    </PageLayout>
   )
 }

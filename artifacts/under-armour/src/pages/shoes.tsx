@@ -7,8 +7,7 @@ import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 
 import { Link } from "wouter"
-import Header from "@/components/header"
-import Footer from "@/components/footer"
+import PageLayout from "@/components/layout/page-layout"
 import StarRating from "@/components/star-rating"
 import { 
   Search, 
@@ -162,8 +161,7 @@ export default function ShoesPage() {
   const activeFiltersCount = selectedCategories.length + selectedGenders.length + selectedSizes.length + selectedColors.length + selectedTechnologies.length
 
   return (
-    <>
-      <Header activePage="shoes" />
+    <PageLayout activePage="shoes">
       <main className="flex-1 bg-gray-100">
         <section className="relative bg-black text-white py-12 lg:py-16 overflow-hidden">
           <div className="container mx-auto px-4">
@@ -569,8 +567,6 @@ export default function ShoesPage() {
           </section>
         )}
       </main>
-
-      <Footer />
-    </>
+    </PageLayout>
   )
 }

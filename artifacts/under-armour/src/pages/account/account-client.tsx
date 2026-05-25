@@ -7,8 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/hooks/use-toast"
 import { Link } from "wouter"
-import Header from "@/components/header"
-import Footer from "@/components/footer"
+import PageLayout from "@/components/layout/page-layout"
 
 export default function AccountClient() {
   const { toast } = useToast()
@@ -41,8 +40,7 @@ export default function AccountClient() {
   }
 
   return (
-    <>
-      <Header />
+    <PageLayout>
       <main className="flex-1 bg-gray-100">
 
       {/* Hero Section */}
@@ -256,7 +254,6 @@ export default function AccountClient() {
       </section>
       </main>
 
-      <Footer />
 
       {/* Personal Info Modal */}
       {isPersonalInfoModalOpen && (
@@ -403,6 +400,6 @@ export default function AccountClient() {
           </Card>
         </div>
       )}
-    </>
+    </PageLayout>
   )
 }

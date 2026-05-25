@@ -2,8 +2,7 @@ import { useState } from "react"
 import { Package, Truck, CheckCircle, MapPin, AlertCircle, Search, Clock, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Link } from "wouter"
-import Header from "@/components/header"
-import Footer from "@/components/footer"
+import PageLayout from "@/components/layout/page-layout"
 
 interface TrackingResult {
   orderNumber: string
@@ -86,8 +85,7 @@ export default function TrackOrderPage() {
   const currentStatus = tracking ? statusConfig[tracking.status] : null
 
   return (
-    <div className="min-h-screen bg-gray-100 font-sans">
-      <Header />
+    <PageLayout>
 
       {/* Hero */}
       <section className="bg-black text-white py-16">
@@ -283,7 +281,6 @@ export default function TrackOrderPage() {
         </div>
       </section>
 
-      <Footer />
-    </div>
+    </PageLayout>
   )
 }

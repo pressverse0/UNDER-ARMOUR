@@ -6,8 +6,7 @@ import { CheckCircle, Package, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Link } from "wouter"
-import Header from "@/components/header"
-import Footer from "@/components/footer"
+import PageLayout from "@/components/layout/page-layout"
 
 function SuccessContent() {
   const searchParams = useNextSearchParams()
@@ -121,8 +120,7 @@ function SuccessContent() {
 
 export default function CheckoutSuccessPage() {
   return (
-    <>
-      <Header />
+    <PageLayout>
       <main className="flex-1 bg-gray-100">
         <Suspense fallback={
           <section className="py-20">
@@ -140,7 +138,6 @@ export default function CheckoutSuccessPage() {
           <SuccessContent />
         </Suspense>
       </main>
-      <Footer />
-    </>
+    </PageLayout>
   )
 }

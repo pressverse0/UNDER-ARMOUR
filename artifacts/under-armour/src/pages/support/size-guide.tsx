@@ -1,8 +1,7 @@
 import { useState } from "react"
 import { Ruler, Info } from "lucide-react"
 import { Link } from "wouter"
-import Header from "@/components/header"
-import Footer from "@/components/footer"
+import PageLayout from "@/components/layout/page-layout"
 
 type Tab = 'mens' | 'womens' | 'kids' | 'footwear'
 
@@ -23,8 +22,7 @@ export default function SizeGuidePage() {
   ]
 
   return (
-    <div className="min-h-screen bg-gray-100 font-sans">
-      <Header />
+    <PageLayout>
 
       {/* Hero */}
       <section className="bg-black text-white py-16">
@@ -396,7 +394,6 @@ export default function SizeGuidePage() {
         </div>
       </section>
 
-      <Footer />
-    </div>
+    </PageLayout>
   )
 }

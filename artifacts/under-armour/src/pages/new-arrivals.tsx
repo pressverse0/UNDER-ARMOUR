@@ -1,12 +1,10 @@
 import { useState, useMemo } from "react"
 import { Sparkles } from "lucide-react"
-import { Link } from "wouter"
 import { useToast } from "@/hooks/use-toast"
 import { useCart } from "@/context/cart-context"
 import { useWishlist } from "@/context/wishlist-context"
-import Header from "@/components/header"
-import Footer from "@/components/footer"
 import ProductCard from "@/components/product-card"
+import { PageLayout, PageHero, FilterBar } from "@/components/layout"
 
 const newProducts = [
   { id: 10, name: "Curry Flow 11", price: 160, category: "Basketball Shoes", rating: 4.9, reviews: 421, image: "/ARMOUR/Curry Flow 11.jpg", inStock: true, arrivedWeeks: 1 },
@@ -69,62 +67,48 @@ export default function NewArrivalsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 font-sans">
-      <Header activePage="new-arrivals" />
-
-      {/* Hero */}
-      <section className="ua-hero py-16 lg:py-24">
-        <div className="ua-hero-gradient" />
-        <div className="ua-page-container relative z-10 text-center">
-          <div className="sketchy-border bg-red-600 inline-block px-6 py-2 transform -rotate-1 mb-6">
+    <PageLayout activePage="new-arrivals">
+      <main className="flex-1 bg-gray-100">
+      <PageHero
+        variant="full"
+        title="New"
+        titleAccent="Arrivals"
+        subtitle="Fresh performance gear. The latest drops from Under Armour — be first to own it."
+        align="center"
+        badge={
+          <div className="sketchy-border bg-red-600 inline-block px-6 py-2 transform -rotate-1">
             <span className="text-white font-black text-sm uppercase tracking-widest flex items-center gap-2">
               <Sparkles className="h-4 w-4" /> Just Landed
             </span>
           </div>
-          <h1 className="text-6xl lg:text-8xl font-black uppercase leading-none tracking-tight mb-4">
-            New <span className="text-red-600">Arrivals</span>
-          </h1>
-          <p className="text-xl text-gray-300 font-bold max-w-2xl mx-auto mb-8">
-            Fresh performance gear. The latest drops from Under Armour — be first to own it.
-          </p>
-          <div className="flex flex-wrap gap-4 justify-center">
-            {["This Week", "Latest Drops", "New Technology", "New Collections"].map(tag => (
-              <span key={tag} className="bg-gray-900 border border-gray-700 text-gray-300 text-xs font-black uppercase px-4 py-2 rounded">
-                {tag}
-              </span>
-            ))}
-          </div>
+        }
+      >
+        <div className="flex flex-wrap gap-4 justify-center">
+          {["This Week", "Latest Drops", "New Technology", "New Collections"].map(tag => (
+            <span key={tag} className="bg-gray-900 border border-gray-700 text-gray-300 text-xs font-black uppercase px-4 py-2 rounded">
+              {tag}
+            </span>
+          ))}
         </div>
-        <div className="ua-hero-divider" />
-      </section>
+      </PageHero>
 
-      {/* Filters */}
-      <section className="ua-filter-bar top-[56px]">
-        <div className="ua-page-container py-3">
-          <div className="flex flex-wrap items-center gap-4 justify-between">
-            <div className="flex gap-1 flex-wrap">
-              {categoryFilters.map(c => (
-                <button
-                  key={c}
-                  onClick={() => setCategory(c)}
-                  className={`ua-filter-chip ${category === c ? "ua-filter-chip-on" : "ua-filter-chip-off"}`}
-                >
-                  {c}
-                </button>
-              ))}
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-black uppercase text-gray-500">Sort:</span>
-              <select value={sortBy} onChange={e => setSortBy(e.target.value)} className="ua-sort-select">
-                <option value="newest">Newest First</option>
-                <option value="price-low">Price: Low to High</option>
-                <option value="price-high">Price: High to Low</option>
-                <option value="rating">Top Rated</option>
-              </select>
-            </div>
-          </div>
-        </div>
-      </section>
+      <FilterBar
+        filterGroups={[
+          {
+            options: categoryFilters.map(c => ({ label: c, value: c })),
+            value: category,
+            onChange: setCategory,
+          },
+        ]}
+        sortOptions={[
+          { label: "Newest First", value: "newest" },
+          { label: "Price: Low to High", value: "price-low" },
+          { label: "Price: High to Low", value: "price-high" },
+          { label: "Top Rated", value: "rating" },
+        ]}
+        sortBy={sortBy}
+        onSortChange={setSortBy}
+      />
 
       {/* Products */}
       <section className="ua-products-section">
@@ -161,7 +145,7 @@ export default function NewArrivalsPage() {
         </div>
       </section>
 
-      <Footer />
-    </div>
+      </main>
+    </PageLayout>
   )
 }

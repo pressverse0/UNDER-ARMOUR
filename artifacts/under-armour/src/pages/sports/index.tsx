@@ -4,8 +4,7 @@ import { Dumbbell, Trophy, Target, Zap, Flag } from "lucide-react"
 
 import { Link } from "wouter"
 
-import Header from "@/components/header"
-import Footer from "@/components/footer"
+import PageLayout from "@/components/layout/page-layout"
 
 
 export default function SportsPage() {
@@ -18,8 +17,7 @@ export default function SportsPage() {
   ]
 
   return (
-    <>
-      <Header activePage="sports" />
+    <PageLayout activePage="sports">
       <main className="flex-1 bg-gray-100">
 
       {/* Hero Section */}
@@ -84,8 +82,6 @@ export default function SportsPage() {
         </div>
       </section>
       </main>
-
-      <Footer />
-    </>
+    </PageLayout>
   )
 }

@@ -1,13 +1,11 @@
 import { useState, useMemo } from "react"
-import { Button } from "@/components/ui/button"
-import { Filter } from "lucide-react"
 import { Link } from "wouter"
+import { Button } from "@/components/ui/button"
 import { useToast } from "@/hooks/use-toast"
 import { useCart } from "@/context/cart-context"
 import { useWishlist } from "@/context/wishlist-context"
-import Header from "@/components/header"
-import Footer from "@/components/footer"
 import ProductCard from "@/components/product-card"
+import { PageLayout, PageHero, FilterBar } from "@/components/layout"
 
 interface KidsProduct {
   id: number
@@ -86,83 +84,54 @@ export default function KidsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 font-sans">
-      <Header activePage="kids" />
-
-      {/* Hero */}
-      <section className="ua-hero py-16 lg:py-24">
-        <div className="ua-hero-gradient" />
-        <div className="ua-page-container relative z-10">
-          <div className="max-w-3xl">
-            <div className="sketchy-border bg-red-600 inline-block px-4 py-2 transform -rotate-1 mb-4">
-              <span className="text-white font-black text-sm uppercase tracking-widest">Young Champions</span>
-            </div>
-            <h1 className="text-5xl lg:text-6xl font-black uppercase leading-none tracking-tight mb-6">
-              Kids <span className="text-red-600">Performance</span>
-            </h1>
-            <p className="text-xl text-gray-300 font-bold mb-8">
-              Built for young athletes. Engineered to grow with champions. Ages 3–16.
-            </p>
-            <div className="flex flex-wrap gap-3">
-              {["HeatGear Tech", "Durable Designs", "Easy Care", "True-to-Size Fit"].map(tag => (
-                <span key={tag} className="bg-gray-900 border border-gray-700 text-gray-300 text-xs font-black uppercase px-3 py-1.5 rounded">
-                  {tag}
-                </span>
-              ))}
-            </div>
+    <PageLayout activePage="kids">
+      <main className="flex-1 bg-gray-100">
+      <PageHero
+        variant="full"
+        title="Kids"
+        titleAccent="Performance"
+        subtitle="Built for young athletes. Engineered to grow with champions. Ages 3–16."
+        badge={
+          <div className="sketchy-border bg-red-600 inline-block px-4 py-2 transform -rotate-1">
+            <span className="text-white font-black text-sm uppercase tracking-widest">Young Champions</span>
           </div>
+        }
+      >
+        <div className="flex flex-wrap gap-3">
+          {["HeatGear Tech", "Durable Designs", "Easy Care", "True-to-Size Fit"].map(tag => (
+            <span key={tag} className="bg-gray-900 border border-gray-700 text-gray-300 text-xs font-black uppercase px-3 py-1.5 rounded">
+              {tag}
+            </span>
+          ))}
         </div>
-        <div className="ua-hero-divider" />
-      </section>
+      </PageHero>
 
-      {/* Filters */}
-      <section className="ua-filter-bar top-[56px]">
-        <div className="ua-page-container py-3">
-          <div className="flex flex-wrap items-center gap-4 justify-between">
-            <div className="flex flex-wrap gap-3">
-              <div className="flex items-center gap-2">
-                <Filter className="h-4 w-4 text-gray-500" />
-                <span className="text-sm font-black uppercase text-gray-500">Gender:</span>
-                <div className="flex gap-1">
-                  {genderFilters.map(g => (
-                    <button
-                      key={g}
-                      onClick={() => setGender(g)}
-                      className={`ua-filter-chip ${gender === g ? "bg-black text-white border-black" : "ua-filter-chip-off"}`}
-                    >
-                      {g}
-                    </button>
-                  ))}
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-black uppercase text-gray-500">Type:</span>
-                <div className="flex gap-1 flex-wrap">
-                  {categoryFilters.map(c => (
-                    <button
-                      key={c}
-                      onClick={() => setCategory(c)}
-                      className={`ua-filter-chip ${category === c ? "ua-filter-chip-on" : "ua-filter-chip-off"}`}
-                    >
-                      {c}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-black uppercase text-gray-500">Sort:</span>
-              <select value={sortBy} onChange={e => setSortBy(e.target.value)} className="ua-sort-select">
-                <option value="featured">Featured</option>
-                <option value="newest">Newest</option>
-                <option value="price-low">Price: Low to High</option>
-                <option value="price-high">Price: High to Low</option>
-                <option value="rating">Top Rated</option>
-              </select>
-            </div>
-          </div>
-        </div>
-      </section>
+      <FilterBar
+        filterGroups={[
+          {
+            label: "Gender",
+            options: genderFilters.map(g => ({ label: g, value: g })),
+            value: gender,
+            onChange: setGender,
+            activeClass: "black",
+          },
+          {
+            label: "Type",
+            options: categoryFilters.map(c => ({ label: c, value: c })),
+            value: category,
+            onChange: setCategory,
+          },
+        ]}
+        sortOptions={[
+          { label: "Featured", value: "featured" },
+          { label: "Newest", value: "newest" },
+          { label: "Price: Low to High", value: "price-low" },
+          { label: "Price: High to Low", value: "price-high" },
+          { label: "Top Rated", value: "rating" },
+        ]}
+        sortBy={sortBy}
+        onSortChange={setSortBy}
+      />
 
       {/* Products */}
       <section className="ua-products-section">
@@ -232,7 +201,7 @@ export default function KidsPage() {
         </div>
       </section>
 
-      <Footer />
-    </div>
+      </main>
+    </PageLayout>
   )
 }

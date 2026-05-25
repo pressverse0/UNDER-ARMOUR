@@ -2,8 +2,7 @@ import { useState } from "react"
 import { Truck, Zap, Globe, Search, Package, CheckCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Link } from "wouter"
-import Header from "@/components/header"
-import Footer from "@/components/footer"
+import PageLayout from "@/components/layout/page-layout"
 
 export default function ShippingPage() {
   const [trackingInput, setTrackingInput] = useState("")
@@ -15,8 +14,7 @@ export default function ShippingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 font-sans">
-      <Header />
+    <PageLayout>
 
       {/* Hero */}
       <section className="bg-black text-white py-16">
@@ -174,7 +172,6 @@ export default function ShippingPage() {
         </div>
       </section>
 
-      <Footer />
-    </div>
+    </PageLayout>
   )
 }

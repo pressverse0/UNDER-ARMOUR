@@ -6,8 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { ShoppingCart, Lock, CheckCircle, ArrowRight, User, Mail, MapPin, Phone } from "lucide-react"
 
-import Header from "@/components/header"
-import Footer from "@/components/footer"
+import PageLayout from "@/components/layout/page-layout"
 
 interface CartItem {
   id: number
@@ -99,8 +98,7 @@ export default function CheckoutPage() {
   }
 
   return (
-    <>
-      <Header />
+    <PageLayout>
       <main className="flex-1 bg-gray-100">
         {/* Checkout Content */}
         <section className="py-12 overflow-x-hidden">
@@ -362,7 +360,6 @@ export default function CheckoutPage() {
         </div>
       </section>
       </main>
-      <Footer />
-    </>
+    </PageLayout>
   )
 }

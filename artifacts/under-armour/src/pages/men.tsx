@@ -8,8 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
 
-import Header from "@/components/header"
-import Footer from "@/components/footer"
+import PageLayout from "@/components/layout/page-layout"
 import StarRating from "@/components/star-rating"
 import { 
   Search, 
@@ -162,8 +161,7 @@ export default function MenPage() {
   }
 
   return (
-    <>
-      <Header activePage="men" />
+    <PageLayout activePage="men">
       <main className="flex-1 bg-gray-100">
         {/* Hero Section */}
         <section className="relative bg-black text-white py-12 lg:py-16 overflow-hidden">
@@ -544,8 +542,6 @@ export default function MenPage() {
           </section>
         )}
       </main>
-
-      <Footer />
-    </>
+    </PageLayout>
   )
 }

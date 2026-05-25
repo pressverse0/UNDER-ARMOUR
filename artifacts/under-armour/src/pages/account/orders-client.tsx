@@ -6,8 +6,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
 import { Link } from "wouter"
-import Header from "@/components/header"
-import Footer from "@/components/footer"
+import PageLayout from "@/components/layout/page-layout"
 
 interface Order {
   id: string
@@ -149,8 +148,7 @@ export default function OrdersClient() {
   }
 
   return (
-    <>
-      <Header />
+    <PageLayout>
       <main className="flex-1 bg-gray-100">
 
       {/* Hero Section */}
@@ -301,7 +299,6 @@ export default function OrdersClient() {
       </section>
       </main>
 
-      <Footer />
 
       {/* Tracking Modal */}
       {showTrackingModal && selectedOrder && (
@@ -417,6 +414,6 @@ export default function OrdersClient() {
           </Card>
         </div>
       )}
-    </>
+    </PageLayout>
   )
 }

@@ -1,12 +1,10 @@
 import { useState, useMemo } from "react"
 import { Tag, Clock } from "lucide-react"
-import { Link } from "wouter"
 import { useToast } from "@/hooks/use-toast"
 import { useCart } from "@/context/cart-context"
 import { useWishlist } from "@/context/wishlist-context"
-import Header from "@/components/header"
-import Footer from "@/components/footer"
 import ProductCard from "@/components/product-card"
+import { PageLayout, PageHero, FilterBar } from "@/components/layout"
 
 const saleProducts = [
   { id: 3, name: "Tech 2.0 Shorts", price: 30, originalPrice: 45, category: "Bottoms", rating: 4.3, reviews: 89, image: "/ARMOUR/Tech2.0Shorts.jpg", inStock: true, discount: 33 },
@@ -62,68 +60,56 @@ export default function SalePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 font-sans">
-      <Header activePage="sale" />
-
-      {/* Hero */}
-      <section className="ua-hero py-16 lg:py-24">
-        <div className="ua-hero-gradient" />
-        <div className="ua-page-container relative z-10 text-center">
-          <div className="sketchy-border bg-red-600 inline-block px-6 py-2 transform -rotate-1 mb-6">
+    <PageLayout activePage="sale">
+      <main className="flex-1 bg-gray-100">
+      <PageHero
+        variant="full"
+        title="Summer"
+        titleAccent="Sale"
+        subtitle="Up to 40% off performance gear. No excuses."
+        align="center"
+        badge={
+          <div className="sketchy-border bg-red-600 inline-block px-6 py-2 transform -rotate-1">
             <span className="text-white font-black text-sm uppercase tracking-widest">Limited Time</span>
           </div>
-          <h1 className="text-6xl lg:text-8xl font-black uppercase leading-none tracking-tight mb-4">
-            Summer <span className="text-red-600">Sale</span>
-          </h1>
-          <p className="text-2xl text-gray-300 font-bold mb-6">Up to 40% off performance gear. No excuses.</p>
-          <div className="flex flex-wrap gap-6 justify-center">
-            <div className="bg-gray-900 border-2 border-red-600 px-6 py-4 text-center">
-              <p className="text-3xl font-black text-red-600">{saleProducts.length}</p>
-              <p className="text-sm font-black uppercase text-gray-400">Items on Sale</p>
-            </div>
-            <div className="bg-gray-900 border-2 border-red-600 px-6 py-4 text-center">
-              <p className="text-3xl font-black text-red-600">Up to 40%</p>
-              <p className="text-sm font-black uppercase text-gray-400">Off Original Price</p>
-            </div>
-            <div className="bg-gray-900 border-2 border-red-600 px-6 py-4 flex items-center gap-3">
-              <Clock className="h-8 w-8 text-red-600 animate-pulse" />
-              <div>
-                <p className="text-xl font-black text-white">Ends Soon</p>
-                <p className="text-xs font-black uppercase text-gray-400">While stocks last</p>
-              </div>
+        }
+      >
+        <div className="flex flex-wrap gap-6 justify-center">
+          <div className="bg-gray-900 border-2 border-red-600 px-6 py-4 text-center">
+            <p className="text-3xl font-black text-red-600">{saleProducts.length}</p>
+            <p className="text-sm font-black uppercase text-gray-400">Items on Sale</p>
+          </div>
+          <div className="bg-gray-900 border-2 border-red-600 px-6 py-4 text-center">
+            <p className="text-3xl font-black text-red-600">Up to 40%</p>
+            <p className="text-sm font-black uppercase text-gray-400">Off Original Price</p>
+          </div>
+          <div className="bg-gray-900 border-2 border-red-600 px-6 py-4 flex items-center gap-3">
+            <Clock className="h-8 w-8 text-red-600 animate-pulse" />
+            <div>
+              <p className="text-xl font-black text-white">Ends Soon</p>
+              <p className="text-xs font-black uppercase text-gray-400">While stocks last</p>
             </div>
           </div>
         </div>
-        <div className="ua-hero-divider" />
-      </section>
+      </PageHero>
 
-      {/* Filters */}
-      <section className="ua-filter-bar top-[56px]">
-        <div className="ua-page-container py-3">
-          <div className="flex flex-wrap items-center gap-4 justify-between">
-            <div className="flex gap-1 flex-wrap">
-              {categoryFilters.map(c => (
-                <button
-                  key={c}
-                  onClick={() => setCategory(c)}
-                  className={`ua-filter-chip ${category === c ? "ua-filter-chip-on" : "ua-filter-chip-off"}`}
-                >
-                  {c}
-                </button>
-              ))}
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-black uppercase text-gray-500">Sort:</span>
-              <select value={sortBy} onChange={e => setSortBy(e.target.value)} className="ua-sort-select">
-                <option value="discount">Biggest Discount</option>
-                <option value="price-low">Price: Low to High</option>
-                <option value="price-high">Price: High to Low</option>
-                <option value="rating">Top Rated</option>
-              </select>
-            </div>
-          </div>
-        </div>
-      </section>
+      <FilterBar
+        filterGroups={[
+          {
+            options: categoryFilters.map(c => ({ label: c, value: c })),
+            value: category,
+            onChange: setCategory,
+          },
+        ]}
+        sortOptions={[
+          { label: "Biggest Discount", value: "discount" },
+          { label: "Price: Low to High", value: "price-low" },
+          { label: "Price: High to Low", value: "price-high" },
+          { label: "Top Rated", value: "rating" },
+        ]}
+        sortBy={sortBy}
+        onSortChange={setSortBy}
+      />
 
       {/* Products */}
       <section className="ua-products-section">
@@ -162,7 +148,7 @@ export default function SalePage() {
         </div>
       </section>
 
-      <Footer />
-    </div>
+      </main>
+    </PageLayout>
   )
 }
