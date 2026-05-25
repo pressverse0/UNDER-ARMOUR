@@ -6,11 +6,11 @@ interface ResultsCountProps {
 
 export default function ResultsCount({ shown, total, label = "products" }: ResultsCountProps) {
   return (
-    <div className="flex items-center gap-2">
-      <span className="text-sm font-black text-red-600">{shown}</span>
-      <span className="text-sm font-bold text-gray-500">of</span>
-      <span className="text-sm font-black text-black">{total}</span>
-      <span className="text-sm font-bold text-gray-500">{label}</span>
+    <div className="ua-results-row">
+      <span className="ua-results-shown">{shown}</span>
+      <span className="ua-results-sep">of</span>
+      <span className="ua-results-total">{total}</span>
+      <span className="ua-results-label">{label}</span>
     </div>
   )
 }

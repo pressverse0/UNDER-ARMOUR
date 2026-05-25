@@ -7,32 +7,19 @@ interface PriceRangeProps {
   label?: string
 }
 
-export default function PriceRange({
-  min,
-  max,
-  value,
-  onChange,
-  step = 5,
-  label = "Price Range",
-}: PriceRangeProps) {
+export default function PriceRange({ min, max, value, onChange, step = 5, label = "Price Range" }: PriceRangeProps) {
   const [low, high] = value
   const pct = Math.round(((high - min) / (max - min)) * 100)
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-3">
+      <div className="ua-range-header">
         <p className="ua-filter-label">{label}</p>
-        <span className="text-xs font-black text-red-600 bg-red-50 border border-red-200 rounded-full px-2 py-0.5">
-          ${low} – ${high}
-        </span>
+        <span className="ua-price-badge">${low} – ${high}</span>
       </div>
-
       <div className="relative pt-1 pb-2">
-        <div className="relative h-2 rounded-full bg-gray-200">
-          <div
-            className="absolute top-0 left-0 h-2 bg-red-600 rounded-full"
-            style={{ width: `${pct}%` }}
-          />
+        <div className="ua-range-track">
+          <div className="ua-range-fill" style={{ width: `${pct}%` }} />
         </div>
         <input
           type="range"
@@ -45,10 +32,9 @@ export default function PriceRange({
           aria-label={`Maximum price: $${high}`}
         />
       </div>
-
-      <div className="flex justify-between mt-1">
-        <span className="text-xs font-bold text-gray-400">${min}</span>
-        <span className="text-xs font-bold text-gray-400">${max}</span>
+      <div className="ua-range-bounds">
+        <span className="ua-range-bound-text">${min}</span>
+        <span className="ua-range-bound-text">${max}</span>
       </div>
     </div>
   )

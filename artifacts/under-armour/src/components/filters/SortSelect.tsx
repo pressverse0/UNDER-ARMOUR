@@ -13,28 +13,14 @@ interface SortSelectProps {
   className?: string
 }
 
-export default function SortSelect({
-  value,
-  options,
-  onChange,
-  label = "Sort",
-  className = "",
-}: SortSelectProps) {
+export default function SortSelect({ value, options, onChange, label = "Sort", className = "" }: SortSelectProps) {
   return (
-    <div className={`flex items-center gap-2 ${className}`}>
-      {label && (
-        <span className="text-xs font-black uppercase text-gray-500 whitespace-nowrap">{label}:</span>
-      )}
+    <div className={`ua-sort-wrapper ${className}`}>
+      {label && <span className="ua-sort-label">{label}:</span>}
       <div className="relative">
-        <select
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          className="ua-sort-select-enhanced"
-        >
+        <select value={value} onChange={(e) => onChange(e.target.value)} className="ua-sort-select-enhanced">
           {options.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
-            </option>
+            <option key={opt.value} value={opt.value}>{opt.label}</option>
           ))}
         </select>
         <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 pointer-events-none" />

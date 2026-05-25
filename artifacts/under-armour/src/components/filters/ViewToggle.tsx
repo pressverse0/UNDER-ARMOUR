@@ -9,16 +9,12 @@ interface ViewToggleProps {
 
 export default function ViewToggle({ value, onChange }: ViewToggleProps) {
   return (
-    <div className="flex items-center gap-1 bg-gray-100 rounded-xl p-1 border border-gray-200">
+    <div className="ua-view-toggle">
       <button
         type="button"
         onClick={() => onChange("grid")}
         aria-label="Grid view"
-        className={`p-2 rounded-lg transition-all ${
-          value === "grid"
-            ? "bg-black text-white shadow-sm"
-            : "text-gray-500 hover:text-black"
-        }`}
+        className={value === "grid" ? "ua-view-btn-active" : "ua-view-btn"}
       >
         <Grid3x3 className="h-4 w-4" />
       </button>
@@ -26,11 +22,7 @@ export default function ViewToggle({ value, onChange }: ViewToggleProps) {
         type="button"
         onClick={() => onChange("list")}
         aria-label="List view"
-        className={`p-2 rounded-lg transition-all ${
-          value === "list"
-            ? "bg-black text-white shadow-sm"
-            : "text-gray-500 hover:text-black"
-        }`}
+        className={value === "list" ? "ua-view-btn-active" : "ua-view-btn"}
       >
         <List className="h-4 w-4" />
       </button>

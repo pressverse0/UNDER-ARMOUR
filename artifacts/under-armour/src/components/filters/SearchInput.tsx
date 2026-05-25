@@ -9,13 +9,7 @@ interface SearchInputProps {
   className?: string
 }
 
-export default function SearchInput({
-  value,
-  onChange,
-  placeholder = "Search products...",
-  autoFocus = false,
-  className = "",
-}: SearchInputProps) {
+export default function SearchInput({ value, onChange, placeholder = "Search products...", autoFocus = false, className = "" }: SearchInputProps) {
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -34,12 +28,7 @@ export default function SearchInput({
         className="ua-search-input"
       />
       {value && (
-        <button
-          type="button"
-          onClick={() => onChange("")}
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-600 transition-colors p-0.5 rounded-full hover:bg-red-50"
-          aria-label="Clear search"
-        >
+        <button type="button" onClick={() => onChange("")} className="ua-search-clear" aria-label="Clear search">
           <X className="h-4 w-4" />
         </button>
       )}

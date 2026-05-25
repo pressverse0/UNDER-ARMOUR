@@ -758,6 +758,87 @@ body {
     @apply flex items-center space-x-1 border-2 border-gray-300;
     border-radius: 0.375rem;
   }
+
+  /* ── List view layout ────────────────────────────────── */
+  .ua-list-view           { @apply flex flex-col gap-3; }
+  .ua-list-item           { @apply bg-white border-2 border-gray-200 rounded-2xl overflow-hidden transition-all duration-200 cursor-pointer; }
+  .ua-list-item:hover     { border-color: #ef4444; }
+  .ua-list-item-inner     { @apply flex gap-4 p-4; }
+  .ua-list-item-image     { @apply relative bg-gray-900 w-36 h-36 flex-shrink-0 rounded-xl overflow-hidden; }
+  .ua-list-item-img       { @apply w-full h-full object-cover grayscale transition-all duration-500; }
+  .ua-list-item:hover .ua-list-item-img { filter: none; }
+  .ua-list-item-body      { @apply flex-1 flex flex-col justify-between py-0.5 min-w-0; }
+  .ua-list-item-meta      { @apply flex items-center gap-2 flex-wrap mb-1; }
+  .ua-list-item-price     { @apply text-xl font-black text-red-600; }
+  .ua-list-item-btn       { @apply bg-black hover:bg-red-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-black uppercase text-sm px-5 py-2.5 rounded-xl transition-colors; }
+  .ua-list-item-row       { @apply flex items-center justify-between mt-2 gap-4; }
+
+  /* ── Page hero (simple black bar) ────────────────────── */
+  .ua-hero-simple         { @apply bg-black text-white py-10 lg:py-14; }
+  .ua-hero-simple-h1      { @apply text-4xl lg:text-5xl font-black uppercase tracking-tight mb-2; }
+  .ua-hero-simple-sub     { @apply text-gray-400 font-bold; }
+
+  /* ── Empty state (no results) ─────────────────────────── */
+  .ua-empty-state         { @apply text-center py-20 bg-white rounded-2xl border-2 border-gray-200; }
+  .ua-empty-state-title   { @apply text-2xl font-black text-gray-500 mb-4; }
+  .ua-empty-state-btn     { @apply bg-red-600 hover:bg-red-700 text-white font-black uppercase px-8 py-3 rounded-xl transition-colors; }
+
+  /* ── Filter panel ─────────────────────────────────────── */
+  .ua-filter-panel        { @apply bg-white border-b-2 border-gray-200 shadow-inner; }
+  .ua-filter-panel-inner  { @apply container mx-auto px-4 py-5; }
+  .ua-filter-panel-header { @apply flex items-center justify-between mb-5; }
+  .ua-filter-panel-title  { @apply flex items-center gap-2; }
+  .ua-filter-panel-grid   { @apply grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6; }
+  .ua-filter-count-badge  { @apply bg-red-600 text-white text-xs font-black rounded-full px-2 py-0.5; }
+  .ua-filter-toggle-count { @apply bg-red-600 text-white text-xs font-black rounded-full w-5 h-5 flex items-center justify-center; }
+  .ua-filter-clear-btn    { @apply flex items-center gap-1.5 text-sm font-black uppercase text-gray-500 hover:text-red-600 transition-colors px-3 py-1.5 rounded-lg hover:bg-red-50 border border-gray-200 hover:border-red-300; }
+  .ua-filter-panel-title-text { @apply font-black text-base uppercase text-black; }
+  .ua-filter-panel-icon   { @apply h-5 w-5 text-red-600; }
+
+  /* ── View toggle ──────────────────────────────────────── */
+  .ua-view-toggle         { @apply flex items-center gap-1 bg-gray-100 rounded-xl p-1 border border-gray-200; }
+  .ua-view-btn            { @apply p-2 rounded-lg transition-all text-gray-500 hover:text-black; }
+  .ua-view-btn-active     { @apply p-2 rounded-lg transition-all bg-black text-white shadow-sm; }
+
+  /* ── Pill toggle ──────────────────────────────────────── */
+  .ua-pill                { @apply inline-flex items-center gap-1.5 font-black uppercase border-2 rounded-full transition-all duration-150 cursor-pointer select-none disabled:opacity-40 disabled:cursor-not-allowed; }
+  .ua-pill-sm             { @apply px-3 py-1.5 text-xs; }
+  .ua-pill-md             { @apply px-4 py-2 text-sm; }
+  .ua-pill-active         { @apply bg-red-600 text-white border-red-600 shadow-sm; }
+  .ua-pill-active-black   { @apply bg-black text-white border-black shadow-sm; }
+  .ua-pill-inactive       { @apply bg-white text-gray-700 border-gray-300 hover:border-red-400 hover:text-red-600; }
+
+  /* ── Price range ──────────────────────────────────────── */
+  .ua-price-badge         { @apply text-xs font-black text-red-600 bg-red-50 border border-red-200 rounded-full px-2 py-0.5; }
+  .ua-range-header        { @apply flex items-center justify-between mb-3; }
+  .ua-range-track         { @apply relative h-2 rounded-full bg-gray-200; }
+  .ua-range-fill          { @apply absolute top-0 left-0 h-2 bg-red-600 rounded-full; }
+  .ua-range-bounds        { @apply flex justify-between mt-1; }
+  .ua-range-bound-text    { @apply text-xs font-bold text-gray-400; }
+
+  /* ── Sort label ──────────────────────────────────────── */
+  .ua-sort-label          { @apply text-xs font-black uppercase text-gray-500 whitespace-nowrap; }
+  .ua-sort-wrapper        { @apply flex items-center gap-2; }
+
+  /* ── Results count row ───────────────────────────────── */
+  .ua-results-row         { @apply flex items-center gap-2; }
+  .ua-results-shown       { @apply text-sm font-black text-red-600; }
+  .ua-results-sep         { @apply text-sm font-bold text-gray-500; }
+  .ua-results-total       { @apply text-sm font-black text-black; }
+  .ua-results-label       { @apply text-sm font-bold text-gray-500; }
+
+  /* ── Checkbox text ───────────────────────────────────── */
+  .ua-checkbox-text         { @apply font-bold text-sm text-gray-700; }
+  .ua-checkbox-text-checked { @apply font-bold text-sm text-black; }
+
+  /* ── Search clear button ─────────────────────────────── */
+  .ua-search-clear        { @apply absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-600 transition-colors p-0.5 rounded-full hover:bg-red-50; }
+
+  /* ── Product section ─────────────────────────────────── */
+  .ua-products-wrapper    { @apply ua-page-container; }
+
+  /* ── Wishlist btn: fix group-hover (v4 @apply restriction) */
+  .ua-product-card:hover .ua-wishlist-btn { opacity: 1; }
 }
 
 @layer utilities {
