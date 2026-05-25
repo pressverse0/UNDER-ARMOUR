@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge"
 import { Link } from "wouter"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
+import StarRating from "@/components/star-rating"
 import { 
   Search, 
   SlidersHorizontal, 
@@ -17,7 +18,6 @@ import {
   ChevronRight,
   Heart,
   ShoppingCart,
-  Star,
   X,
   Grid3x3,
   List,
@@ -351,7 +351,7 @@ export default function GolfPage() {
               </Button>
             </div>
           ) : (
-            <div className={viewMode === 'grid' ? 'grid md:grid-cols-2 lg:grid-cols-3 gap-6' : 'space-y-6'}>
+            <div className={viewMode === 'grid' ? 'ua-product-grid-3' : 'space-y-6'}>
               {paginatedProducts.map((product) => (
                 viewMode === 'grid' ? (
                   <Link key={product.id} href={`/product/${product.id}`}>
@@ -387,17 +387,7 @@ export default function GolfPage() {
                         <h3 className="font-black text-lg text-black uppercase leading-tight">{product.name}</h3>
                         <p className="text-sm font-bold text-gray-600">{product.gender}</p>
                         
-                        <div className="flex items-center gap-2">
-                          <div className="flex">
-                            {[...Array(5)].map((_, i) => (
-                              <Star
-                                key={i}
-                                className={`h-4 w-4 ${i < Math.floor(product.rating) ? 'fill-yellow-500 text-yellow-500' : 'text-gray-300'}`}
-                              />
-                            ))}
-                          </div>
-                          <span className="text-sm font-bold text-gray-600">({product.reviews})</span>
-                        </div>
+                        <StarRating rating={product.rating} reviews={product.reviews} size="md" />
 
                         <div className="flex items-center gap-2 flex-1">
                           <p className="text-2xl font-black text-red-600">${product.price}</p>
@@ -450,17 +440,7 @@ export default function GolfPage() {
                             <h3 className="font-black text-2xl text-black uppercase mb-1">{product.name}</h3>
                             <p className="text-sm font-bold text-gray-600 mb-3">{product.gender}</p>
                             
-                            <div className="flex items-center gap-2 mb-3">
-                              <div className="flex">
-                                {[...Array(5)].map((_, i) => (
-                                  <Star
-                                    key={i}
-                                    className={`h-4 w-4 ${i < Math.floor(product.rating) ? 'fill-yellow-500 text-yellow-500' : 'text-gray-300'}`}
-                                  />
-                                ))}
-                              </div>
-                              <span className="text-sm font-bold text-gray-600">{product.rating} ({product.reviews} reviews)</span>
-                            </div>
+                            <StarRating rating={product.rating} reviews={product.reviews} size="md" />
 
                             <div className="mb-3">
                               <span className="font-bold text-sm text-gray-600 mr-2">Sizes:</span>

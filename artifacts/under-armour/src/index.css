@@ -463,6 +463,147 @@ body {
 .zoom-in-95 { animation-name: zoom-in-95; }
 .duration-200 { animation-duration: 200ms; }
 
+/* ============================================================
+   UA Design System — centralized, single source of truth
+   All repeated grid / spacing / rounded / shadow patterns live here.
+   Pages and components import these named classes instead of
+   duplicating long Tailwind strings.
+   ============================================================ */
+@layer components {
+
+  /* ── Layout ─────────────────────────────────────────── */
+  .ua-hero              { @apply relative bg-black text-white overflow-hidden; }
+  .ua-hero-gradient     { @apply absolute inset-0 bg-gradient-to-r from-black via-gray-900 to-black opacity-90; }
+  .ua-hero-divider {
+    @apply absolute bottom-0 left-0 right-0 bg-red-600;
+    height: 8px;
+    background: linear-gradient(90deg, #c9001f 0%, #c9001f 100%);
+    border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+    position: absolute;
+  }
+  .ua-hero-divider::before {
+    content: "";
+    position: absolute;
+    top: -2px;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: #000;
+    border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+    opacity: 0.3;
+  }
+  .ua-page-container    { @apply container mx-auto px-4; }
+  .ua-products-section  { @apply py-12 bg-gray-100; }
+  .ua-cta-section       { @apply py-16 bg-black text-white; }
+
+  /* ── Filter bar ─────────────────────────────────────── */
+  .ua-filter-bar        { @apply bg-white border-b-4 border-black sticky z-30; }
+
+  /* ── Filter chips (shared across all listing pages) ─── */
+  .ua-filter-chip       { @apply text-xs font-black uppercase px-3 py-1.5 border-2 transition-colors cursor-pointer; }
+  .ua-filter-chip-on    { @apply bg-red-600 text-white border-red-600; }
+  .ua-filter-chip-off   { @apply border-gray-300 text-gray-700 hover:border-red-600; }
+  .ua-sort-select       { @apply border-2 border-black text-sm font-bold px-2 py-1.5 focus:outline-none focus:border-red-600 bg-white; }
+
+  /* ── Product grids ──────────────────────────────────── */
+  .ua-product-grid      { @apply grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6; }
+  .ua-product-grid-3    { @apply grid md:grid-cols-2 lg:grid-cols-3 gap-6; }
+
+  /* ── Product card ───────────────────────────────────── */
+  .ua-product-card {
+    @apply bg-white border-4 border-black hover:scale-105 transition-all duration-300 h-full flex flex-col cursor-pointer group;
+    border-radius: 3px 8px 2px 7px / 2px 4px 3px 2px;
+    position: relative;
+    box-shadow: 4px 6px 0px rgba(0,0,0,0.2), inset -1px -1px 0px rgba(0,0,0,0.1);
+    transform: rotate(-0.3deg);
+  }
+  .ua-product-card:hover {
+    transform: rotate(0deg);
+    box-shadow: 6px 8px 0px rgba(0,0,0,0.3), inset -1px -1px 0px rgba(0,0,0,0.15);
+  }
+  .ua-card-body         { @apply p-4 flex flex-col flex-1; }
+  .ua-card-body-lg      { @apply p-6 flex flex-col flex-1; }
+  .ua-card-image-wrap   { @apply relative bg-gray-900 overflow-hidden; }
+  .ua-card-image        { @apply w-full h-full object-cover filter grayscale group-hover:grayscale-0 transition-all duration-500; }
+  .ua-card-image-frame {
+    @apply relative bg-gray-900 flex items-center justify-center overflow-hidden;
+    border-radius: 2px 6px 3px 5px / 1px 3px 2px 4px;
+    position: relative;
+    border: 4px solid #000;
+    box-shadow: 3px 5px 0px rgba(0,0,0,0.4), inset -2px -2px 0px rgba(255,255,255,0.1);
+  }
+
+  /* ── Card badges ────────────────────────────────────── */
+  .ua-badge             { @apply text-xs font-black uppercase px-2 py-1; }
+  .ua-badge-new         { @apply bg-black text-white; }
+  .ua-badge-sale        { @apply bg-red-600 text-white; }
+  .ua-badge-oos         { @apply bg-gray-600 text-white; }
+  .ua-badge-stack       { @apply absolute top-3 left-3 flex flex-col gap-1; }
+
+  /* ── Wishlist / interaction buttons ─────────────────── */
+  .ua-wishlist-btn      { @apply absolute top-3 right-3 bg-white rounded-full p-1.5 shadow hover:scale-110 transition-transform; }
+
+  /* ── Category tag ───────────────────────────────────── */
+  .ua-category-tag      { @apply bg-red-600 inline-block px-2 py-0.5 mb-2 self-start; border-radius: 2px 8px 3px 6px / 1px 3px 4px 2px; position: relative; }
+  .ua-category-tag-lg   { @apply bg-red-600 inline-block px-3 py-1 self-start; border-radius: 2px 8px 3px 6px / 1px 3px 4px 2px; position: relative; }
+  .ua-category-tag-text { @apply text-white font-bold text-xs uppercase; }
+
+  /* ── Product typography ─────────────────────────────── */
+  .ua-product-name      { @apply font-black text-sm uppercase mb-1 leading-snug; }
+  .ua-product-name-lg   { @apply font-black text-lg uppercase leading-tight; }
+  .ua-product-desc      { @apply text-xs text-gray-500 font-bold mb-2; }
+
+  /* ── Pricing ────────────────────────────────────────── */
+  .ua-price             { @apply text-lg font-black text-red-600; }
+  .ua-price-lg          { @apply text-2xl font-black text-red-600; }
+  .ua-price-xl          { @apply text-3xl font-black text-red-600; }
+  .ua-price-orig        { @apply text-sm text-gray-400 line-through font-bold; }
+  .ua-price-orig-lg     { @apply text-lg font-bold text-gray-400 line-through; }
+  .ua-savings-text      { @apply text-xs font-black text-green-600 mb-3; }
+
+  /* ── Star rating ────────────────────────────────────── */
+  .ua-rating-count      { @apply text-xs text-gray-500 font-bold; }
+
+  /* ── CTA / action buttons ───────────────────────────── */
+  .ua-btn-cart {
+    @apply bg-black text-white hover:bg-red-600 font-black uppercase text-xs w-full disabled:opacity-50 disabled:cursor-not-allowed;
+    border-radius: 2px 6px 3px 5px / 1px 2px 3px 2px;
+    border: 3px solid transparent;
+    box-shadow: 2px 3px 0px rgba(0,0,0,0.3), inset -1px -1px 0px rgba(0,0,0,0.2);
+    transform: rotate(-0.5deg);
+  }
+  .ua-btn-cart:hover { transform: rotate(0deg) scale(1.02); box-shadow: 3px 4px 0px rgba(0,0,0,0.4); }
+  .ua-btn-cart-red {
+    @apply bg-red-600 text-white hover:bg-red-700 font-black uppercase text-xs w-full disabled:opacity-50;
+    border-radius: 2px 6px 3px 5px / 1px 2px 3px 2px;
+    border: 3px solid transparent;
+    box-shadow: 2px 3px 0px rgba(0,0,0,0.3), inset -1px -1px 0px rgba(0,0,0,0.2);
+    transform: rotate(-0.5deg);
+  }
+  .ua-btn-cart-red:hover { transform: rotate(0deg) scale(1.02); box-shadow: 3px 4px 0px rgba(0,0,0,0.4); }
+  .ua-btn-primary {
+    @apply bg-red-600 hover:bg-red-700 text-white font-black uppercase;
+    border-radius: 2px 6px 3px 5px / 1px 2px 3px 2px;
+    border: 3px solid transparent;
+    box-shadow: 2px 3px 0px rgba(0,0,0,0.3), inset -1px -1px 0px rgba(0,0,0,0.2);
+    transform: rotate(-0.5deg);
+  }
+  .ua-btn-primary:hover { transform: rotate(0deg) scale(1.02); }
+  .ua-btn-secondary {
+    @apply bg-black hover:bg-gray-900 text-white font-black uppercase;
+    border-radius: 2px 6px 3px 5px / 1px 2px 3px 2px;
+    border: 3px solid transparent;
+    box-shadow: 2px 3px 0px rgba(0,0,0,0.3), inset -1px -1px 0px rgba(0,0,0,0.2);
+    transform: rotate(-0.5deg);
+  }
+  .ua-btn-secondary:hover { transform: rotate(0deg) scale(1.02); }
+
+  /* ── Section utilities ──────────────────────────────── */
+  .ua-results-count     { @apply text-sm font-black uppercase text-gray-600 mb-6; }
+  .ua-section-heading   { @apply text-4xl lg:text-5xl font-black uppercase tracking-tight; }
+  .ua-section-subtext   { @apply font-black uppercase text-sm; }
+}
+
 @layer utilities {
   input[type="search"]::-webkit-search-cancel-button {
     @apply hidden;
