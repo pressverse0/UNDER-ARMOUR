@@ -511,7 +511,7 @@ body {
 
   /* ── Product card ───────────────────────────────────── */
   .ua-product-card {
-    @apply bg-white border-4 border-black hover:scale-105 transition-all duration-300 h-full flex flex-col cursor-pointer group;
+    @apply bg-white border-4 border-black hover:scale-105 transition-all duration-300 h-full flex flex-col cursor-pointer;
     border-radius: 3px 8px 2px 7px / 2px 4px 3px 2px;
     position: relative;
     box-shadow: 4px 6px 0px rgba(0,0,0,0.2), inset -1px -1px 0px rgba(0,0,0,0.1);
@@ -524,7 +524,7 @@ body {
   .ua-card-body         { @apply p-4 flex flex-col flex-1; }
   .ua-card-body-lg      { @apply p-6 flex flex-col flex-1; }
   .ua-card-image-wrap   { @apply relative bg-gray-900 overflow-hidden; }
-  .ua-card-image        { @apply w-full h-full object-cover filter grayscale group-hover:grayscale-0 transition-all duration-500; }
+  .ua-card-image        { @apply w-full h-full object-cover filter grayscale transition-all duration-500; }
   .ua-card-image-frame {
     @apply relative bg-gray-900 flex items-center justify-center overflow-hidden;
     border-radius: 2px 6px 3px 5px / 1px 3px 2px 4px;

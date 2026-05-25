@@ -53,10 +53,10 @@ export default function ProductCard({
 }: ProductCardProps) {
   return (
     <Link href={`/product/${id}`}>
-      <Card className="ua-product-card">
+      <Card className="ua-product-card group">
         <CardContent className="p-0 flex flex-col flex-1">
           <div className="ua-card-image-wrap" style={{ height: imageHeight }}>
-            <img src={image} alt={name} className="ua-card-image" />
+            <img src={image} alt={name} className="ua-card-image group-hover:grayscale-0" />
 
             {customBadge ? (
               <div className="absolute top-3 left-3">{customBadge}</div>
