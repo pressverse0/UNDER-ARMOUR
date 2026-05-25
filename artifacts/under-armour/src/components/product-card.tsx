@@ -74,22 +74,22 @@ export default function ProductCard({
             )}
 
             <button onClick={onToggleWishlist} className="ua-wishlist-btn" aria-label="Toggle wishlist">
-              <Heart className={`h-4 w-4 ${isWishlisted ? "fill-red-600 text-red-600" : "text-gray-400"}`} />
+              <Heart className={`h-4 w-4 ${isWishlisted ? "fill-red-600 text-red-600" : "text-gray-500"}`} />
             </button>
 
             {bottomImageBadge && (
-              <div className="absolute bottom-2 left-2">{bottomImageBadge}</div>
+              <div className="absolute bottom-3 left-3">{bottomImageBadge}</div>
             )}
           </div>
 
           <div className="ua-card-body">
-            <div className={`sketchy-border ${categoryTagVariant === "black" ? "bg-black" : "bg-red-600"} inline-block px-2 py-0.5 mb-2 self-start`}>
+            <span className={`ua-category-tag ${categoryTagVariant === "black" ? "ua-category-tag-black" : ""}`}>
               <span className="ua-category-tag-text">{category}</span>
-            </div>
+            </span>
             <h3 className="ua-product-name">{name}</h3>
             {description && <p className="ua-product-desc">{description}</p>}
             <StarRating rating={rating} reviews={reviews} size="sm" />
-            <div className="flex items-center gap-2 mb-3 mt-auto">
+            <div className="flex items-center gap-2 mb-3 mt-auto pt-1">
               <span className="ua-price">${price}</span>
               {originalPrice && <span className="ua-price-orig">${originalPrice}</span>}
             </div>

@@ -657,19 +657,23 @@ body {
   }
 
   /* ── Card badges ────────────────────────────────────── */
-  .ua-badge             { @apply text-xs font-black uppercase px-2 py-1; }
+  .ua-badge             { @apply text-xs font-black uppercase px-2.5 py-1 rounded-full; }
   .ua-badge-new         { @apply bg-black text-white; }
   .ua-badge-sale        { @apply bg-red-600 text-white; }
-  .ua-badge-oos         { @apply bg-gray-600 text-white; }
+  .ua-badge-oos         { @apply bg-gray-700 text-white; }
   .ua-badge-stack       { @apply absolute top-3 left-3 flex flex-col gap-1; }
 
   /* ── Wishlist / interaction buttons ─────────────────── */
-  .ua-wishlist-btn      { @apply absolute top-3 right-3 bg-white rounded-full p-1.5 shadow hover:scale-110 transition-transform; }
+  .ua-wishlist-btn {
+    @apply absolute top-3 right-3 bg-white/95 rounded-full p-2 shadow-md
+           opacity-0 group-hover:opacity-100 transition-all hover:scale-110 hover:bg-white;
+  }
 
   /* ── Category tag ───────────────────────────────────── */
-  .ua-category-tag      { @apply bg-red-600 inline-block px-2 py-0.5 mb-2 self-start rounded; position: relative; }
-  .ua-category-tag-lg   { @apply bg-red-600 inline-block px-3 py-1 self-start rounded; position: relative; }
-  .ua-category-tag-text { @apply text-white font-bold text-xs uppercase; }
+  .ua-category-tag      { @apply bg-red-600 inline-block px-2.5 py-0.5 mb-2 self-start rounded-full; }
+  .ua-category-tag-black { @apply bg-black; }
+  .ua-category-tag-lg   { @apply bg-red-600 inline-block px-3 py-1 self-start rounded-full; }
+  .ua-category-tag-text { @apply text-white font-black text-xs uppercase tracking-wide; }
 
   /* ── Product typography ─────────────────────────────── */
   .ua-product-name      { @apply font-black text-sm uppercase mb-1 leading-snug; }
