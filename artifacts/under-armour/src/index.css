@@ -515,7 +515,7 @@ body {
     border-radius: 50% 50% 0 0 / 100% 100% 0 0;
     opacity: 0.3;
   }
-  .ua-page-container    { @apply container mx-auto px-4; }
+  .ua-page-container    { width: 100%; max-width: 80rem; margin-left: auto; margin-right: auto; padding-left: 1rem; padding-right: 1rem; }
   .ua-products-section  { @apply py-12 bg-gray-100; }
   .ua-cta-section       { @apply py-16 bg-black text-white; }
 
@@ -835,7 +835,7 @@ body {
   .ua-search-clear        { @apply absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-600 transition-colors p-0.5 rounded-full hover:bg-red-50; }
 
   /* ── Product section ─────────────────────────────────── */
-  .ua-products-wrapper    { @apply ua-page-container; }
+  .ua-products-wrapper    { width: 100%; max-width: 80rem; margin-left: auto; margin-right: auto; padding-left: 1rem; padding-right: 1rem; }
 
   /* ── Wishlist btn: fix group-hover (v4 @apply restriction) */
   .ua-product-card:hover .ua-wishlist-btn { opacity: 1; }
