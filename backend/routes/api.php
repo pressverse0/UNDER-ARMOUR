@@ -11,6 +11,9 @@ use App\Http\Controllers\Api\CheckoutController;
 use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\AdminProductController;
 use App\Http\Controllers\Api\AdminReviewController;
+use App\Http\Controllers\Api\CouponController;
+use App\Http\Controllers\Api\AnalyticsController;
+use App\Models\Category;
 
 // Auth routes
 Route::prefix('auth')->group(function () {
@@ -93,6 +96,22 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // User reviews
     Route::get('/reviews/user', [ReviewController::class, 'userReviews']);
+
+    // Coupon routes
+    Route::prefix('coupons')->group(function () {
+        Route::post('/validate', [CouponController::class, 'validate']);
+        Route::get('/available', [CouponController::class, 'available']);
+    });
+
+    // Analytics routes (protected - admin)
+    Route::prefix('analytics')->group(function () {
+        Route::get('/sales', [AnalyticsController::class, 'sales']);
+        Route::get('/products', [AnalyticsController::class, 'products']);
+        Route::get('/users', [AnalyticsController::class, 'users']);
+        Route::get('/reviews', [AnalyticsController::class, 'reviews']);
+        Route::get('/inventory', [AnalyticsController::class, 'inventory']);
+        Route::get('/dashboard', [AnalyticsController::class, 'dashboard']);
+    });
 
     // Admin routes (protected - add middleware for admin role in production)
     Route::prefix('admin')->group(function () {

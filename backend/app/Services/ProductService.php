@@ -7,7 +7,8 @@ use App\Repositories\Contracts\ProductRepositoryContract;
 class ProductService
 {
     public function __construct(
-        private ProductRepositoryContract $productRepository
+        private ProductRepositoryContract $productRepository,
+        private CacheService $cacheService
     ) {}
 
     /**
@@ -15,7 +16,12 @@ class ProductService
      */
     public function getAllProducts(int $perPage = 15, array $filters = [])
     {
-        return $this->productRepository->getAllPaginated($perPage, $filters);
+        $cacheKey = 'products:all:' . md5(json_encode($filters)) . ':' . $perPage;
+        
+        return $this->cacheService->remember($cacheKey, function () use ($perPage, $filters) {
+            LogService::logCacheOperation('get', $cacheKey);
+            return $this->productRepository->getAllPaginated($perPage, $filters);
+        });
     }
 
     /**
@@ -23,28 +29,33 @@ class ProductService
      */
     public function getProductDetails(int $productId)
     {
-        $product = $this->productRepository->getById($productId);
+        $cacheKey = "product:{$productId}";
+        
+        return $this->cacheService->remember($cacheKey, function () use ($productId) {
+            LogService::logCacheOperation('get', $cacheKey);
+            $product = $this->productRepository->getById($productId);
 
-        return [
-            'id' => $product->id,
-            'name' => $product->name,
-            'slug' => $product->slug,
-            'description' => $product->description,
-            'price' => $product->price,
-            'original_price' => $product->original_price,
-            'category' => $product->category,
-            'image' => $product->image,
-            'images' => $product->images,
-            'rating' => $product->rating,
-            'reviews_count' => $product->reviews_count,
-            'gender' => $product->gender,
-            'technology' => $product->technology,
-            'is_new' => $product->is_new,
-            'is_sale' => $product->is_sale,
-            'discount_percentage' => $product->discount_percentage,
-            'variants' => $product->variants,
-            'reviews' => $product->reviews()->approved()->get(),
-        ];
+            return [
+                'id' => $product->id,
+                'name' => $product->name,
+                'slug' => $product->slug,
+                'description' => $product->description,
+                'price' => $product->price,
+                'original_price' => $product->original_price,
+                'category' => $product->category,
+                'image' => $product->image,
+                'images' => $product->images,
+                'rating' => $product->rating,
+                'reviews_count' => $product->reviews_count,
+                'gender' => $product->gender,
+                'technology' => $product->technology,
+                'is_new' => $product->is_new,
+                'is_sale' => $product->is_sale,
+                'discount_percentage' => $product->discount_percentage,
+                'variants' => $product->variants,
+                'reviews' => $product->reviews()->approved()->get(),
+            ];
+        });
     }
 
     /**
