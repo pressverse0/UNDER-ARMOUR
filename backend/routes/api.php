@@ -8,7 +8,9 @@ use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\WishlistController;
 use App\Http\Controllers\Api\CheckoutController;
-use App\Models\Category;
+use App\Http\Controllers\Api\ReviewController;
+use App\Http\Controllers\Api\AdminProductController;
+use App\Http\Controllers\Api\AdminReviewController;
 
 // Auth routes
 Route::prefix('auth')->group(function () {
@@ -38,6 +40,12 @@ Route::prefix('products')->group(function () {
     Route::get('/{id}', [ProductController::class, 'show']);
     Route::get('/{id}/sizes', [ProductController::class, 'sizes']);
     Route::get('/{id}/colors', [ProductController::class, 'colors']);
+});
+
+// Public review routes
+Route::prefix('products/{productId}/reviews')->group(function () {
+    Route::get('/', [ReviewController::class, 'index']);
+    Route::get('/{reviewId}', [ReviewController::class, 'show']);
 });
 
 // Protected routes
@@ -74,5 +82,49 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('checkout')->group(function () {
         Route::post('/validate', [CheckoutController::class, 'validate']);
         Route::post('/process', [CheckoutController::class, 'process']);
+    });
+
+    // Review routes (protected)
+    Route::prefix('products/{productId}/reviews')->group(function () {
+        Route::post('/', [ReviewController::class, 'store']);
+        Route::put('/{reviewId}', [ReviewController::class, 'update']);
+        Route::delete('/{reviewId}', [ReviewController::class, 'destroy']);
+    });
+
+    // User reviews
+    Route::get('/reviews/user', [ReviewController::class, 'userReviews']);
+
+    // Admin routes (protected - add middleware for admin role in production)
+    Route::prefix('admin')->group(function () {
+        // Product management
+        Route::prefix('products')->group(function () {
+            Route::post('/', [AdminProductController::class, 'store']);
+            Route::put('/{productId}', [AdminProductController::class, 'update']);
+            Route::delete('/{productId}', [AdminProductController::class, 'destroy']);
+            Route::post('/bulk-update', [AdminProductController::class, 'bulkUpdate']);
+            Route::post('/{productId}/restore', [AdminProductController::class, 'restore']);
+            Route::get('/all', [AdminProductController::class, 'allProducts']);
+        });
+
+        // Inventory management
+        Route::prefix('inventory')->group(function () {
+            Route::get('/products/{productId}', [AdminInventoryController::class, 'index']);
+            Route::put('/variants/{variantId}', [AdminInventoryController::class, 'update']);
+            Route::post('/variants/{variantId}/adjust', [AdminInventoryController::class, 'adjust']);
+            Route::get('/low-stock', [AdminInventoryController::class, 'lowStock']);
+            Route::get('/out-of-stock', [AdminInventoryController::class, 'outOfStock']);
+            Route::post('/bulk-update', [AdminInventoryController::class, 'bulkUpdate']);
+            Route::get('/report', [AdminInventoryController::class, 'report']);
+        });
+
+        // Review management
+        Route::prefix('reviews')->group(function () {
+            Route::get('/pending', [AdminReviewController::class, 'pending']);
+            Route::post('/{reviewId}/approve', [AdminReviewController::class, 'approve']);
+            Route::post('/{reviewId}/reject', [AdminReviewController::class, 'reject']);
+            Route::get('/all', [AdminReviewController::class, 'all']);
+            Route::delete('/{reviewId}', [AdminReviewController::class, 'destroy']);
+            Route::get('/statistics', [AdminReviewController::class, 'statistics']);
+        });
     });
 });
