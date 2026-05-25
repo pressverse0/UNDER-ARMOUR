@@ -23,21 +23,10 @@ import {
   Trophy
 } from "lucide-react"
 
-interface Product {
-  id: number
-  name: string
-  price: number
-  originalPrice?: number
-  category: string
+import type { Product } from "@/types/product"
+
+interface _SportProduct extends Product {
   gender: string
-  size: string[]
-  color: string[]
-  rating: number
-  reviews: number
-  image: string
-  isNew?: boolean
-  isSale?: boolean
-  inStock: boolean
 }
 
 export default function BasketballPage() {

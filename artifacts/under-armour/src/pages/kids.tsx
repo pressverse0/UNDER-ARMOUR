@@ -7,22 +7,7 @@ import { useWishlist } from "@/context/wishlist-context"
 import ProductCard from "@/components/product-card"
 import { PageLayout, PageHero, FilterBar } from "@/components/layout"
 
-interface KidsProduct {
-  id: number
-  name: string
-  price: number
-  originalPrice?: number
-  category: string
-  gender: "Boys" | "Girls" | "Unisex"
-  ages: string
-  rating: number
-  reviews: number
-  image: string
-  isNew?: boolean
-  isSale?: boolean
-  inStock: boolean
-  description: string
-}
+import type { KidsProduct } from "@/types/product"
 
 const products: KidsProduct[] = [
   { id: 101, name: "Boys' Tech T-Shirt", price: 20, category: "Tops", gender: "Boys", ages: "6-16", rating: 4.5, reviews: 89, image: "/ARMOUR/HeatGear Training Shirt.jpg", inStock: true, isNew: true, description: "Lightweight, breathable tee for young athletes" },

@@ -9,17 +9,7 @@ import { Link } from "wouter"
 
 import PageLayout from "@/components/layout/page-layout"
 import { useCart } from "@/context/cart-context"
-
-interface CustomerInfo {
-  fullName: string
-  email: string
-  phone: string
-  address: string
-  city: string
-  state: string
-  zipCode: string
-  country: string
-}
+import type { CustomerInfo } from "@/types/checkout"
 
 export default function CheckoutPage() {
   const { cartItems, cartTotal, clearCart } = useCart()

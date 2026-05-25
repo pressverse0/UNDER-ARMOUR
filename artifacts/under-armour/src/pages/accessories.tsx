@@ -7,20 +7,7 @@ import { useWishlist } from "@/context/wishlist-context"
 import ProductCard from "@/components/product-card"
 import { PageLayout, PageHero, FilterBar } from "@/components/layout"
 
-interface AccessoryProduct {
-  id: number
-  name: string
-  price: number
-  originalPrice?: number
-  category: string
-  rating: number
-  reviews: number
-  image: string
-  isNew?: boolean
-  isSale?: boolean
-  inStock: boolean
-  description: string
-}
+import type { AccessoryProduct } from "@/types/product"
 
 const products: AccessoryProduct[] = [
   { id: 201, name: "Project Rock Gym Bag", price: 75, category: "Bags", rating: 4.8, reviews: 234, image: "/ARMOUR/ProjectRockGymBag.jpg", inStock: true, isNew: true, description: "Built for champions, by champions. 42L capacity." },

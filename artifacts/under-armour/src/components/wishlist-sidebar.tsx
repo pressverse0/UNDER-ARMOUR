@@ -39,7 +39,7 @@ export default function WishlistSidebar({ isOpen, onClose }: WishlistSidebarProp
             <div className="flex items-center space-x-2">
               <Heart className="h-6 w-6 text-red-600 fill-red-600" />
               <h2 className="text-2xl font-black uppercase text-white">Wishlist</h2>
-              <span className="bg-red-600 text-white text-xs font-black rounded-full h-6 w-6 flex items-center justify-center">{wishlistCount}</span>
+              <span className="ua-count-badge">{wishlistCount}</span>
             </div>
             <button onClick={onClose} className="text-white hover:text-red-600 transition-colors" aria-label="Close wishlist">
               <X className="h-6 w-6" />
@@ -59,8 +59,8 @@ export default function WishlistSidebar({ isOpen, onClose }: WishlistSidebarProp
             ) : (
               <div className="space-y-4">
                 {wishlistItems.map((item) => (
-                  <div key={item.id} className="flex gap-4 p-4 border-2 border-gray-200 rounded hover:border-red-600 transition-colors">
-                    <div className="w-20 h-20 bg-gray-900 rounded overflow-hidden flex-shrink-0 relative">
+                  <div key={item.id} className="ua-sidebar-item">
+                    <div className="ua-sidebar-thumb relative">
                       {!item.inStock && (
                         <div className="absolute inset-0 bg-black bg-opacity-70 flex items-center justify-center z-10">
                           <span className="text-white font-black text-xs uppercase">Out</span>

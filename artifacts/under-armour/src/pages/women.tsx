@@ -22,21 +22,7 @@ import {
   List
 } from "lucide-react"
 
-interface Product {
-  id: number
-  name: string
-  price: number
-  originalPrice?: number
-  category: string
-  size: string[]
-  color: string[]
-  rating: number
-  reviews: number
-  image: string
-  isNew?: boolean
-  isSale?: boolean
-  inStock: boolean
-}
+import type { Product } from "@/types/product"
 
 export default function WomenPage() {
   const [searchQuery, setSearchQuery] = useState('')

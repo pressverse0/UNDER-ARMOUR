@@ -1,15 +1,8 @@
-import { createContext, useContext, useState, useCallback, ReactNode } from "react"
+import { createContext, useContext, useState, useCallback, useEffect, ReactNode } from "react"
+import type { CartItem } from "@/types/cart"
+import { storageGet, storageSet, storageClear, STORAGE_KEYS } from "@/utils/storage"
 
-export interface CartItem {
-  id: number
-  name: string
-  price: number
-  quantity: number
-  image: string
-  category: string
-  size?: string
-  color?: string
-}
+export type { CartItem }
 
 interface CartContextType {
   cartItems: CartItem[]
@@ -24,7 +17,13 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | null>(null)
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [cartItems, setCartItems] = useState<CartItem[]>([])
+  const [cartItems, setCartItems] = useState<CartItem[]>(() =>
+    storageGet<CartItem[]>(STORAGE_KEYS.CART, [])
+  )
+
+  useEffect(() => {
+    storageSet(STORAGE_KEYS.CART, cartItems)
+  }, [cartItems])
 
   const addToCart = useCallback((item: Omit<CartItem, "quantity"> & { quantity?: number }) => {
     setCartItems(prev => {
@@ -46,7 +45,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
     )
   }, [])
 
-  const clearCart = useCallback(() => setCartItems([]), [])
+  const clearCart = useCallback(() => {
+    setCartItems([])
+    storageClear(STORAGE_KEYS.CART)
+  }, [])
 
   const cartCount = cartItems.reduce((sum, i) => sum + i.quantity, 0)
   const cartTotal = cartItems.reduce((sum, i) => sum + i.price * i.quantity, 0)

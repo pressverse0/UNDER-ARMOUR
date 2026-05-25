@@ -36,7 +36,7 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
             <div className="flex items-center space-x-2">
               <ShoppingCart className="h-6 w-6 text-red-600" />
               <h2 className="text-2xl font-black uppercase text-white">Cart</h2>
-              <span className="bg-red-600 text-white text-xs font-black rounded-full h-6 w-6 flex items-center justify-center">{cartCount}</span>
+              <span className="ua-count-badge">{cartCount}</span>
             </div>
             <button onClick={onClose} className="text-white hover:text-red-600 transition-colors" aria-label="Close cart">
               <X className="h-6 w-6" />
@@ -66,8 +66,8 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
             ) : (
               <div className="space-y-4">
                 {cartItems.map((item) => (
-                  <div key={item.id} className="flex gap-4 p-4 border-2 border-gray-200 rounded hover:border-red-600 transition-colors">
-                    <div className="w-20 h-20 bg-gray-900 rounded overflow-hidden flex-shrink-0">
+                  <div key={item.id} className="ua-sidebar-item">
+                    <div className="ua-sidebar-thumb">
                       <img src={item.image} alt={item.name} className="w-full h-full object-cover filter grayscale" />
                     </div>
                     <div className="flex-1">
@@ -82,7 +82,7 @@ export default function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
                         </button>
                       </div>
                       <div className="flex justify-between items-center">
-                        <div className="flex items-center space-x-1 border-2 border-gray-300 rounded">
+                        <div className="ua-qty-ctrl">
                           <button onClick={() => handleQuantityChange(item.id, -1)} className="p-1.5 hover:bg-gray-100 transition-colors" aria-label="Decrease quantity">
                             <Minus className="h-3 w-3" />
                           </button>

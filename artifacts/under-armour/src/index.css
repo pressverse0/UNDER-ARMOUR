@@ -674,6 +674,35 @@ body {
   .ua-results-count     { @apply text-sm font-black uppercase text-gray-600 mb-6; }
   .ua-section-heading   { @apply text-4xl lg:text-5xl font-black uppercase tracking-tight; }
   .ua-section-subtext   { @apply font-black uppercase text-sm; }
+
+  /* ── Sidebar item row ───────────────────────────────── */
+  .ua-sidebar-item {
+    @apply flex gap-4 p-4 border-2 border-gray-200 transition-colors cursor-pointer;
+    border-radius: 0.375rem;
+  }
+  .ua-sidebar-item:hover { border-color: #dc2626; }
+
+  /* ── Sidebar thumbnail (image container) ────────────── */
+  .ua-sidebar-thumb {
+    @apply bg-gray-900 overflow-hidden flex-shrink-0;
+    width: 5rem;
+    height: 5rem;
+    border-radius: 0.375rem;
+  }
+
+  /* ── Count badge (cart / wishlist count bubble) ─────── */
+  .ua-count-badge {
+    @apply bg-red-600 text-white text-xs font-black flex items-center justify-center;
+    border-radius: 9999px;
+    height: 1.5rem;
+    width: 1.5rem;
+  }
+
+  /* ── Quantity control wrapper ───────────────────────── */
+  .ua-qty-ctrl {
+    @apply flex items-center space-x-1 border-2 border-gray-300;
+    border-radius: 0.375rem;
+  }
 }
 
 @layer utilities {

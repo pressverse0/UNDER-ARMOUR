@@ -23,22 +23,7 @@ import {
   Target
 } from "lucide-react"
 
-interface Product {
-  id: number
-  name: string
-  price: number
-  originalPrice?: number
-  category: string
-  gender: string
-  size: string[]
-  color: string[]
-  rating: number
-  reviews: number
-  image: string
-  isNew?: boolean
-  isSale?: boolean
-  inStock: boolean
-}
+import type { Product } from "@/types/product"
 
 export default function FootballPage() {
   const [searchQuery, setSearchQuery] = useState('')
