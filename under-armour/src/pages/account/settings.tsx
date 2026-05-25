@@ -1,5 +1,6 @@
 
-import { User, Package, Heart, Settings, LogOut, Lock, Bell, CreditCard, Globe, Eye, EyeOff } from "lucide-react"
+import { useState } from "react"
+import { User, Package, Heart, Settings, LogOut, Lock, Bell, CreditCard, Globe, Mail, Phone, MapPin } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -7,9 +8,41 @@ import { Label } from "@/components/ui/label"
 import { useToast } from "@/hooks/use-toast"
 import { Link } from "wouter"
 import PageLayout from "@/components/layout/page-layout"
+import { useAuth } from "@/context/auth-context"
 
 export default function SettingsPage() {
   const { toast } = useToast()
+  const { user, isAuthenticated, logout, updateProfile } = useAuth()
+  const [profileForm, setProfileForm] = useState({
+    name: user?.name ?? '',
+    email: user?.email ?? '',
+    phone: user?.phone ?? '',
+    address: user?.address ?? '',
+    city: user?.city ?? '',
+    state: user?.state ?? '',
+    zip_code: (user as any)?.zip_code ?? '',
+    country: user?.country ?? '',
+  })
+  const [saving, setSaving] = useState(false)
+
+  const handleProfileSave = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setSaving(true)
+    try {
+      await updateProfile(profileForm)
+      toast({ title: "Profile Updated", description: "Your changes have been saved.", variant: "success" as any })
+    } catch (err: any) {
+      toast({ title: "Error", description: err.message || "Failed to save profile.", variant: "destructive" })
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const handleLogout = async () => {
+    await logout()
+    toast({ title: "Logged Out Successfully", description: "You have been logged out of your account", variant: "success" as any })
+  }
+
   return (
     <PageLayout>
       <main className="flex-1 bg-gray-100">
@@ -47,8 +80,8 @@ export default function SettingsPage() {
                         <Settings className="h-4 w-4" />
                       </button>
                     </div>
-                    <h2 className="text-2xl font-black uppercase mt-4">M.Said</h2>
-                    <p className="text-gray-600 font-bold">Champion Athlete</p>
+                    <h2 className="text-2xl font-black uppercase mt-4">{user?.name || 'Guest'}</h2>
+                    <p className="text-gray-600 font-bold text-sm">{user?.email || ''}</p>
                   </div>
 
                   {/* Navigation Menu */}
@@ -70,13 +103,7 @@ export default function SettingsPage() {
                       <span>Settings</span>
                     </Link>
                     <button 
-                      onClick={() => {
-                        toast({
-                          title: "Logged Out Successfully",
-                          description: "You have been logged out of your account",
-                          variant: "success" as any,
-                        })
-                      }}
+                      onClick={handleLogout}
                       className="flex items-center space-x-3 p-3 hover:bg-red-50 rounded transition-colors font-bold uppercase text-red-600 w-full"
                     >
                       <LogOut className="h-5 w-5" />
@@ -90,6 +117,60 @@ export default function SettingsPage() {
 
             {/* Main Content */}
             <div className="lg:col-span-2 space-y-8">
+              {/* Personal Information */}
+              <Card className="sketchy-card bg-white border-4 border-black">
+                <CardContent className="p-8">
+                  <div className="flex items-center gap-3 mb-6">
+                    <User className="h-8 w-8 text-red-600" />
+                    <h3 className="text-3xl font-black uppercase">Personal Information</h3>
+                  </div>
+                  <form onSubmit={handleProfileSave} className="space-y-5">
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div>
+                        <Label className="font-black uppercase text-sm mb-2 block">Full Name</Label>
+                        <Input value={profileForm.name} onChange={e => setProfileForm({...profileForm, name: e.target.value})}
+                          className="border-2 border-gray-300 focus:border-red-600 font-bold" placeholder="John Doe" />
+                      </div>
+                      <div>
+                        <Label className="font-black uppercase text-sm mb-2 block"><Mail className="h-4 w-4 inline mr-1" />Email</Label>
+                        <Input type="email" value={profileForm.email} onChange={e => setProfileForm({...profileForm, email: e.target.value})}
+                          className="border-2 border-gray-300 focus:border-red-600 font-bold" placeholder="you@example.com" />
+                      </div>
+                      <div>
+                        <Label className="font-black uppercase text-sm mb-2 block"><Phone className="h-4 w-4 inline mr-1" />Phone</Label>
+                        <Input value={profileForm.phone} onChange={e => setProfileForm({...profileForm, phone: e.target.value})}
+                          className="border-2 border-gray-300 focus:border-red-600 font-bold" placeholder="+1 (555) 123-4567" />
+                      </div>
+                    </div>
+                    <div>
+                      <Label className="font-black uppercase text-sm mb-2 block"><MapPin className="h-4 w-4 inline mr-1" />Street Address</Label>
+                      <Input value={profileForm.address} onChange={e => setProfileForm({...profileForm, address: e.target.value})}
+                        className="border-2 border-gray-300 focus:border-red-600 font-bold" placeholder="123 Main Street" />
+                    </div>
+                    <div className="grid md:grid-cols-3 gap-4">
+                      <div>
+                        <Label className="font-black uppercase text-sm mb-2 block">City</Label>
+                        <Input value={profileForm.city} onChange={e => setProfileForm({...profileForm, city: e.target.value})}
+                          className="border-2 border-gray-300 focus:border-red-600 font-bold" placeholder="New York" />
+                      </div>
+                      <div>
+                        <Label className="font-black uppercase text-sm mb-2 block">State</Label>
+                        <Input value={profileForm.state} onChange={e => setProfileForm({...profileForm, state: e.target.value})}
+                          className="border-2 border-gray-300 focus:border-red-600 font-bold" placeholder="NY" />
+                      </div>
+                      <div>
+                        <Label className="font-black uppercase text-sm mb-2 block">ZIP Code</Label>
+                        <Input value={profileForm.zip_code} onChange={e => setProfileForm({...profileForm, zip_code: e.target.value})}
+                          className="border-2 border-gray-300 focus:border-red-600 font-bold" placeholder="10001" />
+                      </div>
+                    </div>
+                    <Button type="submit" disabled={saving} className="sketchy-btn bg-red-600 text-white hover:bg-red-700 font-black uppercase">
+                      {saving ? 'Saving...' : 'Save Profile'}
+                    </Button>
+                  </form>
+                </CardContent>
+              </Card>
+
               {/* Security Settings */}
               <Card className="sketchy-card bg-white border-4 border-black">
                 <CardContent className="p-8">

@@ -9,7 +9,7 @@ import PageLayout from "@/components/layout/page-layout"
 import ProductCard from "@/components/product-card"
 import SectionHeading from "@/components/section-heading"
 import { categories, missionItems, testimonials, heroStats } from "@/data/home"
-import { featuredProducts, homeNewArrivals } from "@/data/products/featured"
+import { useProducts } from "@/hooks/useProducts"
 
 export default function UnderArmourLanding() {
   const { toast } = useToast()
@@ -17,6 +17,9 @@ export default function UnderArmourLanding() {
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist()
   const [email, setEmail] = useState("")
   const [newsletterSubmitted, setNewsletterSubmitted] = useState(false)
+
+  const { products: featuredProducts, loading: featuredLoading } = useProducts({ filter: 'all', perPage: 6 })
+  const { products: homeNewArrivals, loading: newLoading } = useProducts({ filter: 'new', limit: 4 })
 
   const handleAddToCart = (
     e: React.MouseEvent,

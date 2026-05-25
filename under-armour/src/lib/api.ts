@@ -33,8 +33,13 @@ async function request<T>(
     headers: getHeaders(auth),
     body: body !== undefined ? JSON.stringify(body) : undefined,
   })
-  const data = await res.json()
-  if (!res.ok) throw new Error(data.message || 'Request failed')
+  const contentType = res.headers.get('content-type') || ''
+  const isJson = contentType.includes('application/json')
+  const data = isJson ? await res.json() : null
+  if (!res.ok) {
+    const msg = data?.message || data?.error || `Request failed (${res.status})`
+    throw new Error(msg)
+  }
   return data as T
 }
 
@@ -46,9 +51,10 @@ export interface User {
   address: string
   city: string
   state: string
-  zip: string
+  zip_code: string
   country: string
   created_at: string
+  updated_at: string
 }
 
 export interface OrderItem {
@@ -86,10 +92,10 @@ export const auth = {
 
   logout: () => request<{ message: string }>('POST', '/auth/logout', {}, true),
 
-  getUser: () => request<User>('GET', '/user', undefined, true),
+  getUser: () => request<User>('GET', '/auth/me', undefined, true),
 
   updateUser: (data: Partial<User>) =>
-    request<User>('PUT', '/user', data, true),
+    request<{ user: User }>('PUT', '/auth/profile', data, true),
 }
 
 // ─── Orders ────────────────────────────────────────────────────────────────

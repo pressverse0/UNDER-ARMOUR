@@ -13,7 +13,7 @@ import {
   ViewToggle, FilterPanel, FilterToggleButton,
   ResultsCount, Pagination,
 } from "@/components/filters"
-import { saleProducts, saleCategoryFilters } from "@/data/products/sale"
+import { useProducts } from "@/hooks/useProducts"
 
 const SORT_OPTIONS = [
   { label: "Biggest Discount",  value: "discount"   },
@@ -22,12 +22,12 @@ const SORT_OPTIONS = [
   { label: "Top Rated",         value: "rating"     },
 ]
 const ITEMS_PER_PAGE = 9
-const ALL_CATEGORIES = saleCategoryFilters.filter((c) => c !== "All")
 
 export default function SalePage() {
   const { toast } = useToast()
   const { addToCart } = useCart()
   const { addToWishlist, isInWishlist, removeFromWishlist } = useWishlist()
+  const { products: saleProducts, loading } = useProducts({ filter: 'sale' })
 
   const [searchQuery, setSearchQuery] = useState("")
   const [categories,  setCategories]  = useState<string[]>([])
@@ -35,6 +35,8 @@ export default function SalePage() {
   const [currentPage, setCurrentPage] = useState(1)
   const [viewMode,    setViewMode]    = useState<"grid" | "list">("grid")
   const [filtersOpen, setFiltersOpen] = useState(false)
+
+  const ALL_CATEGORIES = useMemo(() => [...new Set(saleProducts.map(p => p.category))].filter(Boolean), [saleProducts])
 
   const filtered = useMemo(() => {
     let items = saleProducts.filter((p) => {
@@ -45,13 +47,13 @@ export default function SalePage() {
       )
     })
     switch (sortBy) {
-      case "discount":   items.sort((a, b) => b.discount - a.discount); break
+      case "discount":   items.sort((a, b) => (b.discount ?? 0) - (a.discount ?? 0)); break
       case "price-low":  items.sort((a, b) => a.price - b.price); break
       case "price-high": items.sort((a, b) => b.price - a.price); break
       case "rating":     items.sort((a, b) => b.rating - a.rating); break
     }
     return items
-  }, [searchQuery, categories, sortBy])
+  }, [searchQuery, categories, sortBy, saleProducts])
 
   const totalPages  = Math.ceil(filtered.length / ITEMS_PER_PAGE)
   const paginated   = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)
@@ -59,14 +61,14 @@ export default function SalePage() {
 
   const clearFilters = () => { setCategories([]); setSearchQuery(""); setCurrentPage(1) }
 
-  const handleCart = (e: React.MouseEvent, p: typeof saleProducts[0]) => {
+  const handleCart = (e: React.MouseEvent, p: (typeof saleProducts)[0]) => {
     e.preventDefault()
     if (!p.inStock) return
     addToCart({ id: p.id, name: p.name, price: p.price, image: p.image, category: p.category })
     toast({ title: "Added to Cart!", description: `${p.name} — $${p.price}` })
   }
 
-  const handleWishlist = (e: React.MouseEvent, p: typeof saleProducts[0]) => {
+  const handleWishlist = (e: React.MouseEvent, p: (typeof saleProducts)[0]) => {
     e.preventDefault()
     if (isInWishlist(p.id)) {
       removeFromWishlist(p.id)
@@ -121,8 +123,8 @@ export default function SalePage() {
                     id={p.id} name={p.name} price={p.price} originalPrice={p.originalPrice}
                     category={p.category} image={p.image} inStock={p.inStock} isSale={true}
                     rating={p.rating} reviews={p.reviews}
-                    savingsText={`You save $${p.originalPrice - p.price} (${p.discount}% off)`}
-                    customBadge={<span className="ua-badge ua-badge-sale">-{p.discount}%</span>}
+                    savingsText={p.originalPrice ? `You save $${(p.originalPrice - p.price).toFixed(2)} (${p.discount ?? 0}% off)` : undefined}
+                    customBadge={<span className="ua-badge ua-badge-sale">-{p.discount ?? 0}%</span>}
                     isWishlisted={isInWishlist(p.id)}
                     onAddToCart={(e) => handleCart(e, p)} onToggleWishlist={(e) => handleWishlist(e, p)}
                   />
