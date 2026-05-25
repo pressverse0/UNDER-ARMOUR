@@ -33,37 +33,6 @@ database/
 routes/api.php                # 30+ API Routes
 ```
 
-## API Endpoints
-
-**Products** (Public):
-- `GET /api/products` - List products
-- `GET /api/products/{id}` - Product details
-- `GET /api/products/search?q=term` - Search
-- `GET /api/products/new-arrivals` - New products
-- `GET /api/products/sale` - Sale products
-
-**Cart** (Protected):
-- `GET /api/cart` - Get cart
-- `POST /api/cart/items` - Add item
-- `PUT /api/cart/items/{id}` - Update item
-- `DELETE /api/cart/items/{id}` - Remove item
-
-**Orders** (Protected):
-- `GET /api/orders` - List orders
-- `GET /api/orders/{id}` - Order details
-- `POST /api/orders/track` - Track order
-
-**Wishlist** (Protected):
-- `GET /api/wishlist` - Get wishlist
-- `POST /api/wishlist` - Add product
-- `DELETE /api/wishlist/{id}` - Remove product
-
-**Checkout** (Protected):
-- `POST /api/checkout/validate` - Validate
-- `POST /api/checkout/process` - Process payment
-
-See [API.md](../docs/API.md) for complete reference.
-
 ## Services
 
 - **ProductService** - Product operations
@@ -71,25 +40,38 @@ See [API.md](../docs/API.md) for complete reference.
 - **OrderService** - Order processing
 - **WishlistService** - Wishlist operations
 
+## Common Commands
+
+```bash
+# Start development server
+php artisan serve
+
+# Run migrations
+php artisan migrate
+
+# Seed database
+php artisan db:seed
+
+# Run tests
+php artisan test
+```
+
+## API Endpoints
+
+See [API.md](../docs/API.md) for complete endpoint reference.
+
+**Quick Examples**:
+- `GET /api/products` - List products
+- `GET /api/products/{id}` - Product details
+- `GET /api/products/search?q=term` - Search
+- `POST /api/cart/items` - Add to cart (protected)
+- `POST /api/checkout/process` - Checkout (protected)
+
 ## Database
 
 11 tables with optimized indexes and relationships.
 
 See [ARCHITECTURE.md](../docs/ARCHITECTURE.md) for schema details.
-
-## Security
-
-- Token-based authentication (Sanctum)
-- Input validation & error handling
-- SQL injection prevention (Eloquent)
-- CSRF protection
-- PCI compliance (Stripe)
-
-## Testing
-
-```bash
-php artisan test
-```
 
 ## Deployment
 

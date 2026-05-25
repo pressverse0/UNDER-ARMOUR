@@ -185,30 +185,6 @@ npm run dev
 
 ---
 
-## 🚀 Quick Start
-
-### Prerequisites
-- PHP 8.2+, Node.js 18+, MySQL 8.0+, Composer, Git
-
-### Backend (5 min)
-```bash
-cd backend
-composer install
-cp .env.example .env
-php artisan key:generate
-php artisan migrate
-php artisan serve
-```
-
-### Frontend (5 min)
-```bash
-cd under-armour
-npm install
-npm run dev
-```
-
----
-
 **Ready to start?** → [Setup Guide](./docs/SETUP.md)
 
 **Need help?** → [Documentation](./docs/) | [Contributing](./docs/CONTRIBUTING.md)
