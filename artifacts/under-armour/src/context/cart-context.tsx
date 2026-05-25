@@ -24,10 +24,7 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | null>(null)
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [cartItems, setCartItems] = useState<CartItem[]>([
-    { id: 1, name: "HeatGear Training Shirt", price: 35, quantity: 1, image: "/ARMOUR/HeatGear Training Shirt.jpg", category: "Apparel" },
-    { id: 2, name: "HOVR Phantom 3", price: 140, quantity: 1, image: "/ARMOUR/HOVRPhantom3.jpg", category: "Footwear" },
-  ])
+  const [cartItems, setCartItems] = useState<CartItem[]>([])
 
   const addToCart = useCallback((item: Omit<CartItem, "quantity"> & { quantity?: number }) => {
     setCartItems(prev => {

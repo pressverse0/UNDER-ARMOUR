@@ -12,7 +12,10 @@ import Footer from "@/components/footer"
 function SuccessContent() {
   const searchParams = useNextSearchParams()
   const sessionId = searchParams.get('session_id')
-  const [orderNumber] = useState(`UA-${Date.now().toString().slice(-8)}`)
+  const urlOrderId = searchParams.get('orderId')
+  const urlTotal = searchParams.get('total')
+  const urlEmail = searchParams.get('email')
+  const [orderNumber] = useState(urlOrderId ?? `UA-${Date.now().toString().slice(-8)}`)
 
   return (
     <section className="py-20">
@@ -23,10 +26,9 @@ function SuccessContent() {
             <CardContent className="p-12">
               {/* Success Icon */}
               <div className="mb-8 relative inline-block">
-                <div className="w-24 h-24 bg-green-600 rounded-full flex items-center justify-center mx-auto animate-scaleIn">
+                <div className="w-24 h-24 bg-green-600 rounded-full flex items-center justify-center mx-auto">
                   <CheckCircle className="h-16 w-16 text-white" />
                 </div>
-                <div className="absolute inset-0 w-24 h-24 bg-green-600 rounded-full animate-ping opacity-20 mx-auto"></div>
               </div>
 
               {/* Success Message */}
@@ -45,10 +47,25 @@ function SuccessContent() {
                     <p className="text-lg font-black text-red-600">{orderNumber}</p>
                   </div>
                   <div>
-                    <p className="text-sm font-black uppercase text-gray-600 mb-1">Session ID</p>
-                    <p className="text-sm font-bold text-gray-800 break-all">{sessionId?.slice(0, 20)}...</p>
+                    {sessionId ? (
+                      <>
+                        <p className="text-sm font-black uppercase text-gray-600 mb-1">Payment ID</p>
+                        <p className="text-sm font-bold text-gray-800 break-all">{sessionId.slice(0, 24)}…</p>
+                      </>
+                    ) : urlTotal ? (
+                      <>
+                        <p className="text-sm font-black uppercase text-gray-600 mb-1">Order Total</p>
+                        <p className="text-lg font-black text-red-600">${urlTotal}</p>
+                      </>
+                    ) : null}
                   </div>
                 </div>
+                {urlEmail && (
+                  <div className="mt-3 text-left border-t border-gray-200 pt-3">
+                    <p className="text-sm font-black uppercase text-gray-600 mb-1">Confirmation sent to</p>
+                    <p className="text-sm font-bold text-gray-800">{urlEmail}</p>
+                  </div>
+                )}
               </div>
 
               {/* What's Next */}
