@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { CartProvider } from "@/context/cart-context";
 import { WishlistProvider } from "@/context/wishlist-context";
 import { PageSkeleton } from "@/components/skeletons";
+import ErrorBoundary from "@/components/error-boundary";
 
 const HomePage = lazy(() => import("@/pages/home"));
 const MenPage = lazy(() => import("@/pages/men"));
@@ -84,18 +85,22 @@ function Router() {
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <CartProvider>
-          <WishlistProvider>
-            <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-              <Router />
-            </WouterRouter>
-            <Toaster />
-          </WishlistProvider>
-        </CartProvider>
-      </TooltipProvider>
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <CartProvider>
+            <WishlistProvider>
+              <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+                <ErrorBoundary>
+                  <Router />
+                </ErrorBoundary>
+              </WouterRouter>
+              <Toaster />
+            </WishlistProvider>
+          </CartProvider>
+        </TooltipProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 }
 
