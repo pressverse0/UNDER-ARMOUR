@@ -150,7 +150,7 @@ export default function FootballPage() {
   const activeFiltersCount = selectedCategories.length + selectedGenders.length + selectedSizes.length + selectedColors.length
 
   return (
-    <PageLayout activePage="sports">
+    <PageLayout activePage="sports" seoTitle="Football Cleats &amp; Apparel | Under Armour®" seoDescription="Shop Under Armour football gear — cleats, gloves, compression shirts, and protective equipment. Built for the gridiron.">
       <main className="flex-1 bg-gray-100">
         <section className="relative bg-black text-white py-12 lg:py-16 overflow-hidden">
           <div className="container mx-auto px-4">

@@ -56,7 +56,7 @@ export default function ContactPage() {
 
   if (submitted) {
     return (
-      <PageLayout>
+      <PageLayout seoTitle="Contact Us | Under Armour® Customer Support" seoDescription="Get help from the Under Armour support team. Contact us by phone, email, or live chat — Mon–Fri 9AM–9PM EST.">
         <section className="py-20 bg-gray-100">
           <div className="container mx-auto px-4 max-w-2xl text-center">
             <div className="bg-white sketchy-card border-4 border-black p-12">

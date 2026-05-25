@@ -150,7 +150,7 @@ export default function RunningPage() {
   const activeFiltersCount = selectedCategories.length + selectedGenders.length + selectedSizes.length + selectedColors.length
 
   return (
-    <PageLayout activePage="sports">
+    <PageLayout activePage="sports" seoTitle="Running Shoes &amp; Gear | Under Armour® HOVR™" seoDescription="Shop Under Armour running shoes and gear. HOVR™ cushioning, moisture-wicking apparel, and GPS-enabled footwear for every runner.">
       <main className="flex-1 bg-gray-100">
         <section className="relative bg-black text-white py-12 lg:py-16 overflow-hidden">
           <div className="container mx-auto px-4">

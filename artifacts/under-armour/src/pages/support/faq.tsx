@@ -108,7 +108,7 @@ export default function FAQPage() {
     : faqCategories
 
   return (
-    <PageLayout>
+    <PageLayout seoTitle="FAQs | Under Armour® Help Center" seoDescription="Find answers to common questions about Under Armour orders, shipping, returns, sizing, account management, and more.">
 
       {/* Hero */}
       <section className="bg-black text-white py-16">

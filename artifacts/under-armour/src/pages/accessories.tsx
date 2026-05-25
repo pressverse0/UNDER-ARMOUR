@@ -76,7 +76,7 @@ export default function AccessoriesPage() {
   }
 
   return (
-    <PageLayout activePage="accessories">
+    <PageLayout activePage="accessories" seoTitle="Athletic Accessories &amp; Gear | Under Armour®" seoDescription="Shop Under Armour bags, headwear, socks, water bottles, and accessories. Complete your athletic kit with performance-engineered gear.">
       <main className="flex-1 bg-gray-100">
       <PageHero
         variant="full"

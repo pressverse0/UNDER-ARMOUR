@@ -161,7 +161,7 @@ export default function ShoesPage() {
   const activeFiltersCount = selectedCategories.length + selectedGenders.length + selectedSizes.length + selectedColors.length + selectedTechnologies.length
 
   return (
-    <PageLayout activePage="shoes">
+    <PageLayout activePage="shoes" seoTitle="Athletic Shoes &amp; Footwear | Under Armour® HOVR™" seoDescription="Shop UA's full lineup of running shoes, training shoes, basketball sneakers, and golf shoes. HOVR™ cushioning for maximum energy return.">
       <main className="flex-1 bg-gray-100">
         <section className="relative bg-black text-white py-12 lg:py-16 overflow-hidden">
           <div className="container mx-auto px-4">

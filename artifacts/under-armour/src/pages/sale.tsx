@@ -60,7 +60,7 @@ export default function SalePage() {
   }
 
   return (
-    <PageLayout activePage="sale">
+    <PageLayout activePage="sale" seoTitle="Sale — Up to 40% Off Athletic Gear | Under Armour®" seoDescription="Shop Under Armour sale items — discounts on men's &amp; women's apparel, shoes, and accessories. Limited-time deals on HeatGear® and HOVR™.">
       <main className="flex-1 bg-gray-100">
       <PageHero
         variant="full"

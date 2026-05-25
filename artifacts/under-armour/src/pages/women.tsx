@@ -137,7 +137,7 @@ export default function WomenPage() {
   const activeFiltersCount = selectedCategories.length + selectedSizes.length + selectedColors.length
 
   return (
-    <PageLayout activePage="women">
+    <PageLayout activePage="women" seoTitle="Women's Athletic Clothing &amp; Shoes | Under Armour®" seoDescription="Shop women's performance activewear, sports bras, running shoes, and training gear. Under Armour® technology engineered to push your limits.">
       <main className="flex-1 bg-gray-100">
         <section className="relative bg-black text-white py-12 lg:py-16 overflow-hidden">
           <div className="container mx-auto px-4">

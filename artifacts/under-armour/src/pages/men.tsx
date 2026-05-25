@@ -161,7 +161,7 @@ export default function MenPage() {
   }
 
   return (
-    <PageLayout activePage="men">
+    <PageLayout activePage="men" seoTitle="Men's Athletic Clothing &amp; Shoes | Under Armour®" seoDescription="Shop men's performance training gear, running shoes, basketball apparel, and compression wear. HeatGear® technology keeps you cool, dry &amp; light.">
       <main className="flex-1 bg-gray-100">
         {/* Hero Section */}
         <section className="relative bg-black text-white py-12 lg:py-16 overflow-hidden">

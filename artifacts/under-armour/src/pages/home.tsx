@@ -52,7 +52,7 @@ export default function UnderArmourLanding() {
   }
 
   return (
-    <PageLayout>
+    <PageLayout seoTitle="Under Armour® | Performance Athletic Apparel, Shoes &amp; Gear" seoDescription="Shop men's &amp; women's performance athletic wear, running shoes, and training gear. HeatGear® &amp; HOVR™ technology engineered for athletes. Free shipping on orders $35+.">
       <main className="flex-1">
 
         {/* Hero Section */}

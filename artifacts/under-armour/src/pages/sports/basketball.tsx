@@ -150,7 +150,7 @@ export default function BasketballPage() {
   const activeFiltersCount = selectedCategories.length + selectedGenders.length + selectedSizes.length + selectedColors.length
 
   return (
-    <PageLayout activePage="sports">
+    <PageLayout activePage="sports" seoTitle="Basketball Shoes &amp; Gear | Under Armour® Curry Brand" seoDescription="Dominate the court with Under Armour basketball shoes, shorts, and jerseys. Curry Brand performance gear built for elite players.">
       <main className="flex-1 bg-gray-100">
         <section className="relative bg-black text-white py-12 lg:py-16 overflow-hidden">
           <div className="container mx-auto px-4">

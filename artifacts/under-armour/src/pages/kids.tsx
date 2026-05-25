@@ -84,7 +84,7 @@ export default function KidsPage() {
   }
 
   return (
-    <PageLayout activePage="kids">
+    <PageLayout activePage="kids" seoTitle="Kids' Athletic Apparel &amp; Shoes | Under Armour®" seoDescription="Shop kids' performance athletic clothing and shoes for ages 3–16. HeatGear® technology built for young athletes — boys, girls, and unisex styles.">
       <main className="flex-1 bg-gray-100">
       <PageHero
         variant="full"

@@ -67,7 +67,7 @@ export default function NewArrivalsPage() {
   }
 
   return (
-    <PageLayout activePage="new-arrivals">
+    <PageLayout activePage="new-arrivals" seoTitle="New Arrivals | Latest Athletic Gear | Under Armour®" seoDescription="Discover the latest Under Armour performance gear, apparel, and shoes. Fresh styles and new technologies dropped every week.">
       <main className="flex-1 bg-gray-100">
       <PageHero
         variant="full"

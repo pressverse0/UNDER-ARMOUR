@@ -17,7 +17,7 @@ export default function SportsPage() {
   ]
 
   return (
-    <PageLayout activePage="sports">
+    <PageLayout activePage="sports" seoTitle="Shop by Sport | Under Armour® Performance Gear" seoDescription="Find performance gear engineered for your sport — basketball, football, running, training, golf, and more. Built to perform.">
       <main className="flex-1 bg-gray-100">
 
       {/* Hero Section */}

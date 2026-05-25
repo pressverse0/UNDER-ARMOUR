@@ -14,7 +14,7 @@ export default function ShippingPage() {
   }
 
   return (
-    <PageLayout>
+    <PageLayout seoTitle="Shipping Information | Under Armour® Delivery" seoDescription="Under Armour shipping options and delivery timelines. Free standard shipping on orders over $35. Expedited and next-day options available.">
 
       {/* Hero */}
       <section className="bg-black text-white py-16">

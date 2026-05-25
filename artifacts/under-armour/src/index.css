@@ -179,6 +179,7 @@
     @apply bg-background text-foreground;
     font-family: var(--font-barriecito);
     overflow-x: hidden;
+    max-width: 100vw;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -216,12 +217,9 @@
   background: #8a0016;
 }
 
-* {
+html {
   scrollbar-width: thin;
   scrollbar-color: #C9001F #f1f1f1;
-}
-
-html {
   overflow-x: hidden;
 }
 
@@ -416,13 +414,13 @@ body {
   to { opacity: 1; transform: scale(1); }
 }
 
-.animate-wiggle { animation: wiggle 3s ease-in-out infinite; }
-.animate-float { animation: float 3s ease-in-out infinite; }
-.animate-glow { animation: glow 2s ease-in-out infinite; }
-.animate-slideInLeft { animation: slideInLeft 0.8s ease-out; }
-.animate-slideInRight { animation: slideInRight 0.8s ease-out; }
-.animate-fadeInUp { animation: fadeInUp 0.8s ease-out; }
-.animate-scaleIn { animation: scaleIn 0.6s ease-out; }
+.animate-wiggle { animation: wiggle 3s ease-in-out infinite; will-change: transform; }
+.animate-float { animation: float 3s ease-in-out infinite; will-change: transform; }
+.animate-glow { animation: glow 2s ease-in-out infinite; will-change: box-shadow; }
+.animate-slideInLeft { animation: slideInLeft 0.8s ease-out; will-change: transform, opacity; }
+.animate-slideInRight { animation: slideInRight 0.8s ease-out; will-change: transform, opacity; }
+.animate-fadeInUp { animation: fadeInUp 0.8s ease-out; will-change: transform, opacity; }
+.animate-scaleIn { animation: scaleIn 0.6s ease-out; will-change: transform, opacity; }
 
 .delay-100 { animation-delay: 100ms; }
 .delay-200 { animation-delay: 200ms; }
@@ -432,7 +430,8 @@ body {
 .delay-1000 { animation-delay: 1000ms; }
 
 .hover-lift {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
 }
 
 .hover-lift:hover {
@@ -448,7 +447,29 @@ body {
   100% { text-shadow: 2px 2px 0 #dc2626, -2px -2px 0 #000; }
 }
 
-.animate-glitch { animation: glitch 1s ease-in-out infinite; }
+.animate-glitch { animation: glitch 1s ease-in-out infinite; will-change: text-shadow; }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-wiggle,
+  .animate-float,
+  .animate-glow,
+  .animate-glitch,
+  .animate-slideInLeft,
+  .animate-slideInRight,
+  .animate-fadeInUp,
+  .animate-scaleIn,
+  .animate-in,
+  .hover-lift,
+  .sketchy-btn,
+  .sketchy-btn-outline,
+  .sketchy-card,
+  .ua-product-card {
+    animation: none !important;
+    transition: none !important;
+    will-change: auto !important;
+    transform: none !important;
+  }
+}
 
 @keyframes fade-in {
   from { opacity: 0; }

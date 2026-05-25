@@ -85,7 +85,7 @@ export default function TrackOrderPage() {
   const currentStatus = tracking ? statusConfig[tracking.status] : null
 
   return (
-    <PageLayout>
+    <PageLayout seoTitle="Track Your Order | Under Armour®" seoDescription="Track the status of your Under Armour order in real time. Enter your order number and email to see delivery updates.">
 
       {/* Hero */}
       <section className="bg-black text-white py-16">

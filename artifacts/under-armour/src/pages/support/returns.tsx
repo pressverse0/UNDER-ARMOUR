@@ -40,7 +40,7 @@ export default function ReturnsPage() {
   }
 
   return (
-    <PageLayout>
+    <PageLayout seoTitle="Returns &amp; Exchanges | Under Armour® Return Policy" seoDescription="Learn about Under Armour's 30-day return policy. Free returns on all qualifying orders. Easy, hassle-free exchanges.">
 
       {/* Hero */}
       <section className="bg-black text-white py-16">

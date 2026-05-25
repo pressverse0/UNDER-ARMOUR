@@ -22,7 +22,7 @@ export default function SizeGuidePage() {
   ]
 
   return (
-    <PageLayout>
+    <PageLayout seoTitle="Size Guide | Under Armour® Fit Finder" seoDescription="Find your perfect Under Armour fit with our comprehensive size guide for men, women, and kids. Measurements for apparel and footwear.">
 
       {/* Hero */}
       <section className="bg-black text-white py-16">
