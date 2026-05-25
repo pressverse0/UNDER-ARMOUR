@@ -1,11 +1,8 @@
-# Under Armour - System Architecture
+# System Design & Architecture
 
 ## Overview
 
-Under Armour is a full-stack e-commerce platform built with:
-- **Frontend**: React 18 + TypeScript + Vite
-- **Backend**: Laravel 11 + Eloquent ORM + MySQL
-- **Architecture**: 4-Layer Clean Architecture Pattern
+4-layer clean architecture with React frontend, Laravel backend, and MySQL database.
 
 ## System Architecture Diagram
 
@@ -56,48 +53,37 @@ Under Armour is a full-stack e-commerce platform built with:
 
 ## 4-Layer Clean Architecture
 
-### Layer 1: Presentation Layer
-**Responsibility**: Handle HTTP requests and responses
+Each layer has a specific responsibility and communicates through well-defined interfaces.
 
-**Components**:
-- API Controllers (ProductController, CartController, etc.)
-- Request validation (Form Requests)
-- Response formatting (API Resources)
-- Error handling
+### Layer 1: Presentation (Controllers & Routes)
+- HTTP request/response handling
+- Input validation via Form Requests
+- Response formatting via API Resources
+- Error handling and status codes
 
 **Location**: `backend/app/Http/Controllers/Api/`
 
-### Layer 2: Application Layer
-**Responsibility**: Implement business logic and use cases
-
-**Components**:
-- Services (ProductService, CartService, OrderService, WishlistService)
+### Layer 2: Application (Services)
 - Business logic orchestration
+- Use case implementation
 - Data transformation
 - Cross-cutting concerns
 
 **Location**: `backend/app/Services/`
 
-### Layer 3: Domain Layer
-**Responsibility**: Define business entities and rules
-
-**Components**:
-- Eloquent Models (User, Product, Order, Cart, Wishlist, Review, etc.)
+### Layer 3: Domain (Models & Repositories)
+- Business entity definitions
 - Repository interfaces
-- Query scopes
-- Business rules
+- Query scopes and business rules
+- Data access abstraction
 
 **Location**: `backend/app/Models/` and `backend/app/Repositories/`
 
-### Layer 4: Infrastructure Layer
-**Responsibility**: Handle data persistence and external services
-
-**Components**:
-- Eloquent ORM
-- MySQL database
+### Layer 4: Infrastructure (Database & Services)
+- Eloquent ORM implementation
+- MySQL database operations
 - Stripe payment integration
-- File storage
-- Caching
+- File storage and caching
 
 **Location**: `backend/database/` and service integrations
 
@@ -147,47 +133,48 @@ Frontend (Success/Error)
 
 ### Core Tables (11 total)
 
-1. **users** - User accounts and profiles
-2. **categories** - Product categories (hierarchical)
-3. **products** - Product information
-4. **product_variants** - Sizes, colors, stock
-5. **orders** - Customer orders
-6. **order_items** - Items in orders
-7. **carts** - Shopping carts
-8. **cart_items** - Items in carts
-9. **wishlists** - Saved products
-10. **reviews** - Product reviews
-11. **migrations** - Schema versioning
+| Table | Purpose |
+|-------|---------|
+| users | User accounts and profiles |
+| categories | Product categories (hierarchical) |
+| products | Product information |
+| product_variants | Sizes, colors, stock levels |
+| orders | Customer orders |
+| order_items | Items in orders |
+| carts | Shopping carts |
+| cart_items | Items in carts |
+| wishlists | Saved products |
+| reviews | Product reviews |
+| migrations | Schema versioning |
 
 ### Key Relationships
 
 ```
-User (1) ──→ (N) Orders
-User (1) ──→ (1) Cart
-User (1) ──→ (N) Wishlists
-User (1) ──→ (N) Reviews
-
+User (1) ──→ (N) Orders, Wishlists, Reviews
 Product (N) ──→ (1) Category
-Product (1) ──→ (N) ProductVariants
-Product (1) ──→ (N) Reviews
-Product (1) ──→ (N) Wishlists
-Product (1) ──→ (N) CartItems
-Product (1) ──→ (N) OrderItems
-
+Product (1) ──→ (N) Variants, Reviews, CartItems, OrderItems
 Order (1) ──→ (N) OrderItems
 Cart (1) ──→ (N) CartItems
 ```
+
+### Indexing Strategy
+
+- `products.category_id` - Category filtering
+- `orders.user_id` - User orders
+- `orders.status` - Order status queries
+- `products.created_at` - New arrivals
+- `products.price` - Price filtering
+- Full-text index on `products.name` and `description`
 
 ## API Architecture
 
 ### Endpoint Categories
 
-**Public Endpoints** (No authentication)
-- Product listing and search
-- Product details
+**Public** (No authentication):
+- Product listing, search, details
 - Category browsing
 
-**Protected Endpoints** (Requires authentication)
+**Protected** (Requires authentication):
 - Cart management
 - Order management
 - Wishlist management
@@ -195,21 +182,12 @@ Cart (1) ──→ (N) CartItems
 
 ### Response Format
 
-All API responses follow a consistent JSON format:
+All responses follow consistent JSON structure:
 
 ```json
 {
-  "data": {
-    "id": 1,
-    "name": "Product Name",
-    "price": 99.99,
-    ...
-  },
-  "meta": {
-    "current_page": 1,
-    "total": 100,
-    "per_page": 15
-  }
+  "data": { /* resource data */ },
+  "meta": { /* pagination info */ }
 }
 ```
 
@@ -219,22 +197,22 @@ All API responses follow a consistent JSON format:
 
 | Aspect | Benefit |
 |--------|---------|
-| **Framework** | Excellent ecosystem, built-in auth, migrations |
-| **ORM** | Eloquent - powerful relationships, eager loading |
-| **Database** | MySQL - proven reliability, full-text search |
-| **Authentication** | Sanctum - token-based API auth |
-| **Validation** | Built-in form requests |
-| **Testing** | PHPUnit + Laravel testing utilities |
+| Framework | Excellent ecosystem, built-in auth, migrations |
+| ORM | Powerful relationships, eager loading, scopes |
+| Database | MySQL - proven reliability, full-text search |
+| Authentication | Sanctum - token-based API auth |
+| Validation | Built-in form requests |
+| Testing | PHPUnit + Laravel utilities |
 
 ### Why React for Frontend?
 
 | Aspect | Benefit |
 |--------|---------|
-| **Component-based** | Reusable UI components |
-| **Performance** | Virtual DOM, efficient rendering |
-| **Ecosystem** | Rich library ecosystem |
-| **Developer Experience** | Hot module replacement, dev tools |
-| **TypeScript** | Type safety and better IDE support |
+| Component-based | Reusable UI components |
+| Performance | Virtual DOM, efficient rendering |
+| Ecosystem | Rich library ecosystem |
+| Developer Experience | Hot reload, dev tools |
+| TypeScript | Type safety, IDE support |
 
 ## Performance Optimization
 
@@ -275,68 +253,3 @@ All API responses follow a consistent JSON format:
 - No sensitive payment data stored locally
 - Webhook verification for payment events
 - Secure environment variables
-
-## Deployment Architecture
-
-### Development Environment
-```
-Local Machine
-├── Frontend (npm run dev)
-├── Backend (php artisan serve)
-└── MySQL (local instance)
-```
-
-### Production Environment
-```
-Web Server (Nginx/Apache)
-├── Frontend (Static files)
-├── Backend (PHP-FPM)
-└── MySQL (Managed database)
-```
-
-## Scalability Considerations
-
-### Current Architecture Supports
-- Up to 10,000+ concurrent users
-- Millions of products
-- Real-time order processing
-- Horizontal scaling of backend
-
-### Future Enhancements
-- Redis caching layer
-- Message queue for async operations
-- CDN for static assets
-- Database read replicas
-- Microservices architecture
-
-## Monitoring & Logging
-
-### Application Monitoring
-- Laravel logs in `storage/logs/`
-- Error tracking and reporting
-- Performance monitoring
-- API request logging
-
-### Database Monitoring
-- Query performance analysis
-- Index usage monitoring
-- Backup and recovery procedures
-- Replication monitoring
-
-## Disaster Recovery
-
-### Backup Strategy
-- Daily database backups
-- Version control for code
-- Environment configuration backups
-- File storage backups
-
-### Recovery Procedures
-- Database restoration from backups
-- Code rollback via git
-- Configuration restoration
-- Service health checks
-
----
-
-**For detailed setup instructions, see [SETUP.md](./SETUP.md)**
